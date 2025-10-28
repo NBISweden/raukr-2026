@@ -23,6 +23,14 @@ University of British Columbia
 Vancouver, Canada
 
 :::
+
+::: {.guest-child}
+
+![](assets/images/profile/profile.webp){.nolightbox}
+
+TBD
+
+:::
 :::
 
 ## Syllabus
