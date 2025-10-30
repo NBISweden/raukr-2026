@@ -35,7 +35,7 @@ TBD
 
 ## Syllabus
 
-We will be covering a number of topics in R programming with focus on R features helpful in bioinformatics and computational biology data analyses workflow. These typically include:
+We will be covering a number of topics in R programming with focus on R features helpful in data analyses workflow. These typically include:
 
 - Literate programming with Quarto
 - R code style guide & best practices
