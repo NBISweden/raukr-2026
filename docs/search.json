@@ -98,6 +98,27 @@
     "text": "Raukr 2023"
   },
   {
+    "objectID": "home_coc.html",
+    "href": "home_coc.html",
+    "title": "Code of Conduct",
+    "section": "",
+    "text": "Below is a summary of The NBIS Code of Conduct. Continue reading for a more detailed description of the CoC.\nWe are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. By participating in this community, participants accept to abide by NBIS Code of Conduct and accept the procedures by which any Code of Conduct incidents are resolved. Any form of behaviour to exclude, intimidate, or cause discomfort is a violation of the Code of Conduct. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all platforms and events:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\nIf you believe someone is violating the Code of Conduct, we ask that you report it to the NBIS Training coordinator (education[at]nbis.se), who will take the appropriate action to address the situation."
+  },
+  {
+    "objectID": "home_coc.html#summary",
+    "href": "home_coc.html#summary",
+    "title": "Code of Conduct",
+    "section": "",
+    "text": "Below is a summary of The NBIS Code of Conduct. Continue reading for a more detailed description of the CoC.\nWe are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. By participating in this community, participants accept to abide by NBIS Code of Conduct and accept the procedures by which any Code of Conduct incidents are resolved. Any form of behaviour to exclude, intimidate, or cause discomfort is a violation of the Code of Conduct. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all platforms and events:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\nIf you believe someone is violating the Code of Conduct, we ask that you report it to the NBIS Training coordinator (education[at]nbis.se), who will take the appropriate action to address the situation."
+  },
+  {
+    "objectID": "home_coc.html#detailed",
+    "href": "home_coc.html#detailed",
+    "title": "Code of Conduct",
+    "section": "Detailed",
+    "text": "Detailed\n\nPart 1. Introduction\nTraining is one of the core values of NBIS, and benefits from the contributions of the entire scientific community. We value the involvement of everyone in the community. We are committed to creating a friendly and respectful place for learning, teaching and contributing. All participants in our events and communications are expected to show respect and courtesy to others.\nTo make clear what is expected, everyone participating in NBIS/ELIXIR courses is required to conform to the Code of Conduct. This Code of Conduct applies to all spaces managed by NBIS including, but not limited to courses, email lists, and online forums such as Studium, GitHub, Slack, Twitter and LinkedIn. Course organizers and teachers are expected to assist with the enforcement of the Code of Conduct.\nThe NBIS Training Coordinator is responsible for enforcing the Code of Conduct. It can be contacted by emailing education[at]nbis.se. All reports will be reviewed and will be kept confidential.\n\n\nPart 2. The NBIS Code of Conduct\nNBIS is dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. As such, we do not tolerate behaviour that is disrespectful to our teachers or learners or that excludes, intimidates, or causes discomfort to others. We do not tolerate discrimination or harassment based on characteristics that include, but are not limited to, gender identity and expression, sexual orientation, disability, physical appearance, body size, citizenship, nationality, ethnic or social origin, pregnancy, familial status, veteran status, genetic information, religion or belief (or lack thereof), membership of a national minority, property, age, education, socio-economic status, technical choices, and experience level.\nEveryone who participates in NBIS training activities is required to conform to this Code of Conduct. It applies to all spaces managed by NBIS including, but not limited to, courses, email lists, and online forums such as Studium, GitHub, Slack, Twitter and LinkedIN. Course leaders and teachers are expected to assist with the enforcement of the Code of Conduct. By participating, attendants indicate their acceptance of the procedures by which NBIS resolves any Code of Conduct incidents, which may include storage and processing of their personal information.\n\nPart 2.1 Expected behaviour\nAll participants in our events and communications are expected to show respect and courtesy to others. All interactions should be professional regardless of platform: either online or in-person. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all NBIS training events and platforms:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\n\n\n\n\n\n\nNote\n\n\n\nSee the four social rules for further recommendations.\n\n\n\n\nPart 2.2 Unacceptable behaviour\nExamples of unacceptable behaviour by participants at any NBIS event/platform include:\n\nWritten or verbal comments which have the effect of excluding people on the basis of membership of any specific group\nCausing someone to fear for their safety, such as through stalking, following, or intimidation\nViolent threats or language directed against another person\nThe display of sexual or violent images\nUnwelcome sexual attention\nNon-consensual or unwelcome physical contact\nSustained disruption of talks, events or communications\nInsults or put downs\nSexist, racist, homophobic, transphobic, ableist, or exclusionary jokes\nExcessive swearing\nIncitement to violence, suicide, or self-harm\nContinuing to initiate interaction (including photography or recording) with someone after being asked to stop\nPublication of private communication without consent\n\n\n\nPart 2.3 Consequences of Unacceptable behaviour\nParticipants who are asked to stop any inappropriate behaviour are expected to comply immediately. This applies to any NBIS events and platforms, either online or in-person. If a participant engages in behaviour that violates this code of conduct, the organisers may warn the offender, ask them to leave the event or platform (without refund), or engage with the NBIS Training Coordinator or the appropriate authorities to investigate the Code of Conduct violation and impose appropriate sanctions."
+  },
+  {
     "objectID": "home_about.html",
     "href": "home_about.html",
     "title": "About",
@@ -116,7 +137,7 @@
     "href": "home_about.html#contact",
     "title": "About",
     "section": "Contact",
-    "text": "Contact\nNBIS is a platform of the Science for Life Laboratory (SciLifeLab) and the Swedish node of ELIXIR. This event is organized in co-operation between Uppsala University and Campus Gotland Uppsala University, Sweden.\nFor queries, write to us at raukr[at]nbis.se.\n\n\nRaukR • R Beyond the Basics, a workshop created by NBIS is licensed under CC BY-NC-SA 4.0"
+    "text": "Contact\nNBIS is a platform of the Science for Life Laboratory (SciLifeLab) and the Swedish node of ELIXIR. This event is organized in co-operation between Uppsala University and Campus Gotland Uppsala University, Sweden.\nFor queries, write to us at raukr[at]nbis.se.\n\n\nRaukR • Data Science With R, a workshop created by NBIS is licensed under CC BY-NC-SA 4.0"
   },
   {
     "objectID": "home_faq.html",
@@ -128,6 +149,13 @@
   {
     "objectID": "home_program.html",
     "href": "home_program.html",
+    "title": "Program",
+    "section": "",
+    "text": "Jennifer Bryan\nSoftware engineer at Posit\nData science professor\nUniversity of British Columbia\nVancouver, Canada\n\n\n\nTBD"
+  },
+  {
+    "objectID": "home_program.html#guest-instructors",
+    "href": "home_program.html#guest-instructors",
     "title": "Program",
     "section": "",
     "text": "Jennifer Bryan\nSoftware engineer at Posit\nData science professor\nUniversity of British Columbia\nVancouver, Canada\n\n\n\nTBD"
@@ -158,41 +186,13 @@
     "href": "index.html",
     "title": "",
     "section": "",
-    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 30-10-2025 at 12:16:32."
+    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 07-11-2025 at 16:30:32."
   },
   {
-    "objectID": "index.html#raukr-r-beyond-the-basics",
-    "href": "index.html#raukr-r-beyond-the-basics",
+    "objectID": "index.html#raukr-data-science-with-r",
+    "href": "index.html#raukr-data-science-with-r",
     "title": "",
     "section": "",
-    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 30-10-2025 at 12:16:32."
-  },
-  {
-    "objectID": "home_program.html#guest-instructors",
-    "href": "home_program.html#guest-instructors",
-    "title": "Program",
-    "section": "",
-    "text": "Jennifer Bryan\nSoftware engineer at Posit\nData science professor\nUniversity of British Columbia\nVancouver, Canada\n\n\n\nTBD"
-  },
-  {
-    "objectID": "home_coc.html",
-    "href": "home_coc.html",
-    "title": "Code of Conduct",
-    "section": "",
-    "text": "Below is a summary of The NBIS Code of Conduct. Continue reading for a more detailed description of the CoC.\nWe are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. By participating in this community, participants accept to abide by NBIS Code of Conduct and accept the procedures by which any Code of Conduct incidents are resolved. Any form of behaviour to exclude, intimidate, or cause discomfort is a violation of the Code of Conduct. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all platforms and events:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\nIf you believe someone is violating the Code of Conduct, we ask that you report it to the NBIS Training coordinator (education[@]nbis.se), who will take the appropriate action to address the situation."
-  },
-  {
-    "objectID": "home_coc.html#summary",
-    "href": "home_coc.html#summary",
-    "title": "Code of Conduct",
-    "section": "",
-    "text": "Below is a summary of The NBIS Code of Conduct. Continue reading for a more detailed description of the CoC.\nWe are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. By participating in this community, participants accept to abide by NBIS Code of Conduct and accept the procedures by which any Code of Conduct incidents are resolved. Any form of behaviour to exclude, intimidate, or cause discomfort is a violation of the Code of Conduct. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all platforms and events:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\nIf you believe someone is violating the Code of Conduct, we ask that you report it to the NBIS Training coordinator (education[@]nbis.se), who will take the appropriate action to address the situation."
-  },
-  {
-    "objectID": "home_coc.html#detailed",
-    "href": "home_coc.html#detailed",
-    "title": "Code of Conduct",
-    "section": "Detailed",
-    "text": "Detailed\n\nPart 1. Introduction\nTraining is one of the core values of NBIS, and benefits from the contributions of the entire scientific community. We value the involvement of everyone in the community. We are committed to creating a friendly and respectful place for learning, teaching and contributing. All participants in our events and communications are expected to show respect and courtesy to others.\nTo make clear what is expected, everyone participating in NBIS/ELIXIR courses is required to conform to the Code of Conduct. This Code of Conduct applies to all spaces managed by NBIS including, but not limited to courses, email lists, and online forums such as Studium, GitHub, Slack, Twitter and LinkedIn. Course organizers and teachers are expected to assist with the enforcement of the Code of Conduct.\nThe NBIS Training Coordinator is responsible for enforcing the Code of Conduct. It can be contacted by emailing education[@]nbis.se. All reports will be reviewed and will be kept confidential.\n\n\nPart 2. The NBIS Code of Conduct\nNBIS is dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. As such, we do not tolerate behaviour that is disrespectful to our teachers or learners or that excludes, intimidates, or causes discomfort to others. We do not tolerate discrimination or harassment based on characteristics that include, but are not limited to, gender identity and expression, sexual orientation, disability, physical appearance, body size, citizenship, nationality, ethnic or social origin, pregnancy, familial status, veteran status, genetic information, religion or belief (or lack thereof), membership of a national minority, property, age, education, socio-economic status, technical choices, and experience level.\nEveryone who participates in NBIS training activities is required to conform to this Code of Conduct. It applies to all spaces managed by NBIS including, but not limited to, courses, email lists, and online forums such as Studium, GitHub, Slack, Twitter and LinkedIN. Course leaders and teachers are expected to assist with the enforcement of the Code of Conduct. By participating, attendants indicate their acceptance of the procedures by which NBIS resolves any Code of Conduct incidents, which may include storage and processing of their personal information.\n\nPart 2.1 Expected behaviour\nAll participants in our events and communications are expected to show respect and courtesy to others. All interactions should be professional regardless of platform: either online or in-person. In order to foster a positive and professional learning environment we encourage the following kinds of behaviours in all NBIS training events and platforms:\n\nUse welcoming and inclusive language\nBe respectful of different viewpoints and experiences\nGracefully accept constructive criticism\nFocus on what is best for the community\nShow courtesy and respect towards other community members\n\n\n\n\n\n\n\nNote\n\n\n\nSee the four social rules for further recommendations.\n\n\n\n\nPart 2.2 Unacceptable behaviour\nExamples of unacceptable behaviour by participants at any NBIS event/platform include:\n\nWritten or verbal comments which have the effect of excluding people on the basis of membership of any specific group\nCausing someone to fear for their safety, such as through stalking, following, or intimidation\nViolent threats or language directed against another person\nThe display of sexual or violent images\nUnwelcome sexual attention\nNon-consensual or unwelcome physical contact\nSustained disruption of talks, events or communications\nInsults or put downs\nSexist, racist, homophobic, transphobic, ableist, or exclusionary jokes\nExcessive swearing\nIncitement to violence, suicide, or self-harm\nContinuing to initiate interaction (including photography or recording) with someone after being asked to stop\nPublication of private communication without consent\n\n\n\nPart 2.3 Consequences of Unacceptable behaviour\nParticipants who are asked to stop any inappropriate behaviour are expected to comply immediately. This applies to any NBIS events and platforms, either online or in-person. If a participant engages in behaviour that violates this code of conduct, the organisers may warn the offender, ask them to leave the event or platform (without refund), or engage with the NBIS Training Coordinator or the appropriate authorities to investigate the Code of Conduct violation and impose appropriate sanctions."
+    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 07-11-2025 at 16:30:32."
   }
 ]

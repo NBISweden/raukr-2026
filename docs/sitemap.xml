@@ -2,19 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nbisweden.github.io/raukr-2026/home_registration.html</loc>
-    <lastmod>2025-10-28T10:27:27.062Z</lastmod>
+    <lastmod>2025-10-28T14:45:41.246Z</lastmod>
   </url>
   <url>
     <loc>https://nbisweden.github.io/raukr-2026/home_gallery.html</loc>
     <lastmod>2025-06-22T18:36:12.085Z</lastmod>
   </url>
   <url>
+    <loc>https://nbisweden.github.io/raukr-2026/home_coc.html</loc>
+    <lastmod>2025-10-30T16:51:15.642Z</lastmod>
+  </url>
+  <url>
     <loc>https://nbisweden.github.io/raukr-2026/home_about.html</loc>
-    <lastmod>2025-10-28T14:06:07.730Z</lastmod>
+    <lastmod>2025-11-07T15:23:33.482Z</lastmod>
   </url>
   <url>
     <loc>https://nbisweden.github.io/raukr-2026/home_faq.html</loc>
-    <lastmod>2025-10-28T14:12:35.229Z</lastmod>
+    <lastmod>2025-10-28T14:45:41.245Z</lastmod>
   </url>
   <url>
     <loc>https://nbisweden.github.io/raukr-2026/home_program.html</loc>
@@ -22,10 +26,6 @@
   </url>
   <url>
     <loc>https://nbisweden.github.io/raukr-2026/index.html</loc>
-    <lastmod>2025-10-17T14:17:16.619Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nbisweden.github.io/raukr-2026/home_coc.html</loc>
-    <lastmod>2025-10-30T11:22:18.260Z</lastmod>
+    <lastmod>2025-11-07T15:23:45.141Z</lastmod>
   </url>
 </urlset>
