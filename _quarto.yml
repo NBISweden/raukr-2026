@@ -69,7 +69,7 @@ format:
     standalone: false
     fig-align: left
     title-block-banner: "assets/images/banner.webp"
-    subtitle: "RaukR 2026 • R Beyond the Basics"
+    subtitle: "RaukR 2026 • Data Science With R"
     callout-icon: true
     date:  last-modified
     date-format: "DD-MMM-YYYY"
@@ -102,7 +102,7 @@ format:
       data-background-image: "/assets/images/cover.webp"
       data-background-size: "cover"
       data-background-opacity: "1"
-    subtitle: "RaukR 2026 • R Beyond the Basics"
+    subtitle: "RaukR 2026 • Data Science With R"
     header-logo-left: /assets/logos/raukr.svg
     header-logo-left-height: 25px
     header-logo-left-url: https://nbisweden.github.io/raukr-2026/slides/index.html

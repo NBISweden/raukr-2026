@@ -1,5 +1,5 @@
 ---
-pagetitle: "RaukR 2026 • Summer school • R Beyond the Basics"
+pagetitle: "RaukR 2026 • Summer school • Data Science With R"
 subtitle: ""
 toc: false
 date: ""
@@ -20,7 +20,7 @@ execute:
 ::: {.home-grid-parent}
 ::: {.home-grid-child-left}
 
-## [RaukR • R Beyond the Basics]{.large}
+## [RaukR • Data Science With R]{.large}
 ### Summer School 2026
 :::{style="margin-bottom:1em;"}
 ##### 10-20 August 2026, Visby, Gotland, Sweden
