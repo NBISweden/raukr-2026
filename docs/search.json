@@ -4,14 +4,14 @@
     "href": "home_registration.html",
     "title": "Registration",
     "section": "",
-    "text": "This workshop is aimed at both Ph.D. students and researchers within life sciences who are already using R for bioinformatics data analyses and who would like to start using R at a more advanced level. Participants from the public sector, companies and other relevant stakeholders are warmly welcome as well. In order for you and other participants to benefit the most, you should consider yourself eligible if you are comfortable with:\n\nReading, writing and transforming data\nInstalling and using third-party packages\nPlotting using base and/or ggplot2\nUnderstanding of R data types (strings, vectors, data.frames, lists etc.)\nWriting functions and using control structures (if, for, while)\nBasic understanding of RMarkdown and/or Quarto\n\n\n\n\n\n\n\nWarning\n\n\n\nThis workshop is not intended for beginners. If you have just started using R, this is not for you."
+    "text": "This workshop is aimed at both Ph.D. students and researchers within life sciences who are already using R for bioinformatics data analyses and who would like to start using R at a more advanced level. Participants from the public sector, companies and other relevant stakeholders are warmly welcome as well. In order for you and other participants to benefit the most, you should consider yourself eligible if you are comfortable with:\n\nReading, writing and transforming data\nInstalling and using third-party packages\nPlotting using base and/or ggplot2\nUnderstanding of R data types (strings, vectors, data.frames, lists etc.)\nWriting functions and using control structures (if, for, while)\nBasic understanding of RMarkdown and/or Quarto\n\n\n\n\n\n\n\nWarning\n\n\n\nThis workshop is not intended for beginners or those new to R. If you have little or no experience using R, we recommend starting with an introductory course first."
   },
   {
     "objectID": "home_registration.html#entry-requirements",
     "href": "home_registration.html#entry-requirements",
     "title": "Registration",
     "section": "",
-    "text": "This workshop is aimed at both Ph.D. students and researchers within life sciences who are already using R for bioinformatics data analyses and who would like to start using R at a more advanced level. Participants from the public sector, companies and other relevant stakeholders are warmly welcome as well. In order for you and other participants to benefit the most, you should consider yourself eligible if you are comfortable with:\n\nReading, writing and transforming data\nInstalling and using third-party packages\nPlotting using base and/or ggplot2\nUnderstanding of R data types (strings, vectors, data.frames, lists etc.)\nWriting functions and using control structures (if, for, while)\nBasic understanding of RMarkdown and/or Quarto\n\n\n\n\n\n\n\nWarning\n\n\n\nThis workshop is not intended for beginners. If you have just started using R, this is not for you."
+    "text": "This workshop is aimed at both Ph.D. students and researchers within life sciences who are already using R for bioinformatics data analyses and who would like to start using R at a more advanced level. Participants from the public sector, companies and other relevant stakeholders are warmly welcome as well. In order for you and other participants to benefit the most, you should consider yourself eligible if you are comfortable with:\n\nReading, writing and transforming data\nInstalling and using third-party packages\nPlotting using base and/or ggplot2\nUnderstanding of R data types (strings, vectors, data.frames, lists etc.)\nWriting functions and using control structures (if, for, while)\nBasic understanding of RMarkdown and/or Quarto\n\n\n\n\n\n\n\nWarning\n\n\n\nThis workshop is not intended for beginners or those new to R. If you have little or no experience using R, we recommend starting with an introductory course first."
   },
   {
     "objectID": "home_registration.html#selection",
@@ -60,7 +60,7 @@
     "href": "home_registration.html#accommodation",
     "title": "Registration",
     "section": "Accommodation",
-    "text": "Accommodation\nParticipants are responsible for arranging their own accommodation. When booking accommodation, we recommend that it is located at a walking/biking distance from Campus Gotland. Here are a few suggestions below where participants have previously stayed at. These are also marked on the map.\n\n\n\n\n\n\n\n\n\n\nName\nAddress\n\n\n\n\nBW Strand Hotel\nStrandgatan 34, 621 56 Visby (8 min walk, 2 min bike)\n\n\nClarion Hotel Visby\nStrandgatan 6, 621 57 Visby, 260m (3 min walk)\n\n\nHotel St. Clemens\nSmedjegatan 3, 621 55 Visby (11 min walk, 4 min bike)\n\n\nScandic Visby\nFärjeleden 3, 621 58 Visby, 950m (13 min walk, 3 min bike)\n\n\nHotell Slottsbacken\nVisborgsgatan 1, 621 57 Visby, 450m (6 min walk)\n\n\nFirst Hotel Kokoloko\nSöderväg 56 A, 621 58 Visby, 1.7km (25 min walk, 8 min bike)\n\n\nVisby Strandby\nSnäckgärdsvägen 32, 621 55 Visby, 2.3km (31 min walk, 7 min bike)\n\n\nVisby Logi & Vandrarhem\nHästgatan 14, 621 56 Visby, 450m (6 min walk)"
+    "text": "Accommodation\nParticipants are responsible for arranging their own accommodation. When booking accommodation, we recommend that it is located at a walking/biking distance from Campus Gotland. Here are a few suggestions below where participants have previously stayed at. These are also marked on the map.\n\n\n\n\n\n\n\n\n\n\nName\nAddress\n\n\n\n\nBW Strand Hotel\nStrandgatan 34, 621 56 Visby (8 min walk, 2 min bike)\n\n\nClarion Hotel Visby\nStrandgatan 6, 621 57 Visby, 260m (3 min walk)\n\n\nHotel St. Clemens\nSmedjegatan 3, 621 55 Visby (11 min walk, 4 min bike)\n\n\nScandic Visby\nFärjeleden 3, 621 58 Visby, 950m (13 min walk, 3 min bike)\n\n\nHotell Slottsbacken\nVisborgsgatan 1, 621 57 Visby, 450m (6 min walk)\n\n\nFirst Hotel Kokoloko\nSöderväg 56 A, 621 58 Visby, 1.7km (25 min walk, 8 min bike)\n\n\nVisby Strandby\nSnäckgärdsvägen 32, 621 55 Visby, 2.3km (31 min walk, 7 min bike)\n\n\nVisby Logi & Vandrarhem\nHästgatan 14, 621 56 Visby, 450m (6 min walk)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nEarly bird registrants will receive information about special hotel deals."
   },
   {
     "objectID": "home_registration.html#meals",
@@ -87,15 +87,15 @@
     "objectID": "home_gallery.html#raukr-2024",
     "href": "home_gallery.html#raukr-2024",
     "title": "Gallery",
-    "section": "Raukr 2024",
-    "text": "Raukr 2024"
+    "section": "RaukR 2024",
+    "text": "RaukR 2024"
   },
   {
     "objectID": "home_gallery.html#raukr-2023",
     "href": "home_gallery.html#raukr-2023",
     "title": "Gallery",
-    "section": "Raukr 2023",
-    "text": "Raukr 2023"
+    "section": "RaukR 2023",
+    "text": "RaukR 2023"
   },
   {
     "objectID": "home_coc.html",
@@ -165,7 +165,7 @@
     "href": "home_program.html#syllabus",
     "title": "Program",
     "section": "Syllabus",
-    "text": "Syllabus\nWe will be covering a number of topics in R programming with focus on R features helpful in data analyses workflow. These typically include:\n\nLiterate programming with Quarto\nR code style guide & best practices\nCode debugging, optimization and profiling\nParallelization and vectorization in R\nCrafting your own functions\nCoding in Positron\nR and AI, from code completions to agents\nObject oriented programming and R classes: S3, S4, R6 and RC\nAnatomy of an R package: Creating your own package from scratch\nTidy data flow using tidyverse\nData visualization in R\nDeveloping web applications using Shiny \nTeam project work - developing data analyses workflow in R using acquired skills\nCollaborative work using Git and GitHub\n\n\n\n\n\n\n\nNote\n\n\n\nNote that the exact topics covered may vary slightly from year to year based on participant feedback, instructors and emerging trends in R programming.\nTherefore the syllabus is subject to change!"
+    "text": "Syllabus\nWe will be covering a number of topics in R programming with focus on R features helpful in data analyses workflow. These typically include:\n\nR code style guide & best practices\nCode debugging, optimization and profiling\nParallelization and vectorization in R\nCrafting your own functions\nGenerating reports, presentations and websites with Quarto\nCoding in Positron\nR and AI, from code completions to agents\nObject oriented programming and R classes: S3, S4, R6 etc\nAnatomy of an R package: Creating your own package from scratch\nTidy data analysis using tidyverse\nData visualization in R\nDeveloping web applications using Shiny\nCollaborative work using Git and GitHub\nTeam project work - developing data analyses workflow in R using acquired skills\n\n\n\n\n\n\n\nNote\n\n\n\nNote that the exact topics covered may vary slightly from year to year based on participant feedback, instructors and emerging trends in R programming.\nTherefore the syllabus is subject to change!"
   },
   {
     "objectID": "home_program.html#course-materials",
@@ -186,13 +186,13 @@
     "href": "index.html",
     "title": "",
     "section": "",
-    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 07-11-2025 at 16:30:32."
+    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 13-11-2025 at 22:57:24."
   },
   {
     "objectID": "index.html#raukr-data-science-with-r",
     "href": "index.html#raukr-data-science-with-r",
     "title": "",
     "section": "",
-    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 07-11-2025 at 16:30:32."
+    "text": "In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.\nApply now ▸\n   \n\n\nUpdated: 13-11-2025 at 22:57:24."
   }
 ]
