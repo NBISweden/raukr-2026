@@ -13,7 +13,7 @@ website:
   image: "assets/images/seo.webp"
   favicon: "assets/favicon.svg"
   navbar:
-    logo: "assets/logos/raukr.png"
+    logo: "assets/logos/logo.png"
     logo-alt: "RaukR"
     right:
       - text: "Home"
@@ -103,7 +103,7 @@ format:
       data-background-size: "cover"
       data-background-opacity: "1"
     subtitle: "RaukR 2026 • Data Science With R"
-    header-logo-left: /assets/logos/raukr.svg
+    header-logo-left: /assets/logos/logo.svg
     header-logo-left-height: 25px
     header-logo-left-url: https://nbisweden.github.io/raukr-2026/slides/index.html
     header-logo-right: /assets/logos/nbis-scilifelab.svg

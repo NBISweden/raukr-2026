@@ -35,7 +35,7 @@ This workshop is aimed at both Ph.D. students and researchers within life scienc
 - Basic understanding of RMarkdown and/or Quarto
 
 ::: {.callout-warning}
-This workshop is not intended for beginners. If you have just started using R, this is not for you.
+This workshop is not intended for beginners or those new to R. If you have little or no experience using R, we recommend starting with an introductory course first.
 :::
 
 ## Selection
@@ -201,7 +201,7 @@ For photographs from previous workshops, visit our [Gallery](home_gallery.html).
 Participants are responsible for arranging their own accommodation. When booking accommodation, we recommend that it is located at a walking/biking distance from Campus Gotland. Here are a few suggestions below where participants have previously stayed at. These are also marked on the map.
 
 ::: {.grid}
-::: {.g-col-10}
+::: {.g-col-12}
 
 ```{r}
 #| echo: false
@@ -224,6 +224,10 @@ readxl::read_xlsx("map.xlsx") %>%
 :::
 :::
 
+::: {.callout-note}
+Early bird registrants will receive information about special hotel deals.
+:::
+
 ## Meals
 
 A cafeteria is available onsite just outside the lecture hall for breakfast and lunches as well as coffee and snacks. Dinners are not included. Breakfast is not included on weekends. For further information, see [FAQs](home_faq.html).
@@ -235,6 +239,7 @@ A cafeteria is available onsite just outside the lecture hall for breakfast and 
 
 ```{r}
 #| echo: false
+# fmt: skip
 
 tibble::tribble(
   ~Date, ~Milestone,
@@ -262,4 +267,4 @@ tibble::tribble(
 
 Before proceeding, please ensure you have read all the information on this page as well as our [FAQs](home_faq.html). Click below to access the online application form.
 
-[[**Application Form**](https://nbis.typeform.com/raukr-2026) {{< fa arrow-up-right-from-square >}}]{.btn .btn-primary .large}
+[[Application Form](https://nbis.typeform.com/raukr-2026) {{< fa arrow-up-right-from-square >}}]{.btn .btn-primary .large}

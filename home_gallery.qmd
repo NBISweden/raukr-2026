@@ -10,7 +10,7 @@ format:
     number-sections: false
 ---
 
-## Raukr 2025
+## RaukR 2025
 
 ![](assets/images/raukr-2025/a.webp){group="raukr-2025"}
 
@@ -61,7 +61,7 @@ format:
 
 <br>
 
-## Raukr 2024
+## RaukR 2024
 
 ![](assets/images/raukr-2024/o.webp){group="raukr-2024"}
 
@@ -112,7 +112,7 @@ format:
 
 <br>
 
-## Raukr 2023
+## RaukR 2023
 
 ![](assets/images/raukr-2023/s.webp){group="raukr-2023"}
 

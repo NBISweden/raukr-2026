@@ -1,4 +1,4 @@
-# Raukr 2026 • Workshop Website  
+# RaukR 2026 • Workshop Website  
 **NBIS Summer School • Data Science With R**  
 
 ---
