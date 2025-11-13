@@ -30,7 +30,7 @@ In Life Sciences and Bioinformatics, the R programming language is pivotal for d
 
 [[Apply now &#9656;]{.btn .btn-primary}](home_registration.html)
 
-![](assets/logos/raukr.svg){height="1.2em" style="margin-bottom:-3px;"} &nbsp; ![](assets/logos/nbis-scilifelab.svg){height="1.1em"}
+![](assets/logos/logo.svg){height="1.2em" style="margin-bottom:-3px;"} &nbsp; ![](assets/logos/nbis-scilifelab.svg){height="1.1em"}
 
 ---
 
