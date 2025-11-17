@@ -12,13 +12,20 @@ format:
     number-sections: false
     title-block-banner: false
     page-layout: full
+    anchor-sections: false
 execute:
   freeze: false
+hero-gallery:
+  images: assets/images/hero/
+resources:
+  - assets/images/binary.svg
+filters:
+  - particles
+  - assets/hero-gallery.lua
 ---
 
 ::: {.home-container}
-::: {.home-grid-parent}
-::: {.home-grid-child-left}
+::: {.home-inner}
 
 ## [RaukR • Data Science With R]{.large}
 ### Summer School 2026
@@ -28,7 +35,7 @@ execute:
 
 In Life Sciences and Bioinformatics, the R programming language is pivotal for data transformation, statistical analyses, and crafting publication-ready visualizations. This workshop goes beyond the basics, offering participants a comprehensive understanding of the R ecosystem. We explore best coding practices, code profiling, data wrangling, generating reports from notebooks and development of web apps using R.
 
-[[Apply now &#9656;]{.btn .btn-primary}](home_registration.html)
+[[Apply Now {{< fa circle-chevron-right >}}]{.btn .btn-primary}](home_registration.html)
 
 ![](assets/logos/logo.svg){height="1.2em" style="margin-bottom:-3px;"} &nbsp; ![](assets/logos/nbis-scilifelab.svg){height="1.1em"}
 
@@ -39,10 +46,12 @@ Updated: {{< meta current_date >}} at {{< meta current_time >}}.
 :::
 
 :::
-:::{.home-grid-child-right}
+:::
 
-![](assets/images/hero.webp){.nolightbox}
-
-:::
-:::
-:::
+{{< particles
+  id="quarto-particlejs"
+  particles.color.value="#a6cbcf"
+  particles.line_linked.color="#a6cbcf"
+  interactivity.events.onhover.enable=true
+  interactivity.events.onhover.mode=repulse
+>}}

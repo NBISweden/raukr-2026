@@ -167,10 +167,28 @@ Ferry connections are available from Stockholm (Nynäshamn) or Oskarshamn to Vis
 #| output: asis
 
 dfr <- dfr %>%
-  mutate(address = paste0("<a target='_blank' href='", url, "'>", label, "</a>,", address)) %>%
+  mutate(
+    address = paste0(
+      "<a target='_blank' href='",
+      url,
+      "'>",
+      label,
+      "</a>,",
+      address
+    )
+  ) %>%
   mutate(address = gsub(",", "<br>", address))
-icons <- awesomeIcons(icon = dfr$marker_icon, markerColor = dfr$marker_colour, iconColor = "#FFFFFF", library = "fa")
-cat(knitr::knit_child(input = "assets/_child-map.qmd", envir = environment(), quiet = TRUE))
+icons <- awesomeIcons(
+  icon = dfr$marker_icon,
+  markerColor = dfr$marker_colour,
+  iconColor = "#FFFFFF",
+  library = "fa"
+)
+cat(knitr::knit_child(
+  input = "assets/_child-map.qmd",
+  envir = environment(),
+  quiet = TRUE
+))
 ```
 
 <br>
@@ -208,7 +226,9 @@ Participants are responsible for arranging their own accommodation. When booking
 
 readxl::read_xlsx("map.xlsx") %>%
   filter(marker_icon == "bed") %>%
-  mutate(label = paste0("<a target='_blank' href='", url, "'>", label, "</a>")) %>%
+  mutate(
+    label = paste0("<a target='_blank' href='", url, "'>", label, "</a>")
+  ) %>%
   select(label, address) %>%
   setNames(c("Name", "Address")) %>%
   gt() %>%

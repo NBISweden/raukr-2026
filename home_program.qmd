@@ -10,12 +10,17 @@ format:
 
 ## Guest instructors
 
-::: {.guest-parent}
-::: {.guest-child}
+::: {.profile-parent .profile-guest}
+::: {.profile-child}
 
+::: {.profile-effect}
 ![](assets/images/profile/jenny-bryan.webp){.nolightbox}
 
-[Jennifer Bryan](https://jennybryan.org/)
+::: {.profile-overlay}
+:::
+:::
+
+[**Jennifer Bryan**](https://jennybryan.org/)
 
 Software engineer at [Posit](https://posit.co/)  
 Data science professor  
@@ -24,9 +29,14 @@ Vancouver, Canada
 
 :::
 
-::: {.guest-child}
+::: {.profile-child}
 
+::: {.profile-effect}
 ![](assets/images/profile/profile.webp){.nolightbox}
+
+::: {.profile-overlay}
+:::
+:::
 
 TBD
 

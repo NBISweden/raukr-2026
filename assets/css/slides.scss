@@ -4,7 +4,7 @@
 
 /* colours, fonts, size ---------------------------------------------------------------------- */
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&family=Nunito:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Fira+Mono:wght@400;500;700&display=swap');
 
 $primary: #4C979F;
 $secondary: #A6CBCF;
@@ -12,8 +12,8 @@ $tertiary: #D1E5E6;
 $link-color: #79B1B7;
 $body-color: #1c2833;
 $code-color: #496985;
-$code-block-bg: WhiteSmoke;
-$font-family-sans-serif: 'Nunito', 'Source Sans Pro', 'Helvetica', 'sans-serif' ;
+$code-block-bg: #E6F0F0;
+$font-family-sans-serif: 'Albert Sans', 'Helvetica', 'sans-serif' ;
 $font-family-monospace: 'Fira Mono','Ubuntu Mono', 'Lucida Console', 'Courier', 'monospace';
 $code-block-border-color: none;
 $code-bg: $code-block-bg; /* inline code */
@@ -29,6 +29,12 @@ $presentation-h5-font-size: 1.125em;
 $presentation-h6-font-size: 1em;
 
 /*-- scss:rules --*/
+
+.quarto-light {
+  background-color: #f5f9f9;
+  background-image: radial-gradient(#A6CBCF 0.65px, #f5f9f9 0.65px);
+  background-size: 13px 13px;
+}
 
 /* font */
 /* major third scale */
@@ -82,7 +88,7 @@ $presentation-h6-font-size: 1em;
 .reveal div.sourceCode {
   border: 0 !important;
   border-radius: 6px;
-  margin-bottom: 0.6em !important;
+  /* margin-bottom: 0.6em !important; */
 }
 
 .reveal pre code {
@@ -91,7 +97,7 @@ $presentation-h6-font-size: 1em;
 }
 
 .reveal .slide-number {
-  font-family: "Source Sans Pro";
+  font-family: $font-family-sans-serif;
 }
 
 .reveal .blockquote {
@@ -317,52 +323,21 @@ $presentation-h6-font-size: 1em;
 }
 
 #title-slide .title-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
+  justify-content: center;
   height: 100%;
 }
 
-#title-slide .title-parent {
-  display: -ms-grid;
-  display: grid;
-  margin: auto;
-  padding-left: 2em;
-  padding-right: 2em;
-  padding-top: 2em;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  grid-column-gap: 2em;
-  /*grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));*/
-}
-
-#title-slide .title-one {
-  -ms-grid-columns: 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas: "text";
-}
-
-#title-slide .title-two {
-  -ms-grid-columns: (1fr)[2];
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: "text hero";
-}
-
-#title-slide .title-child-text {
-  -ms-grid-row: 1;
-  -ms-grid-column: 1;
-  grid-area: text;
+#title-slide .title-content {
+  background-color: #eaf2f3;
+  padding: 2em 4em;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  /* background-image: url('assets/images/binary.svg'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   text-align: left;
-}
-
-#title-slide .title-child-hero {
-  -ms-grid-row: 1;
-  -ms-grid-column: 2;
-  grid-area: hero;
 }
 
 /* citation */
@@ -387,3 +362,4 @@ $presentation-h6-font-size: 1em;
 .reveal .shinylive-wrapper {
   margin: 0;
 }
+

@@ -11,10 +11,15 @@ format:
 
 ## Organizers
 
-::: {.profile-parent}
+::: {.profile-parent .profile-about}
 ::: {.profile-child}
 
-![](assets/images/profile/marcin-kierczak.webp){.nolightbox}
+::: {.profile-effect}
+![](assets/images/profile/marcin-kierczak.webp){.image-effect .nolightbox}
+
+::: {.profile-overlay}
+:::
+:::
 
 [Marcin Kierczak](http://www.kierczak.pl/)  
 Bioinformatics Data Scientist, NBIS,  
@@ -23,7 +28,12 @@ Associate Professor in Bioinformatics, Uppsala university
 :::
 ::: {.profile-child}
 
-![](assets/images/profile/sebastian-dilorenzo.webp){.nolightbox}
+::: {.profile-effect}
+![](assets/images/profile/sebastian-dilorenzo.webp){.image-effect .nolightbox}
+
+::: {.profile-overlay}
+:::
+:::
 
 [Sebastian DiLorenzo](https://www.katalog.uu.se/profile?id=N11-2322)  
 Bioinformatics Data Scientist, NBIS, Uppsala university
@@ -31,7 +41,12 @@ Bioinformatics Data Scientist, NBIS, Uppsala university
 :::
 ::: {.profile-child}
 
-![](assets/images/profile/roy-francis.webp){.nolightbox}
+::: {.profile-effect}
+![](assets/images/profile/roy-francis.webp){.image-effect .nolightbox}
+
+::: {.profile-overlay}
+:::
+:::
 
 [Roy Francis](https://www.katalog.uu.se/empinfo/?id=N14-525)  
 Bioinformatics Data Scientist, NBIS, Uppsala university
@@ -39,7 +54,12 @@ Bioinformatics Data Scientist, NBIS, Uppsala university
 :::
 ::: {.profile-child}
 
-![](assets/images/profile/annika-kollstedt.webp){.nolightbox}
+::: {.profile-effect}
+![](assets/images/profile/annika-kollstedt.webp){.image-effect .nolightbox}
+
+::: {.profile-overlay}
+:::
+:::
 
 [Annika Kollstedt](https://www.katalog.uu.se/empinfo/?id=N1-816)  
 Administrator, NBIS, Uppsala university
