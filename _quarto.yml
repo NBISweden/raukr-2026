@@ -68,7 +68,7 @@ format:
     df-print: paged
     standalone: false
     fig-align: left
-    title-block-banner: "#D1E5E6"
+    title-block-banner: "assets/images/binary.svg"
     subtitle: "RaukR 2026 • Data Science With R"
     callout-icon: true
     date:  last-modified
