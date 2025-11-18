@@ -17,7 +17,6 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 library(dplyr)
 library(leaflet)
 library(readxl)
-library(gt)
 library(tibble)
 
 dfr <- readxl::read_xlsx("map.xlsx")
@@ -229,16 +228,8 @@ readxl::read_xlsx("map.xlsx") %>%
   mutate(
     label = paste0("<a target='_blank' href='", url, "'>", label, "</a>")
   ) %>%
-  select(label, address) %>%
-  setNames(c("Name", "Address")) %>%
-  gt() %>%
-  fmt_markdown(columns = Name) %>%
-  cols_width(Name ~ px(250)) %>%
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = cells_column_labels()
-  ) %>%
-  opt_row_striping(row_striping = FALSE)
+  transmute(Name = label, Address = address) %>%
+  knitr::kable(format = "html", escape = FALSE, align = c("l", "l"))
 ```
 
 :::
@@ -264,20 +255,13 @@ A cafeteria is available onsite just outside the lecture hall for breakfast and 
 tibble::tribble(
   ~Date, ~Milestone,
   "27-Oct-2025", "Application opens",
-  "**01-Jan-2026 00:00**", "Early bird rate ends",
-  "**01-May-2026 23:59**", "Application deadline",
+  "<strong>01-Jan-2026 00:00</strong>", "Early bird rate ends",
+  "<strong>01-May-2026 23:59</strong>", "Application deadline",
   "09-Aug-2026", "Arrival to Visby, mingle in the evening",
   "10-Aug-2026 - 20-Aug-2026", "Workshop",
   "20-Aug-2026", "Project presentations, certificates issued, lunch included",
 ) %>%
-  gt() %>%
-  fmt_markdown(columns = Date) %>%
-  cols_width(Date ~ px(300)) %>%
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = cells_column_labels()
-  ) %>%
-  opt_row_striping(row_striping = FALSE)
+  knitr::kable(format = "html", escape = FALSE, align = c("l", "l"))
 ```
 
 :::
