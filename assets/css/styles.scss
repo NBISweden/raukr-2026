@@ -97,6 +97,29 @@ body {
   margin-bottom: 0;
 }
 
+/* apply button style */
+.navbar a.nav-link[href="./home_registration.html"],
+.navbar a.btn.btn-primary {
+  margin-top: 4px;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  background-color: $primary;
+  color: whitesmoke !important;
+  box-shadow: $shadow-medium;
+  max-width: 120px;
+}
+
+.navbar a.nav-link[href="./home_registration.html"]:hover,
+.navbar a.nav-link[href="./home_registration.html"]:focus,
+.navbar a.btn.btn-primary:hover,
+.navbar a.btn.btn-primary:focus {
+  background-color: darken($primary, 5%);
+  color: whitesmoke !important;
+  box-shadow: $shadow-low;
+}
 
 /* buttons and badges */
 
@@ -124,6 +147,7 @@ body {
 }
 
 .btn-primary:hover {
+  background-color: darken($primary, 5%);
   color: whitesmoke;
 }
 
@@ -133,6 +157,7 @@ body {
 }
 
 .btn-secondary:hover {
+  background-color: darken($secondary, 5%);
   color: whitesmoke;
 }
 
