@@ -25,6 +25,9 @@ filters:
 ---
 
 ::: {.home-container}
+::: {.spacer}
+
+:::
 ::: {.home-inner}
 
 ## [RaukR • Data Science With R]{.large}
@@ -44,6 +47,9 @@ In Life Sciences and Bioinformatics, the R programming language is pivotal for d
 ::: small
 Updated: {{< meta current_date >}} at {{< meta current_time >}}.
 :::
+
+:::
+::: {.spacer}
 
 :::
 :::

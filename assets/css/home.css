@@ -6,6 +6,8 @@
 
 .nav-footer {
   background-color: transparent !important;
+  position: relative;
+  z-index: 1;
 }
 
 /* home page content box */
@@ -13,10 +15,19 @@
 .home-container {
   max-width: 1200px;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
   pointer-events: none;
+}
+
+.home-container .spacer:first-child {
+	flex: 1 1 60% ;
+}
+
+.home-container .spacer:last-child {
+	flex: 1 1 40% ;
 }
 
 .home-inner {
@@ -27,6 +38,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  pointer-events: auto;
 }
 
 @media only screen and (max-width: 576px) {
