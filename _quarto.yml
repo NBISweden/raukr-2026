@@ -22,6 +22,9 @@ website:
       - text: "Program"
         href: "home_program.html"
         aria-label: "Program"
+      - text: "Registration"
+        href: "home_registration.html"
+        aria-label: "Registration"
       - text: Gallery
         href: "home_gallery.html"
         aria-label: "Gallery"
@@ -31,9 +34,6 @@ website:
       - text: About
         href: "home_about.html"
         aria-label: "About"
-      - text: "Apply Now"
-        href: "home_registration.html"
-        aria-label: "Apply Now"
       - icon: github
         href: https://github.com/NBISweden/raukr-2026
         aria-label: "GitHub"
