@@ -52,19 +52,6 @@ Bioinformatics Data Scientist, NBIS, Uppsala university
 Bioinformatics Data Scientist, NBIS, Uppsala university
 
 :::
-::: {.profile-child}
-
-::: {.profile-effect}
-![](assets/images/profile/annika-kollstedt.webp){.image-effect .nolightbox}
-
-::: {.profile-overlay}
-:::
-:::
-
-[Annika Kollstedt](https://www.katalog.uu.se/empinfo/?id=N1-816)  
-Administrator, NBIS, Uppsala university
-
-:::
 :::
 
 ## Contact
