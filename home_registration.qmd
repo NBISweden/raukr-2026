@@ -215,7 +215,13 @@ For photographs from previous workshops, visit our [Gallery](home_gallery.html).
 
 ## Accommodation
 
-Participants are responsible for arranging their own accommodation. When booking accommodation, we recommend that it is located at a walking/biking distance from Campus Gotland. Here are a few suggestions below where participants have previously stayed at. These are also marked on the map.
+Participants are generally responsible for arranging their own accommodation. When booking accommodation, we recommend that it is located at a walking/biking distance from Campus Gotland. 
+
+::: {.callout-note}
+All accepted applicants will get special discounts at Visby Börs and Donners Hotel. More information will be provided upon acceptance.
+:::
+
+Here are a few suggestions below where participants have previously stayed at. These are also marked on the map.
 
 ::: {.grid}
 ::: {.g-col-12}
@@ -233,10 +239,6 @@ readxl::read_xlsx("map.xlsx") %>%
 ```
 
 :::
-:::
-
-::: {.callout-note}
-Early bird registrants will receive information about special hotel deals.
 :::
 
 ## Meals
