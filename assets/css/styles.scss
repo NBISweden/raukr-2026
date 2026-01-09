@@ -56,7 +56,6 @@ h1,h2,h3,h4,h5,h6 {
 .smaller { font-size: 0.64em;}
 .smallest { font-size: 0.512em;}
 
-
 /* site ---------------------------------------------------------------------- */
 
 body {
@@ -101,6 +100,7 @@ body {
 .badge,
 .badge-primary {
   background-color: $primary;
+  border-radius: 0;
 }
 
 .badge-secondary {

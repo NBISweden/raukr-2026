@@ -20,25 +20,26 @@ format:
 :::
 :::
 
-[**Jennifer Bryan**](https://jennybryan.org/)
+[**Jennifer Bryan**](https://jennybryan.org/)  
 
 Software engineer at [Posit](https://posit.co/)  
-Data science professor  
-University of British Columbia  
-Vancouver, Canada
+Vancouver, Canada  
 
 :::
 
 ::: {.profile-child}
 
 ::: {.profile-effect}
-![](assets/images/profile/profile.webp){.nolightbox}
+![](assets/images/profile/christophe-dervieux.webp){.nolightbox}
 
 ::: {.profile-overlay}
 :::
 :::
 
-TBD
+[Christophe Dervieux](https://github.com/cderv)  
+
+Software engineer at [Posit](https://posit.co/)  
+Paris, France  
 
 :::
 :::
