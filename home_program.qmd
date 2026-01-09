@@ -36,7 +36,7 @@ Vancouver, Canada
 :::
 :::
 
-[Christophe Dervieux](https://github.com/cderv)  
+[**Christophe Dervieux**](https://github.com/cderv)  
 
 Software engineer at [Posit](https://posit.co/)  
 Paris, France  
