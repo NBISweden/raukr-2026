@@ -34,7 +34,7 @@ This workshop is aimed at both Ph.D. students and researchers within life scienc
 - Basic understanding of RMarkdown and/or Quarto
 
 ::: {.callout-warning}
-This workshop is not intended for beginners or those new to R. If you have little or no experience using R, we recommend starting with an introductory course first.
+This workshop is not intended for absolute beginners. If you have very little or no experience using R, we recommend starting with an introductory course first.
 :::
 
 ## Selection
