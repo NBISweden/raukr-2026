@@ -708,14 +708,14 @@ This slide has a background image
 
 - To set custom title slide cover image
 
-```yaml
-title-slide-attributes:
-  data-background-image: "assets/images/image.webp"
-```
+  ```yaml
+  title-slide-attributes:
+    data-background-image: "assets/images/image.webp"
+  ```
 
 - To add custom end slide picture, set page title
 
-`##  {background-image="assets/images/network.svg"}`
+  `##  {background-image="assets/images/network.svg"}`
 
 - Add custom css under YAML `css: "styles.css"`
 

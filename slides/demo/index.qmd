@@ -1399,7 +1399,7 @@ title-slide-attributes:
 ---
 ```
 
-- To add custom end slide picture, set page title
+To add custom end slide picture, set page title
 
 `##  {background-image="assets/images/image.webp"}`
 
