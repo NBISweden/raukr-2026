@@ -15,3 +15,5 @@ todo.txt
 .Rproj.user
 .vscode/
 **/*.quarto_ipynb
+*.fastq
+to-do.md
