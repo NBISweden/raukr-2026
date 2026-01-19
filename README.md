@@ -72,7 +72,7 @@ nbisweden/raukr-2026:main <- you/raukr-2026:develop
 ## Branches
 
 - `main` - Finalized material for the workshop website
-- `develop` - Work in progress including above excluding slides and labs
+- `develop` - Work in progress including above and working slides and labs
 - `<topic>` - Individual topic branches for development
 
 ## Tips & Conventions
