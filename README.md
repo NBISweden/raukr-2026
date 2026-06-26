@@ -85,7 +85,12 @@ nbisweden/raukr-2026:main <- you/raukr-2026:main
 nbisweden/raukr-2026:main <- you/raukr-2026:your-branch
 ```
 
-- Note that qmd rendering can be selectively disabled in _quarto.yml.
+- Note that qmd rendering can be selectively disabled in _quarto.yml
+
+## Updating schedule
+
+- In raukr-2026 google drive, make changes to **schedule-vertical** tab in the **schedule** google sheet
+- Then re-render **home_schedule.qmd** and push the contents of *_freeze*
 
 ## Tips & Conventions
 
