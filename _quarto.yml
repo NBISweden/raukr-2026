@@ -18,8 +18,6 @@ project:
     - "!slides/packages/*.qmd"
     - "!labs/packages/*.qmd"
     - "!slides/quarto/*.qmd"
-    - "!labs/quarto/*.qmd"
-    - "!labs/quarto-site/*.qmd"
     - "!slides/scripting/*.qmd"
     - "!labs/scripting/*.qmd"
     - "!slides/tidyverse/*.qmd"
