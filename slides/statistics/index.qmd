@@ -33,6 +33,7 @@ format:
   
 . . . 
 
+- R is still consdiered the preferred language of statisticians and new developments and methods in statistics are often released as R package first.
 
 
 ## R and Statistics
@@ -71,11 +72,36 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 
 ? someexample on fisher or t-test or gauss?
 
+## Making Sense of the World and Learning with Statitics
+
 
 ## Statistical Learning
 
-- "Statistical learning refers to a set of tools for making sense of complex datasets" - book ISL
 
+:::: {.columns}
+
+::: {.column width="70%"}
+
+- "Statistical learning refers to a set of tools for making sense of complex datasets" -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
+
+- Many of these methods were developed long before we had computers, and they are incredibly useful today.
+
+- No single methods will perform well or be appropriate for all data set. It is therefore important to understand how these tools work, when to use them and how to interpret the results.
+
+- "*We are drowning in information and starving for knowledge*" -- Rutherford D. Roger as quoted in Elements of Statistical Learning
+
+:::
+
+::: {.column width="30%"}
+
+![](assets/MachineLearningXKCD.webp)
+:::
+
+::::
+
+::: {.aside}
+(https://xkcd.com/1838)
+:::
 
 ## Additional Resources
 
@@ -83,6 +109,15 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 
 ::: {.v-center}
 ::: {}
+
+"*The quiet statisticians have changed our world; not by discovering new facts or technical developments, but by changing the ways that we reason, experiment and form our opinions.*"
+
+-- Ian Hacking 
+
+| 
+|
+|
+
 "*Many of us are drawn to the field of statistics because we are natural-born skeptics. Through our statistical training, we become more skeptical still. Our experience—both personal and professional—has taught us that if something seems too good to be true, then it probably is. We seek the simplest possible answer to every question, and no simpler. After all, statistics is hard. The key is to enjoy the challenge.*" 
 
 -- Daniela Witten & Rob Tibshirani
