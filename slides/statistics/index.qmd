@@ -1,0 +1,96 @@
+---
+title: "Statistical Learning"
+author: "Dania Machlab"
+format:
+  revealjs:
+    df-print: default
+---
+
+## Packages {visibility="hidden"}
+
+```{r}
+#| echo: false
+# library(tidyverse)
+# library(ggplot2)
+# library(kableExtra)
+# library(magrittr)
+# library(emo)
+
+```
+
+## R and Statistics
+
+- S (for **S**tatistics) is a statistical programming language developed at Bell Labs in 1976. 
+  - *"to turn ideas into software, quickly and faithfully"* -- John Chambers
+
+- Bell labs: Unix, C, C++, Information Theory
+  - 11 Nobel prizes and 5 Turing awards
+
+. . . 
+
+- R released in 1993 by **R**oss Ihaka and **R**obert Gentleman as the free and open-source alternative (part of GNU project) using ideas and syntax from S.
+  - R 1.0 released in 2000.
+  
+. . . 
+
+
+
+## R and Statistics
+
+:::: {.columns}
+
+::: {.column width="70%"}
+![](assets/RousseeuwPrize.webp)
+:::
+
+::::
+
+::: {.aside}
+[Rousseeuw Prize](https://www.rousseeuwprize.org/2026)
+:::
+
+
+::: {.notes}
+
+S: statisticians needed a flexible framework to explore data and where they could also develop new methods
+
+Bell Labs:
+ - an American industrial research and development company owned by the Finnish technology company Nokia.
+ - former subsidiary of the American Telephone and Telegraph Company (AT&T)
+
+R: first letters in creators' names and the S language successor
+
+Robert Gentleman (23andme) + others - Bioconductor project in 2001
+
+- The Rousseeuw Prize for Statistics: awarded every 2 years, US$1,000,000 award, Belgium
+ 
+:::
+
+
+## Statistics and the Real World
+
+? someexample on fisher or t-test or gauss?
+
+
+## Statistical Learning
+
+- "Statistical learning refers to a set of tools for making sense of complex datasets" - book ISL
+
+
+## Additional Resources
+
+## Concluding Remarks
+
+::: {.v-center}
+::: {}
+"*Many of us are drawn to the field of statistics because we are natural-born skeptics. Through our statistical training, we become more skeptical still. Our experience—both personal and professional—has taught us that if something seems too good to be true, then it probably is. We seek the simplest possible answer to every question, and no simpler. After all, statistics is hard. The key is to enjoy the challenge.*" 
+
+-- Daniela Witten & Rob Tibshirani
+:::
+:::
+
+
+
+
+
+

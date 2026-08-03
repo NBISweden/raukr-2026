@@ -1,0 +1,19 @@
+{
+  "hash": "19ea1968982803aa9a90f617ec48bb1c",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Statistical Learning\"\nauthor: \"Dania Machlab\"\nformat:\n  revealjs:\n    df-print: default\n---\n\n## Packages {visibility=\"hidden\"}\n\n\n::: {.cell}\n\n:::\n\n\n## R and Statistics\n\n- S (for **S**tatistics) is a statistical programming language developed at Bell Labs in 1976. \n  - *\"to turn ideas into software, quickly and faithfully\"* -- John Chambers\n\n- Bell labs: Unix, C, C++, Information Theory\n  - 11 Nobel prizes and 5 Turing awards\n\n. . . \n\n- R released in 1993 by **R**oss Ihaka and **R**obert Gentleman as the free and open-source alternative (part of GNU project) using ideas and syntax from S.\n  - R 1.0 released in 2000.\n  \n. . . \n\n\n\n## R and Statistics\n\n:::: {.columns}\n\n::: {.column width=\"70%\"}\n![](assets/RousseeuwPrize.webp)\n:::\n\n::::\n\n::: {.aside}\n[Rousseeuw Prize](https://www.rousseeuwprize.org/2026)\n:::\n\n\n::: {.notes}\n\nS: statisticians needed a flexible framework to explore data and where they could also develop new methods\n\nBell Labs:\n - an American industrial research and development company owned by the Finnish technology company Nokia.\n - former subsidiary of the American Telephone and Telegraph Company (AT&T)\n\nR: first letters in creators' names and the S language successor\n\nRobert Gentleman (23andme) + others - Bioconductor project in 2001\n\n- The Rousseeuw Prize for Statistics: awarded every 2 years, US$1,000,000 award, Belgium\n \n:::\n\n## Statistical Learning\n\n- \"Statistical learning refers to a set of tools for making sense of complex datasets\" - book ISL\n\n\n## Concluding Remarks\n\n::: {.v-center}\n::: {}\n\"*Many of us are drawn to the field of statistics because we are natural-born skeptics. Through our statistical training, we become more skeptical still. Our experience—both personal and professional—has taught us that if something seems too good to be true, then it probably is. We seek the simplest possible answer to every question, and no simpler. After all, statistics is hard. The key is to enjoy the challenge.*\" \n\n-- Daniela Witten & Rob Tibshirani\n:::\n:::\n\n\n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
