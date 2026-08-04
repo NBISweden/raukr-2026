@@ -1,0 +1,15 @@
+---
+title: "Statistical Learning"
+author: "Dania Machlab"
+description: "Linear Models"
+format: html
+---
+
+```{r}
+#| echo: false
+library(glmnet)
+
+```
+
+
+
