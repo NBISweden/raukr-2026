@@ -37,9 +37,11 @@ Linear models are incredibly useful and powerful in that they allows us to learn
 
 We will refer to the dep var y, x, X.., e, epsilon etc
 
+assumptions: indep observations, n > p, error normal with mean 0, linear relationship no collinearity
+
 ### The data sets
 
-explain about advertising and credit data sets.
+explain about advertising and credit data sets. and Auto
 
 ```{r}
 ## Set to the desired working directory (you may change this to suit your wdir)
@@ -155,36 +157,6 @@ The size of the RSE value will reflect how poorly the model fits the data. Howev
 Note that in the case of the simple linear regression, the $R^2$ is identical to $Cor(y, \hat{y})^2$.
 :::
 
-
-### Modelling non-linearities - perhaps delete here and mention elsewhere
-
-We noticed that the residuals tend to vary more with higher TV budget values, or in other words there is heteroscedasticity. This calls into question the suitability of the model. Sometimes transforming the data can resolve this. 
-
-```{r}
-ggplot(df, aes(x = sales, y = residual)) + 
-    geom_point() +
-    geom_hline(yintercept = 0, color = "blue") + 
-    theme_bw()
-
-ggplot(df, aes(x = TV, y = sales)) + 
-    geom_point() +
-    theme_bw()
-
-ggplot(df, aes(x = log10(TV), y = log10(sales))) + 
-    geom_point() +
-    theme_bw()
-
-fit <- lm(log10(sales) ~ log10(TV), data = df)
-ggplot(df, aes(x = log10(sales), y = fit$residuals)) + 
-    geom_point() +
-    geom_hline(yintercept = 0, color = "blue") + 
-    theme_bw()
-
-
-```
-
-
-Linear models assume a linear relationship between the predictors and the expected value of the response. Using transformed values of the predictors of response does not violate this, merely how we interpret the fit. This open up a whole range of possibilities and allows to to still model non-linearites in a sense.
 
 
 ## Multiple linear regression
@@ -401,7 +373,37 @@ Using the credit data set, model the relationship between Income (response) and 
 :::
 
 
-## Non-linearity and heteroscadicity
+## Note on non-linearities
+
+The flexibility and power of linear models is not to be underestimated. So far we have used the predictors as they are in our examples. However there is nothing preventing us from using non-linear transformations of these predictors, such as the square root ($\sqrt{(x)}$), a log transformation ($log2(x)$) or raising it to the power of some number (such as $x^2$ or $x^3$), to mention a few. The relationship between predictors, whatever transformation they may have taken, is still linear in the context of the linear model. Linear models assume a linear relationship between the predictors and the expected value of the response. Using transformed values of the predictors or response does not violate this, merely how we interpret the fit. 
+
+## Variance-bias trade off
+
+So far with the least squares approach, we have estimated beta coefficients such that the residual sum of squares is minimized. This simple approach while powerful, does not always work best in practice on real world data. If we learn the model on one data set, do we get the same coefficients estimated on another data set? Data can inherently vary due to measuring errors for example, and so we can easily end up over-fitting the coefficients in one data set. Additionally, suppose that two predictors are highly correlated with each other but not with the response. If both predictors get equal coefficient values but opposite signs they cancel each other out. In such cases the coefficients can get arbitrarily large without adding much to the RSS. We again suffer at getting good estimates of the beta coefficients and reliably interpreting them. To overcome these problems and estimate beta coefficients that are more robust and representative shrinkage methods have been proposed by imposing a penalty on the size of the beta coefficients. This problem is known as the variance-bias trade off, since the beta estimates will vary less with such imposed penalties at the expense of being slightly more biased since we are deliberately constraining them.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Pick one of the two data sets we have explored so far (Advertising or Credit), randomly split the observations into two and then do a linear fit on each subset. Do you get identical beta estimates or do they vary? The code below demonstrates this on the Advertising data set.
+:::
+
+```{r}
+## set seed for random sampling (for reproducibility)
+set.seed(123)
+i <- sample(x = nrow(advertisingData), 
+            size = floor(nrow(advertisingData)/2))
+
+## subset data
+set1 <- advertisingData[i, ]
+set2 <- advertisingData[-i, ]
+
+## fit model
+fit1 <- lm(formula = sales ~ TV + radio + newspaper, data = set1)
+fit2 <- lm(formula = sales ~ TV + radio + newspaper, data = set2)
+
+## compare fits
+fit1
+fit2
+```
 
 
 ## stabsel
