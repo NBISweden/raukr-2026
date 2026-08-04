@@ -7,9 +7,307 @@ format: html
 
 ```{r}
 #| echo: false
+
+library(ISLR2)
+library(MASS)
 library(glmnet)
+library(ggplot2)
+library(patchwork)
+```
+
+
+## Learning outcomes
+
+- understand what a linear model is
+- understand the different flavors of linear regression and what differenciates them
+- understand variance-bias trade off and colinearity in regression
+- be able to assess what linear regression fits best to learn what you need from your data
+
+## Linear models
+
+
+Linear models are incredibly useful and powerful in that they allows us to learn something from the data while providing a high degree of interpretability. Given a variable $y$, the model assumes the expected value of $y$ is linear in the inputs $x$.
+
+
+
+### Annotations and vocabulary
+
+We will refer to the dep var y, x, X.., e, epsilon etc
+
+## The data sets
+
+explain about advertising and credit data sets.
+
+```{r}
+## Set to the desired working directory (you may change this to suit your wdir)
+wdir <- "~/GitHub/raukr-2026/labs/statistics"
+setwd(wdir)
+
+## Download the dataset
+download.file(url = "https://www.statlearning.com/s/Advertising.csv", 
+              destfile = file.path(wdir, "assets", "Advertising.csv"))
+
+## Read in the data 
+advertisingData <- read.csv(file = "assets/Advertising.csv", 
+                            header = TRUE, 
+                            row.names = 1)
+str(advertisingData)
+head(advertisingData)
+summary(advertisingData)
+```
+
+
+## Simple linear regression
+
+As the name implies, a simple linear regression predicts a quantitative response $y$ on the basis of a single predictor $x$ and assumes an approximately linear relationship between $x$ and $y$. Mathematically, we can write this linear relationship as $$y = \beta_0 + \beta_1x + \epsilon$$ where $\beta_0$ and $\beta_1$ are the intercept term and the coefficient for $x$ respectively. The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
+
+Let us use the advertising data set, to see if we can learn something about the relationship between TV advertising and sales. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$.
+
+Let us have a first look at the sales vs TV relationship in the data. Visually, we can see some kind of linear relationship and that sales increases with increasing TV advertising budget. Is there anything else you notice about the spread of the data?
+
+
+```{r}
+ggplot(advertisingData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    theme_bw()
+```
+
+Let's estimate the beta coefficients and learn the exact linear function capturing this relationship.
+```{r}
+## Fit linear model
+simpleLinearFit <- lm(sales ~ TV, data = advertisingData) 
+simpleLinearFit
+names(simpleLinearFit)
+```
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Explore the `simpleLinearFit` object and what it contains. You can make use of the following methods: `str()`, `class()`, `names()` and the `$` sign to access slots. You can also refer to the help page of the `lm()` function to see what it returns. Do you get the same values if you compare the `residuals` from the `simpleLinearFit` object to the difference between the sales values and the `fitted.values` in the `simpleLinearFit` object? Plot the distribution of the residuals. Is it approximately normal?
+:::
+
+Let's plot the linear fit on our original scatter plot.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingData, 
+                          residual = simpleLinearFit$residuals, 
+                          predictedSales = simpleLinearFit$fitted.values))
+beta0 <- simpleLinearFit$coefficients["(Intercept)"]
+beta1 <- simpleLinearFit$coefficients["TV"]
+
+## plot
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0, slope = beta1, color = "firebrick") + 
+    theme_bw()
+
+p2 <- p1 + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue")
+
+p1 + p2
+```
+
+The red line is the linear fit and we can visualize the residuals in blue, which show the difference between predicted and observed sales values. Recall that for each observation $i$, the residual $e_i=y_i-\hat{y_i}$. 
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Plot the distribution of the residuals. Is it approximately normal?
+:::
+
+Now that we have our fit, how do we interpret the values of the beta coefficients and what can we communicate back to our clients? $\beta_0$ is the intercept term, and shows the expected value of $y$ when $x=0$. The slope, $\beta_1$, shows the average increase in $y$ associated with a one-unit increase in $x$. In our example, $\beta_0$ has a value of `{r} round(beta0, 4)` and $\beta_1$ a value of `{r} round(beta1, 4)`. That means that an additional \$1000 spent on TV advertising is associated with selling approximately `{r} round(1000*beta1, 1)` extra units of the product.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Pick either one of the other two advertising budgets, newspaper or radio, and repeat this exercise. What are you expecting based on the scatter plots before doing any fit? Is there a positive relationship to sales, and to what extent? Fit a line and interpret the coefficients. Can you say something about how well the fit captures the trend in the data?
+:::
+
+
+### Assessing the quality of the fit
+
+We will explore two measures that allow us to assess the quality of the linear regression fit: the residual standard error (RSE) and the $R^2$ statistic.
+
+Recall that we can't perfectly predict $y$ from $x$ and that there is an associated residual $e$ for each observation showing how much we have deviated from the line. The RSE roughly represents the average amount of deviation from this line, as reflected in its formula: $RSE=\sqrt{\frac{1}{n-2}RSS}$. Let's have a look at the RSE value in our example. Not that here we have $n-2$ since we have 2 coefficients.
+
+```{r}
+summary(simpleLinearFit)
+```
+
+The RSE has a value of `{r} round(summary(simpleLinearFit)$sigma, 2)`. The observed sales deviate from the true regression line by about 3,260 units on average (since the sales is in thousands of units). Is this something we can live with? What is the mean value of sales in our data set?
+
+```{r}
+## mean sales (in thousdands of units)
+mean(advertisingData$sales)
+
+## percentage error
+summary(simpleLinearFit)$sigma / mean(advertisingData$sales) * 100
+```
+
+The size of the RSE value will reflect how poorly the model fits the data. However, the RSE is measured in units of $y$ and it is not always clear what a good value should be. The $R^2$ statistic on the other hand represents the proportion of variance explained, meaning it will always have a value between 0 and 1: $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$. TSS is the **t**otal **s**um of **s**quares and measures the total variance in $y$, whereas the RSS can be thought of as measuring the variability that is left unexplained after doing the regression. The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression. In our example, $R^2$ has a value of `{r} round(summary(simpleLinearFit)$r.squared, 2)`, meaning that around two thirds of the variability in sales is explained by a linear regression on TV advertising budget. Even though the $R^2$ is nicely interpretable, it can still be difficult to judge what a good value should look like in practice, particularly in fields where data is generated with a degree of experimental noise such as in biology.
+
+::: callout-note
+Note that in the case of the simple linear regression, the $R^2$ is identical to $Cor(y, \hat{y})^2$.
+:::
+
+
+### Modelling non-linearities - perhaps delete here and mention elsewhere
+
+We noticed that the residuals tend to vary more with higher TV budget values, or in other words there is heteroscedasticity. This calls into question the suitability of the model. Sometimes transforming the data can resolve this. 
+
+```{r}
+ggplot(df, aes(x = sales, y = residual)) + 
+    geom_point() +
+    geom_hline(yintercept = 0, color = "blue") + 
+    theme_bw()
+
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    theme_bw()
+
+ggplot(df, aes(x = log10(TV), y = log10(sales))) + 
+    geom_point() +
+    theme_bw()
+
+fit <- lm(log10(sales) ~ log10(TV), data = df)
+ggplot(df, aes(x = log10(sales), y = fit$residuals)) + 
+    geom_point() +
+    geom_hline(yintercept = 0, color = "blue") + 
+    theme_bw()
+
 
 ```
 
+
+Linear models assume a linear relationship between the predictors and the expected value of the response. Using transformed values of the predictors of response does not violate this, merely how we interpret the fit. This open up a whole range of possibilities and allows to to still model non-linearites in a sense.
+
+
+## Multiple linear regression
+
+Now that we have a good understanding of the simple linear regression with one dependent variable $x$, let's extend this problem by including more predictors (dependent variables). Continuing with the advertising data set, can we say something about which kind of advertising has a bigger impact on sales based on the size of the beta coefficients? With more than one predictor, this form of linear regression is called multiple linear regression and is formulated as follows for $p$ predictors: $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$.
+
+In the original advertising data, $sales = \beta_0 + \beta_1TV + \beta_2radio + \beta_3newspaper + \epsilon$. As with the simple linear regression, we estimate the beta coefficients to minimize the sum of the squared residuals or the RSS.
+
+We don't have too many predictors to crowd a pairs plot. Let's look at all combinations of scatter plots and get a feeling for the data. What can we see?
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+## visualize the data
+pairs(advertisingData, pch = 16)
+```
+
+```{r}
+## fit
+multipleLinearFit <- lm(sales ~ TV + radio + newspaper, 
+                        data = advertisingData) 
+multipleLinearFit
+
+## compare to the sales ~ TV fit
+summary(simpleLinearFit)
+```
+
+```{r}
+summary(multipleLinearFit)
+```
+
+
+We interpret $\beta_j$ as the average effect on $y$ of a one unit increase in $x_j$, holding all other predictors fixed. Spending an additional \$1,000 on radio advertising is associated with an average increase in around 189 units of additional sales. How to the coefficients for all predictors in the multiple linear regression compare to the coefficients if we were to do a simple linear regression separately per predictor? What do you notice about the newspaper predictor and the (adjusted) $R^2$ values?
+
+The multiple linear regression allows us to assess the contribution of a predictor in explaining the response vector in context with the other predictors and allows us to assess the relative contributions of each predictor.
+
+
+## Interaction terms
+
+In our advertising data, we have seen that both the TV and radio are media whose budgets contribute towards explaining the sales and both have (significantly) positive coefficient estimates. But what can we say about their joint contribution towards the sales at the same time? What if each predictor is associated with sales in a different way, and if we were to take them together the beta coefficient for the TV and radio budget would be even bigger? These are questions we currently have, and which we can address by including an interaction term, reflecting the product of the TV and radio predictors. 
+
+We can represent the predictors in a matrix form $X$ called the predictor matrix. The equation $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$ can be rewritten as $y = \beta.X + \epsilon$ where $\beta$ is the vector of beta coefficients which we are estimating. $X$ includes the intercept term which is a vector of 1s (multiplying 1 by the estimated intercept yields the intercept). In R we can use the `model.matrix()` function to create this matrix (the `lm()` function does this internally).
+
+To add an interaction term, we can simply add `TV:radio` into the `lm()` function, or we can use `TV*radio` which will expand into `TV + radio + TV:radio`.
+
+```{r}
+## create predictor matrix (you may recognize this as the design matrix)
+X <- model.matrix(~ TV + radio + newspaper + TV:radio, 
+                  data = advertisingData)
+head(X)
+
+## linear regression (all ways below work)
+#lm(sales ~ TV + radio + TV:radio + newspaper, data = advertisingData)
+#lm(sales ~ TV*radio + newspaper, data = advertisingData)
+fit <- lm(advertisingData$sales ~ X + 0)
+summary(fit)
+```
+
+What do you notice about the beta coefficients and the adjusted R-squared?
+
+
+
+## Categorical variables
+
+So far we have dealt with quantitative values of the predictors. What if we have a qualitative variable for example indicating presence or absence? What happens in the linear fit when such a predictor exists? To illustrate this, we will use another data set, namely the Credit data set, where we have a mixture of quantitative and qualitative variables.
+```{r}
+head(Credit)
+```
+
+
+To illustrate, we will use the balance variable as the response vector and investigate differences in credit card balance between those who own a house and those who don't: $balance = \beta_0 + \beta_1Own + \epsilon$. The categorical variable *Own* can be represented as a vector of 0s and 1s indicating where an individual owns a house. This is also called a dummy variable and takes two possible values: $x_i=1$ if the $i^{th}$ person owns a house and $x_i=0$ otherwise. This results in $y_i = \beta_0 + \beta_1 +\epsilon_i$ if person $i$ owns a house and in $y_i = \beta_0 +\epsilon_i$ if person $i$ does not own a house. $\beta_0$ is now interpreted as the average credit balance for those who do not own, $\beta_0+\beta_1$ the average credit balance for those who do own, and $\beta_1$ reflects the average difference in credit balance between home owners and non-owners. What is the average credit card debt for home owners in the Credit data set?
+
+```{r}
+## fit
+lm(Balance ~ Own, data = Credit)
+```
+
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Use the `model.matrix()` function to see what the predictor matrix looks like. What do you see?
+:::
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Examine the Credit data set. Which columns represent categorical variables? Pick one categorical variable and do a linear fit. Notice that categorical variables are represented as l-1 dummy variables, where l is the number of levels.
+:::
+
+Example:
+```{r}
+X <- model.matrix(~ Region, 
+                  data = Credit)
+head(X)
+```
+
+Can you think of another way to represent categorical variables?
+
+
+## Robust regression
+
+
+
+## Non-linearity and heteroscadicity
+
+
+## stabsel
+
+talk about p > n and colinearity with rand lasso
+
+## more
+
+end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used
+
+
+## References
+
+A lot of this lab was based on chapters bloop and bloop from ISL 
+
+## Session
+
+```{r}
+#| label: sessionInfo
+
+date()
+sessionInfo()
+```
 
 
