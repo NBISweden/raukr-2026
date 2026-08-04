@@ -15,15 +15,18 @@ library(ggplot2)
 library(patchwork)
 ```
 
+## Overview
 
-## Learning outcomes
+### Learning outcomes
 
 - understand what a linear model is
 - understand the different flavors of linear regression and what differenciates them
 - understand variance-bias trade off and colinearity in regression
 - be able to assess what linear regression fits best to learn what you need from your data
 
-## Linear models
+Note that boxes labeled **Task** will ask you to do follow up anaylses or exploration using what has been demonstrated. We will discuss them and go through them together.
+
+### Linear models
 
 
 Linear models are incredibly useful and powerful in that they allows us to learn something from the data while providing a high degree of interpretability. Given a variable $y$, the model assumes the expected value of $y$ is linear in the inputs $x$.
@@ -34,7 +37,7 @@ Linear models are incredibly useful and powerful in that they allows us to learn
 
 We will refer to the dep var y, x, X.., e, epsilon etc
 
-## The data sets
+### The data sets
 
 explain about advertising and credit data sets.
 
@@ -283,6 +286,119 @@ Can you think of another way to represent categorical variables?
 
 ## Robust regression
 
+So far in the linear fit, the coefficients are estimated using the least squares methods by minimizing the sum of squared residuals: $\min\limits_{\beta}\sum_{i=1}^{N}e_{i}^{2}$ where the residual for the $i^{th}$ observation $e_{i} = (y_i - \hat{y_i})$. What if we had outlier points which would result in large residuals? Does this have an impact on the linear fit? To illustrate this, we will add artificial observations to the advertising data set which deviate quite a bit from the rest of the trend in the data and visualize below.
+
+```{r}
+## add outlier points
+nOutliers <- 30
+advertisingOutlData <- rbind(advertisingData, 
+                         data.frame(TV = runif(n = nOutliers, min = 50, max = 150), 
+                                    radio = runif(n = nOutliers, min = 10, max = 15), 
+                                    newspaper = runif(n = nOutliers, min = 10, max = 30), 
+                                    sales = runif(n = nOutliers, min = 20, max = 30)))
+
+## visualize
+ggplot(advertisingOutlData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    theme_bw()
+
+## fit linear model with lm()
+lmFit <- lm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          residual = lmFit$residuals, 
+                          predictedSales = lmFit$fitted.values))
+beta0lm <- lmFit$coefficients["(Intercept)"]
+beta1lm <- lmFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue")
+```
+
+What do you notice about the fitted line and the residuals?
+
+Currently, all residuals contribute equally in the summation we are minimizing. With a robust linear regression, the very big residuals can be weighted less and therefore contribute less to the total sum of the squared residuals. 
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+## robust linear fit
+robustFit <- rlm(sales ~ TV, data = advertisingOutlData) 
+robustFit
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          predictedSales = robustFit$fitted.values, 
+                          weightedResidual = robustFit$wresid, 
+                          weight = robustFit$w))
+beta0rlm <- robustFit$coefficients["(Intercept)"]
+beta1rlm <- robustFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(aes(intercept = beta0lm, 
+                    slope = beta1lm,
+                    color = "Linear regression")) + 
+    geom_abline(aes(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "Robust regression")) +
+    geom_abline(aes(intercept = beta0, 
+                    slope = beta1,
+                    color = "Original linear regression (without outliers)")) +
+    scale_color_manual(name = "Model", 
+                       values = c("Linear regression" = "firebrick", 
+                                  "Robust regression" = "forestgreen", 
+                                  "Original linear regression (without outliers)" = "steelblue")) +
+    theme_bw() 
+```
+
+Note that the fitted line using the robust regression better fits the trend in the non-outlier points and gets closer to the original fit we had on the data before adding the so-called outliers. The robust regression can have useful applications for example in data sets where we are interested in selecting outliers which deviate from an expected trend, and we want to capture a good fit on that trend.
+
+Let's plot the same scatter plot, coloring by the weight each point receives, reflecting its contribution to the sum of the squared residuals. What do you see? Seeing a scatter plot like this, and assuming we are interested in the outlier points in the cloud above the rest of the data, as they seem to be capturing a signal deviating from an expected background trend, how can we select that group in a data-driven manner?
+
+
+```{r}
+#| fig-width: 15
+#| fig-height: 4
+
+## plot coloring by weight
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = weight)) +
+    geom_abline(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "forestgreen") +
+    theme_bw() 
+
+## naturally define cutoffs for outliers
+p2 <- ggplot(df, aes(x = 1 - weight)) + 
+    geom_density() + 
+    theme_bw() 
+df$selected <- 1 - df$weight > 0.3
+
+p3 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = selected)) +
+    geom_abline(intercept = beta0rlm, 
+                slope = beta1rlm,
+                color = "forestgreen") +
+    theme_bw() 
+
+p1 + p2 + p3
+```
+
+We have done this selection very exploratively, to illustrate that it is possible to select outliers in a data-driven way with robust statistical methods and continue with downstream analyses. Note that in these cases we are actually interested in outliers that deviate from an expected technical or background trend and in properly fitting that expected trend.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Using the credit data set, model the relationship between Income (response) and Age (predictor). We will assume that there is a general trend between both variables and that there are some individuals who deviate from this trend. We wish to reasonably select  these individuals and fit the background trend. 
+:::
 
 
 ## Non-linearity and heteroscadicity
