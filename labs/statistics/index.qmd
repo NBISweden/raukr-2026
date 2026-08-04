@@ -13,6 +13,7 @@ library(MASS)
 library(glmnet)
 library(ggplot2)
 library(patchwork)
+library(tidyverse)
 ```
 
 ## Overview
@@ -405,6 +406,68 @@ fit1
 fit2
 ```
 
+## Shrinkage methods
+
+### Ridge regression
+
+The ridge regression penalizes by putting a limit on the sum of the squared beta coefficients. This is done by adding a penalty term $\lambda$ as follows when estimating the beta coefficients:
+
+$$
+\hat{\beta}=\min\limits_{\beta}\{\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p\beta_j^2 \}
+$$
+
+Notice that in addition to the RSS (first part of the equation) we are penalizing the sum of the squared beta coefficients. When is the above equation identical to the RSS? How do you think the size of $\lambda$ impacts the shrinkage?
+
+The ridge regression shrinks the values of the estimated beta coefficients towards zero. However they are not equal to zero and every coefficient will have an estimated value. To apply the shrinkage regressions, we will make use of the functions from the `glmnet` package and use the Credit data set. Note that here we will represent the predictors in a matrix $X$.
+
+```{r}
+
+## prepare to fit
+y <- Credit$Balance
+X <- model.matrix(Balance ~ ., data = Credit)
+head(X)
+
+## fit
+## note that internally, glmnet by default standardizes the predictors 
+## ... but returns the beta estimates in the original space
+ridgeFit <- glmnet(x = X, y = y, alpha = 0)
+#plot(ridgeFit)
+
+## examine the beta estimate for each lambda 
+head(ridgeFit$lambda)
+head(ridgeFit$beta)
+ncol(ridgeFit$beta) == length(ridgeFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(ridgeFit$beta)
+colnames(betaMat) <- ridgeFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    filter(predictor != "(Intercept)") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 1e4))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+
+### Lasso regression
+
+### Elastic net 
+
 
 ## stabsel
 
@@ -412,10 +475,10 @@ talk about p > n and colinearity with rand lasso
 
 ## more
 
-end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used
+end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph
 
 
-## References
+## Resources
 
 A lot of this lab was based on chapters bloop and bloop from ISL 
 
