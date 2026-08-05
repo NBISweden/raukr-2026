@@ -654,6 +654,11 @@ randLasso <- randLassoStabSel(x = X,
                               cutoff = 0.6, 
                               PFER = 1)
 
+## selected predictors
+randLasso$selected
+randLasso$selProb
+randLasso$selAUC  # Area under the curve of the stability paths
+
 ## plot stability paths
 plotStabilityPaths(randLasso)
 ```
