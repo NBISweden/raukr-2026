@@ -668,19 +668,6 @@ Apply the stability selection method of choice (lasso or randomized) on the pros
 :::
 
 
-
-
-
-
-## Bonus Exercise
-
-give a data set and ask the students to explore it and decide on the best method to use in order to select meaningful predictors.
-
-## more
-
-end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph -> save it for the slides
-
-
 ## Resources
 
 A lot of the ideas and material presented in this lab were constructed using the following books:
@@ -690,6 +677,9 @@ A lot of the ideas and material presented in this lab were constructed using the
 Additional reading material and interesting resources:
 * Meinshausen paper
 * blogs wxw
+
+end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph -> save it for the slides
+
 
 ## Session
 
