@@ -669,7 +669,7 @@ In our example nothing gets selected. In practice, randomized stability selectio
 
 ::: {.callout-note appearance="simple" icon=false}
 ## Task
-Apply the stability selection method of choice (lasso or randomized) on the prostate cancer dataset. Decide on the parameter values and play with them. Examine the output of `randLassoStabSel()` and plot the stability paths. What are you selecting?
+Apply the stability selection method of choice (lasso or randomized) on the prostate cancer data set. Decide on the parameter values and play with them. Examine the output of `randLassoStabSel()` and plot the stability paths. What are you selecting? Explore the available plotting functions `plotStabilityPaths()` and `plotSelectionProb()`.
 :::
 
 ## Bonus exercise

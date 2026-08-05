@@ -33,7 +33,7 @@ format:
   
 . . . 
 
-- R is still consdiered the preferred language of statisticians and new developments and methods in statistics are often released as R package first.
+- R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R package first.
 
 
 ## R and Statistics
@@ -103,14 +103,96 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 (https://xkcd.com/1838)
 :::
 
+::: {.notes}
+- "Statistical learning should not be viewed as a series of black boxes. No single approach will perform well in all possible applications. Without understanding all of the cogs inside the box, or the interaction between those cogs, it is impossible to select the best box." -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
+:::
+
+## learning from data
+
+pca, cor etc.. introduce linear modesl this way?
 
 
 ## Supervised vs Unsupervised Learning
 
+## Linear models
+
+* By the 1970s many methods for learning from the data were available. The vast majority of them were *linear* methods because fitting *non-linear* relationships was computationally difficult at the time.
+
+::: {.notes}
+Neural networks gained popularity in the 1980s, and support vector machines arose in the 1990s.
+::: 
+
+## Least squares
+
+* developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
+* 
 
 
+## Correlation is not causation
 
-## Additional Resources
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/SpuriousCorrelation1.webp){width=70%}
+
+![](assets/SpuriousCorrelation2.webp){width=70%}
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/SpuriousCorrelation3.webp){width=70%}
+
+![](assets/SpuriousCorrelation4.webp){width=70%}
+
+:::
+
+
+::::
+
+## Resources
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+* **An Introduction to Statistical Learning with applications in R** -- Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+
+* [https://www.statlearning.com](https://www.statlearning.com)
+
+![](assets/ISL.webp){width=30%}
+
+:::
+
+::: {.column width="50%"}
+
+* **The Elements of Statistical Learning** -- Trevor Hastie, Robert Tibshirani and Jerome Friedman
+
+* [https://hastie.su.domains/ElemStatLearn](https://hastie.su.domains/ElemStatLearn/)
+
+| 
+| 
+
+![](assets/ESL.webp){width=30%}
+
+:::
+
+::::
+
+
+::: {.notes}
+Freely available soft copies. Lots of online material, R packages with the datasets ISLR2.
+::: 
+
+## For fun
+
+* Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
+
+* Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
+
+* [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+
 
 ## Concluding Remarks
 
