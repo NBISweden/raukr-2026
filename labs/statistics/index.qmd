@@ -419,13 +419,13 @@ $$
 
 Notice that in addition to the RSS (first part of the equation) we are penalizing the sum of the squared beta coefficients. When is the above equation identical to the RSS? How do you think the size of $\lambda$ impacts the shrinkage?
 
-The ridge regression shrinks the values of the estimated beta coefficients towards zero. However they are not equal to zero and every coefficient will have an estimated value. To apply the shrinkage regressions, we will make use of the functions from the `glmnet` package and use the Credit data set. Note that here we will represent the predictors in a matrix $X$.
+The ridge regression shrinks the values of the estimated beta coefficients towards zero. However they are not equal to zero and every coefficient will have an estimated value. To apply the shrinkage regressions, we will make use of the functions from the `glmnet` package and use the Credit data set. Note that here we will represent the predictors in a matrix $X$. We will focus on the quantitative variables in the Credit data set, but these methods can be used on the whole data set.
 
 ```{r}
-
 ## prepare to fit
 y <- Credit$Balance
-X <- model.matrix(Balance ~ . + 0, data = Credit)
+X <- model.matrix(Balance ~ 0 + Income + Limit + Rating + Cards + Age + Education, 
+                  data = Credit)
 head(X)
 
 ## fit
@@ -436,7 +436,7 @@ ridgeFit <- glmnet(x = X, y = y, alpha = 0)
 
 ## examine the beta estimate for each lambda 
 head(ridgeFit$lambda)
-head(ridgeFit$beta)
+ridgeFit$beta[1:6, 1:6]
 ncol(ridgeFit$beta) == length(ridgeFit$lambda)
 
 ## prepare to plot
@@ -465,7 +465,6 @@ p1 / p2 + plot_layout(guides = 'collect')
 Notice that we get different beta estimates with different penalty values. As the penalty increases, the coefficient values decrease or shrink due to heavier penalization. Choosing the right penalty is therefore critical and can have a big impact on our estimates. How can we choose a reasonable $\lambda$ value? A common method is to do cross-validation. For a chosen set of lambdas, the cross-validation error for each value of lambda is calculated, and finally the lambda value which gives the smallest error (`lambda.min`) is chosen and the model is re-fit with that penalty value. For more details on this. Another common choice is `lambda.1se` which is where the cross-validated error is within one standard error of the minimum.
 
 ```{r}
-
 ## fit with cross validation
 ridgeFit <- cv.glmnet(x = X, y = y, alpha = 0)
 
@@ -475,11 +474,78 @@ plot(ridgeFit)
 ## explore
 ridgeFit$lambda.min
 ridgeFit$lambda.1se
-coef(ridgeFit, s = "lambda.min")
+coef(ridgeFit, s = "lambda.1se")
 ```
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Do a multiple linear regression on the same data we used in the ridge regression and compare the estimates for the beta coefficients.
+:::
 
 
 ### Lasso regression
+
+The Lasso regression also imposes a penalty on the size of the coefficients. However it does so slightly differently, namely by penalizing and thus limiting the sum of the absolute beta values. This has the wonderful effect of resulting in a *selection* of predictors by setting the coefficients of the uninteresting ones which don't contribute much to the response to zero. Predictors with non-zero coefficients are considered *selected*. The beta coefficients are estimated, minimizing the following:
+
+$$
+\hat{\beta}=\frac{1}{2}\min\limits_{\beta}\{\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
+$$
+
+
+```{r}
+## fit
+lassoFit <- glmnet(x = X, y = y, alpha = 1)
+#plot(ridgeFit)
+
+## examine the beta estimate for each lambda 
+ncol(lassoFit$beta) == length(lassoFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(lassoFit$beta)
+colnames(betaMat) <- lassoFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 200))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+
+How do these plots compare to that of the ridge regression? What do you think it means when a predictor gets set to zero before another one (e.g. Cards and Income)? 
+
+
+```{r}
+## fit with cross validation
+lassoFit <- cv.glmnet(x = X, y = y, alpha = 1)
+
+## plot
+plot(lassoFit)
+
+## explore
+lassoFit
+lassoFit$lambda.min
+lassoFit$lambda.1se
+coef(lassoFit, s = "lambda.1se")
+```
+
+Is there a coefficient which got set to zero and where does it lie on the plot showing coefficient estimates as a function of the penalty?
+
+
+### Note on collinearity
 
 ### Elastic net 
 
@@ -488,6 +554,10 @@ coef(ridgeFit, s = "lambda.min")
 
 recap on linear assumptions
 talk about p > n and colinearity with rand lasso
+
+## Bonus Exercise
+
+give a data set and ask the students to explore it and decide on the best method to use in order to select meaningful predictors.
 
 ## more
 
