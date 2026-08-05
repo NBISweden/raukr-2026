@@ -11,9 +11,10 @@ format: html
 library(ISLR2)
 library(MASS)
 library(glmnet)
+library(monaLisa)
+library(SummarizedExperiment)
 library(ggplot2)
 library(patchwork)
-library(tidyverse)
 ```
 
 ## Overview
@@ -564,15 +565,15 @@ From the lasso fit, Rating was selected and had a beta coefficient of `{r} round
 
 ### Elastic net regression
 
-The elastic net is an interesting situation between the ridge and lasso regressions. You may have noticed that we needed to specify an alpha parameter in the `glmnet` function to perform the ridge and lasso regressions with alphas of 0 and 1 respectively. The elastic net selects variables like the lasso and shrinks the coefficients of correlated predictors like the ridge using the following penalty:
+We won't dive too deep here, but it is worth mentioning the elastic net. The elastic net is an interesting situation or compromise between the ridge and lasso regressions. You may have noticed that we needed to specify an alpha parameter in the `glmnet` function to perform the ridge and lasso regressions with alphas of 0 and 1 respectively. The elastic net selects variables like the lasso and shrinks the coefficients of correlated predictors like the ridge using the following penalty:
 
 $$
-\lambda \sum_{j=1}^p(\alpha|\beta| + (1-\alpha)\beta_j^2)
+\lambda \sum_{j=1}^p(\alpha|\beta_j| + (1-\alpha)\beta_j^2)
 $$
 
 Alpha is a value between 0 and 1 and will dictate how close the regression is to a lasso ($\alpha=1$) or a ridge ($\alpha=0$). The choice in alpha value can be quite tricky. In practice we try a few values, keeping in mind what we know about the correlation structure in our data set, and see what makes sense. 
 
-### Fit with `alpha=0.5`
+#### Fit with `alpha=0.5`
 
 ```{r}
 ## fit with alpha = 0.5
@@ -605,15 +606,30 @@ p1 / p2 + plot_layout(guides = 'collect')
 ```
 
 
+## Stability selection
+
+Although these methods could also fall under shrinkage methods since they do make use of them, they offer additional gains where typical regression methods fail, such as when the number of predictors exceeds the number of observations. The idea behind stability selection is to apply the regression of choice on several subsets of the data, and select the predictors which consistently pop up. Lasso stability selection will apply the lasso regression on subsets of the data and return a selection probability for each predictor which is the number of times it was selected divided by the total number of times a regression was performed. The authors of this methods introduced a new form of regularization with the randomized lasso stability selection. There, a a weakness parameter is additionally used to vary the lasso penalty term $\lambda$ to a randomly chosen value between $[\lambda, \lambda/weakness]$ for each predictor. This type of regularization has advantages in cases where the **number of predictors** exceeds the number of observations, in selecting variables **consistently**, demonstrating better **error control** and not **depending strongly** on the penalization parameter (Meinshausen and Bühlmann 2010).
+
+We will apply. the randomized lasso stability selection using the `monaLisa` package. Have a look at the help page of the `randLassoStabSel()` function for more details.
+
+```{r}
+randLasso <- randLassoStabSel(x = X, 
+                              y = y, 
+                              weakness = 0.8, 
+                              cutoff = 0.6, 
+                              PFER = 1)
+    
+```
 
 
 
 
+In practice, randomized stability selection is quite conservative, preferring to select nothing rather than something false. 
 
-## stabsele
 
-recap on linear assumptions
-talk about p > n and colinearity with rand lasso
+
+We can now run randomized lasso stability selection to identify TFs that are likely to explain the log-fold changes in accessibility. The exact choice of parameter values for this approach will depend largely on how stringent the user wishes to be and how much signal there is in the data. For example, for more stringent selections, one may decrease the value of the weakness parameter which will make it harder for a variable to get selected. The user is in control of false discoveries with the PFER parameter, which indicates the number of falsely selected variables. As for the selection probability cutoff, Meinshausen and Bühlmann (2010) argue that values in the range of [0.6, 0.9] should give similar results. See the randLassoStabSel function for more details and default parameter values as well as the stabs::stabsel function for the default assumptions on the stability selection implementation by Shah and Samworth (2013).
+
 
 ## Bonus Exercise
 
@@ -621,7 +637,7 @@ give a data set and ask the students to explore it and decide on the best method
 
 ## more
 
-end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph
+end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph -> save it for the slides
 
 
 ## Resources
