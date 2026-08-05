@@ -107,6 +107,7 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 - "Statistical learning should not be viewed as a series of black boxes. No single approach will perform well in all possible applications. Without understanding all of the cogs inside the box, or the interaction between those cogs, it is impossible to select the best box." -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
 :::
 
+
 ## learning from data
 
 pca, cor etc.. introduce linear modesl this way?
@@ -114,19 +115,117 @@ pca, cor etc.. introduce linear modesl this way?
 
 ## Supervised vs Unsupervised Learning
 
-## Linear models
+:::: {.columns}
 
-* By the 1970s many methods for learning from the data were available. The vast majority of them were *linear* methods because fitting *non-linear* relationships was computationally difficult at the time.
+::: {.column width="50%"}
+
+::: {.fragment}
+- Suppose we have measurements for $p$ variables $x_1, x_2 ... x_p$ and their associated response measurement $y$ and wish to say something about how $x_1, x_2 ... x_p$ explain or relate to $y$. An example is prediction or classification.
+
+- $y \sim f(x)$
+
+![](assets/SupervisedLearning.webp){width=35%}
+
+:::
+
+::: 
+
+::: {.column width="50%"}
+
+::: {.fragment}
+- Suppose we only have measurements for variables $x_1, x_2 ... x_p$ and wish to learn the relationships between them. An example method is clustering.
+
+![](assets/UnsupervisedLearning.webp){width=70%}
+:::
+
+:::
+
+::::
+
+::: {.aside}
+- [https://xkcd.com/2173/](https://xkcd.com/2173/)
+- Complex Heatmap book
+:::
+
+
+## Linear Models
+
+| 
+|
+
+[$y = f(x) + \epsilon$]{.large}
+
+- $y$ is often called the response or dependent variable
+
+- $x$ is often called the predictor or independent variable
+
+- $\epsilon$ is the random error term
+
+- Statistical learning refers to a set of approaches for estimating $f$ 
+
+- Simple linear model: $y = \beta_0 + \beta_1x + \epsilon$
+
+- By the 1970s many methods for learning from the data were available. The vast majority of them were *linear* methods because fitting *non-linear* relationships was computationally difficult at the time.
+
+
 
 ::: {.notes}
 Neural networks gained popularity in the 1980s, and support vector machines arose in the 1990s.
 ::: 
 
+
+## Prediction
+
+- Training data vs test data
+
+- Trade off between prediction accuracy and model interpretability
+
+![](assets/InterpretabilityVsFlexibility.webp){width=60%}
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+
+## Inference
+
+- Which predictors ($x$s) are associated with the response $y$?
+
+## Why care about linear approaches?
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+- Having a good understanding of linear models is essential for understanding non-linear ones. Many of the latter are generalizations of the linear methods.
+
+- Powerful in their interpretability and in their flexibility
+
+- If we are interested in *inference* then retaining interpretability is key
+
+:::
+
+::: {.column width="70%"}
+
+![](assets/LinearModelsVsNonLinear1.webp)
+
+![](assets/LinearModelsVsNonLinear2.webp)
+
+:::
+
+::::
+
 ## Least squares
 
-* developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
-* 
+- developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
 
+
+
+## The Bias-Variance Trade-Off
+
+- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
+
+- bias: the error introduced by approximating a real life problem
 
 ## Correlation is not causation
 
@@ -157,9 +256,9 @@ Neural networks gained popularity in the 1980s, and support vector machines aros
 
 ::: {.column width="50%"}
 
-* **An Introduction to Statistical Learning with applications in R** -- Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+- **An Introduction to Statistical Learning with applications in R** -- Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
 
-* [https://www.statlearning.com](https://www.statlearning.com)
+- [https://www.statlearning.com](https://www.statlearning.com)
 
 ![](assets/ISL.webp){width=30%}
 
@@ -167,9 +266,9 @@ Neural networks gained popularity in the 1980s, and support vector machines aros
 
 ::: {.column width="50%"}
 
-* **The Elements of Statistical Learning** -- Trevor Hastie, Robert Tibshirani and Jerome Friedman
+- **The Elements of Statistical Learning** -- Trevor Hastie, Robert Tibshirani and Jerome Friedman
 
-* [https://hastie.su.domains/ElemStatLearn](https://hastie.su.domains/ElemStatLearn/)
+- [https://hastie.su.domains/ElemStatLearn](https://hastie.su.domains/ElemStatLearn/)
 
 | 
 | 
@@ -187,11 +286,11 @@ Freely available soft copies. Lots of online material, R packages with the datas
 
 ## For fun
 
-* Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
+- Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
 
-* Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
+- Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
 
-* [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+- [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
 
 
 ## Concluding Remarks
@@ -215,6 +314,6 @@ Freely available soft copies. Lots of online material, R packages with the datas
 
 
 
-
+to add: model accuracy 
 
 
