@@ -496,7 +496,7 @@ $$
 ```{r}
 ## fit
 lassoFit <- glmnet(x = X, y = y, alpha = 1)
-#plot(ridgeFit)
+#plot(lassoFit)
 
 ## examine the beta estimate for each lambda 
 ncol(lassoFit$beta) == length(lassoFit$lambda)
@@ -544,13 +544,73 @@ coef(lassoFit, s = "lambda.1se")
 
 Is there a coefficient which got set to zero and where does it lie on the plot showing coefficient estimates as a function of the penalty?
 
+#### Note on collinearity
 
-### Note on collinearity
+Since the lasso regression selects the variables that best explain the response vector, there is no need to choose variables which don't contribute nor to select variables which don't add much additional value. Consider two predictors which both contribute to the response vector, and which are highly correlated to each other. It is enough to select one of them to be able to explain the response and the model rather thinks there is no need to be redundant and select the second predictor if it doesn't add or explain much more. This is something one should certainly be aware of and consider in regression.
 
-### Elastic net 
+Let's go back to our example and look at the correlation structure of our predictor matrix, as well as the correlation to the response vector.
+
+```{r}
+cor(X)
+```
+
+```{r}
+cor(X, y)
+```
+
+From the lasso fit, Rating was selected and had a beta coefficient of `{r} round(coef(lassoFit, s = "lambda.1se")["Rating", ], 4)`. Compare to that of the Limit predictor. What do you notice about the correlation between Ratings and Limit to each other and to the response?
 
 
-## stabsel
+
+### Elastic net regression
+
+The elastic net is an interesting situation between the ridge and lasso regressions. You may have noticed that we needed to specify an alpha parameter in the `glmnet` function to perform the ridge and lasso regressions with alphas of 0 and 1 respectively. The elastic net selects variables like the lasso and shrinks the coefficients of correlated predictors like the ridge using the following penalty:
+
+$$
+\lambda \sum_{j=1}^p(\alpha|\beta| + (1-\alpha)\beta_j^2)
+$$
+
+Alpha is a value between 0 and 1 and will dictate how close the regression is to a lasso ($\alpha=1$) or a ridge ($\alpha=0$). The choice in alpha value can be quite tricky. In practice we try a few values, keeping in mind what we know about the correlation structure in our data set, and see what makes sense. 
+
+### Fit with `alpha=0.5`
+
+```{r}
+## fit with alpha = 0.5
+elasticNetFit <- glmnet(x = X, y = y, alpha = 0.5)
+
+## examine the beta estimate for each lambda 
+ncol(elasticNetFit$beta) == length(elasticNetFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(elasticNetFit$beta)
+colnames(betaMat) <- elasticNetFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 200))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+
+
+
+
+
+
+## stabsele
 
 recap on linear assumptions
 talk about p > n and colinearity with rand lasso
