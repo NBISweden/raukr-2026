@@ -10,15 +10,11 @@ format:
 
 ```{r}
 #| echo: false
-# library(tidyverse)
-# library(ggplot2)
-# library(kableExtra)
-# library(magrittr)
-# library(emo)
 
+library(ggplot2)
 ```
 
-## R and Statistics
+## R and statistics
 
 - S (for **S**tatistics) is a statistical programming language developed at Bell Labs in 1976. 
   - *"to turn ideas into software, quickly and faithfully"* -- John Chambers
@@ -36,7 +32,7 @@ format:
 - R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R package first.
 
 
-## R and Statistics
+## R and statistics
 
 :::: {.columns}
 
@@ -68,14 +64,14 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 :::
 
 
-## Statistics and the Real World
+## Statistics and the real world
 
 ? someexample on fisher or t-test or gauss?
 
-## Making Sense of the World and Learning with Statitics
+## Making sense of the world and learning with statitics
 
 
-## Statistical Learning
+## Statistical learning
 
 
 :::: {.columns}
@@ -113,7 +109,7 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 pca, cor etc.. introduce linear modesl this way?
 
 
-## Supervised vs Unsupervised Learning
+## Supervised vs unsupervised learning
 
 :::: {.columns}
 
@@ -148,7 +144,7 @@ pca, cor etc.. introduce linear modesl this way?
 :::
 
 
-## Linear Models
+## Linear models
 
 | 
 |
@@ -215,13 +211,108 @@ Image from An Introduction to Statistical Learning
 
 ::::
 
+## Simple Linear regression
+
+- learn the association between a single predictor $x$ and a quantitative response $y$.
+
+- assumes an approximately linear relationship between $x$ and $y$.
+
+$$y = \beta_0 + \beta_1x + \epsilon$$
+
+- The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
+
+```{r}
+#| fig-height: 4
+#| fig-width: 5
+#| echo: false
+
+advertisingData <- read.csv(file = "https://www.statlearning.com/s/Advertising.csv", 
+                            header = TRUE, 
+                            row.names = 1)
+
+ggplot(advertisingData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    geom_smooth(method = "lm", se = FALSE) + 
+    theme_bw()
+```
+
 ## Least squares
 
-- developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+::: {.fragment}
+- $y = \beta_0 + \beta_1x + \epsilon$
+:::
 
 
+::: {.fragment}
+- $\hat{y_i}=\beta_0 + \beta_1x_i$
+:::
 
-## The Bias-Variance Trade-Off
+::: {.fragment}
+- $e_i=y_i-\hat{y_i}$
+::: 
+
+::: {.fragment}
+- The residual sum of squares (RSS) is defined as $RSS=\sum_{i=1}^Ne_i^2$
+
+- We want to choose beta estimates which minimize the RSS. This is the least squares method.
+
+- Least squares was developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
+:::
+
+:::
+
+::: {.column width="60%"}
+
+::: {.fragment}
+![](assets/LeastSquares.webp)
+::: 
+
+::: 
+
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+::: {.notes}
+What do the beta terms reflect> intercept: expected y when x=0, slope: avr increase in y associated with one unit increase in x.
+:::
+
+## Multiple linear regression
+
+:::: {.columns}
+
+::: {.column width="60%"}
+![](assets/MultipleRegression.webp){width=70%}
+:::
+
+::: {.column width="40%"}
+- $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
+- $y = \beta.X + \epsilon$
+- Assumptions:
+  - linear relationship
+  - constant variance of residuals (homoscedasticity)
+  - $\epsilon \sim N(0, \sigma^2)$
+  - independence of observations
+  - no multicollinearity among predictors
+  - n >> p
+:::
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+
+## The bias-variance trade-off
 
 - variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
 
