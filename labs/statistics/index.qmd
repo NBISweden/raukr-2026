@@ -672,10 +672,14 @@ In our example nothing gets selected. In practice, randomized stability selectio
 Apply the stability selection method of choice (lasso or randomized) on the prostate cancer dataset. Decide on the parameter values and play with them. Examine the output of `randLassoStabSel()` and plot the stability paths. What are you selecting?
 :::
 
+## Bonus exercise
+
+Use the prostate cancer data set apply a ridge regression, a lasso and lasso stability selection. Compare the coefficients you are getting and what gets selected, keeping in mind what the correlation structure looks like as well in the predictor matrix.
 
 ## Resources
 
 A lot of the ideas and material presented in this lab were constructed using the following books:
+
 * An Introduction to Statistical Learning with applications in R *by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani*.
 * The Elements of Statistical Learning *by Trevor Hastie, Robert Tibshirani and Jerome Friedman*.
 
