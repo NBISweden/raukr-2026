@@ -303,6 +303,11 @@ What do the beta terms reflect> intercept: expected y when x=0, slope: avr incre
   - independence of observations
   - no multicollinearity among predictors
   - n >> p
+  
+::: {.fragment}
+- Is this a linear model? $log2(y) = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$
+:::
+
 :::
 
 ::::
@@ -310,6 +315,69 @@ What do the beta terms reflect> intercept: expected y when x=0, slope: avr incre
 ::: {.aside}
 Image from An Introduction to Statistical Learning
 :::
+
+## Multiple linear regression
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## predictor matrix
+X <- model.matrix(~ TV + radio + newspaper, 
+                  data = advertisingData)
+head(X)
+```
+:::
+::: 
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## linear fit
+fit <- lm(sales ~ X + 0, data = advertisingData)
+summary(fit)
+```
+::: 
+:::
+
+::::
+
+## Categorical variables and interaction terms
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Categorical variables with $l$ levels can be represented as $l-1$ so called dummy variables consisting of columns of 1s and 0s. We will see this more in the lab session.
+- Beta coefficients per predictor say something about the effect of that predictor on $y$ when all others are fixed.
+- Interaction terms allow us to capture more complex relationships in the model reflecting the joint effect of two predictors. This is represented in the product of the two predictors.
+
+::: 
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+X <- model.matrix(~ TV + radio + newspaper + TV:radio, 
+                  data = advertisingData)
+head(X)
+```
+
+| 
+|
+
+```{r}
+X <- model.matrix(~ TV*radio + newspaper, 
+                  data = advertisingData)
+head(X)
+```
+:::
+:::
+
+:::: 
+
+## Evaluating the quality of the linear fit
+
 
 
 ## The bias-variance trade-off
