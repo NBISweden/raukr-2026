@@ -15,6 +15,7 @@ library(monaLisa)
 library(SummarizedExperiment)
 library(ggplot2)
 library(patchwork)
+library(tidyverse)
 ```
 
 ## Overview
@@ -62,6 +63,39 @@ str(advertisingData)
 head(advertisingData)
 summary(advertisingData)
 ```
+
+#### Prostate data set
+
+The prostate cancer data set comes from The Elements of Statistical Learning book by Trevor Hastie, Robert Tibshirani and Jerome Friedman. The data contains measures of prostate specific antigen (PSA) and a number of clinical measures in men who were about to receive a radical prostatectomy.
+```{r}
+## Download the dataset
+download.file(url = "https://hastie.su.domains/ElemStatLearn/datasets/prostate.data", 
+              destfile = file.path(wdir, "assets", "ProstateData.txt"))
+
+## Read in the data 
+prostateData <- read.table(file = "assets/ProstateData.txt", 
+                           header = TRUE, 
+                           sep = "\t", 
+                           row.names = 1)
+str(prostateData)
+head(prostateData)
+summary(prostateData)
+```
+
+```{r}
+colnames(prostateData)
+```
+
+* lcavol: log cancer volume
+* lweight: log prostate weight
+* age: individual's age
+* lbph: log of benign prostatic hyperplasia amount
+* svi: seminal vesicle invasion
+* lcp: log of capsular penetration
+* gleason: Gleason score
+* pgg45: percent of Gleason scores 4 or 5 pgg45
+* lpsa: log of PSA
+* train: if this will be used as training data. We will ignore this and use all the data since we are interested in learning the relationship between predictors and not using the data to train a model to use for future predictions.
 
 
 ## Simple linear regression
@@ -610,25 +644,32 @@ p1 / p2 + plot_layout(guides = 'collect')
 
 Although these methods could also fall under shrinkage methods since they do make use of them, they offer additional gains where typical regression methods fail, such as when the number of predictors exceeds the number of observations. The idea behind stability selection is to apply the regression of choice on several subsets of the data, and select the predictors which consistently pop up. Lasso stability selection will apply the lasso regression on subsets of the data and return a selection probability for each predictor which is the number of times it was selected divided by the total number of times a regression was performed. The authors of this methods introduced a new form of regularization with the randomized lasso stability selection. There, a a weakness parameter is additionally used to vary the lasso penalty term $\lambda$ to a randomly chosen value between $[\lambda, \lambda/weakness]$ for each predictor. This type of regularization has advantages in cases where the **number of predictors** exceeds the number of observations, in selecting variables **consistently**, demonstrating better **error control** and not **depending strongly** on the penalization parameter (Meinshausen and Bühlmann 2010).
 
-We will apply. the randomized lasso stability selection using the `monaLisa` package. Have a look at the help page of the `randLassoStabSel()` function for more details.
+We will apply the randomized lasso stability selection using the `monaLisa` package. Have a look at the help page of the `randLassoStabSel()` function for more details.
 
 ```{r}
+## stability selection
 randLasso <- randLassoStabSel(x = X, 
                               y = y, 
                               weakness = 0.8, 
                               cutoff = 0.6, 
                               PFER = 1)
-    
+
+## plot stability paths
+plotStabilityPaths(randLasso)
 ```
 
+This plot shows the selection probability or each predictor (line) as a function of the regularization step, with less strong regularization going from left to right. These so called stability paths can be quite informative, as an indicator of which predictor(s) gets selected first, if it stays up and how well the selected supposedly meaningful predictors separate from the noisy rest.
+
+In our example nothing gets selected. In practice, randomized stability selection is quite conservative, preferring to select nothing rather than something false. Our choice in parameter values depends on how stringent we want to be and how strong the signal in the data is. For more stringent selections, one may decrease the value of the weakness parameter which will make it harder for a variable to get selected. The user is in control of false discoveries with the PFER parameter, which indicates the number of falsely selected variables. As for the selection probability cutoff, Meinshausen and Bühlmann (2010) argue that values in the range of [0.6, 0.9] should give similar results.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Apply the stability selection method of choice (lasso or randomized) on the prostate cancer dataset. Decide on the parameter values and play with them. Examine the output of `randLassoStabSel()` and plot the stability paths. What are you selecting?
+:::
 
 
 
-In practice, randomized stability selection is quite conservative, preferring to select nothing rather than something false. 
 
-
-
-We can now run randomized lasso stability selection to identify TFs that are likely to explain the log-fold changes in accessibility. The exact choice of parameter values for this approach will depend largely on how stringent the user wishes to be and how much signal there is in the data. For example, for more stringent selections, one may decrease the value of the weakness parameter which will make it harder for a variable to get selected. The user is in control of false discoveries with the PFER parameter, which indicates the number of falsely selected variables. As for the selection probability cutoff, Meinshausen and Bühlmann (2010) argue that values in the range of [0.6, 0.9] should give similar results. See the randLassoStabSel function for more details and default parameter values as well as the stabs::stabsel function for the default assumptions on the stability selection implementation by Shah and Samworth (2013).
 
 
 ## Bonus Exercise
@@ -642,7 +683,13 @@ end with honorable mentions like logistic regression, multivariate regression, g
 
 ## Resources
 
-A lot of this lab was based on chapters bloop and bloop from ISL 
+A lot of the ideas and material presented in this lab were constructed using the following books:
+* An Introduction to Statistical Learning with applications in R *by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani*.
+* The Elements of Statistical Learning *by Trevor Hastie, Robert Tibshirani and Jerome Friedman*.
+
+Additional reading material and interesting resources:
+* Meinshausen paper
+* blogs wxw
 
 ## Session
 
