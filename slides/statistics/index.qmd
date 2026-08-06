@@ -93,6 +93,78 @@ Gosset's idea was simply to replace σ (population) with s (sample). Because s i
 Sometimes it underestimates the true variability. Sometimes it overestimates it. That makes the standardized statistic more variable than a Normal random variable, producing the heavier tails of the t-distribution. As the sample size increases, s→σ, so the t-distribution approaches the Normal distribution.
 :::
 
+## Data science and learning from data
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+- Eratosthenes: ancient Greek philosopher, scholar, mathematician, geographer, poet, astronomer and music theorist.
+- Estimating the circumference of the earth in 240 BC.
+- Assumptions:
+  - earth is round
+  - sun is so far the rays coming from there are parallel
+  - distance between Alexandria and Syene is known
+  
+|
+
+- $\frac{7.2^\circ}{360^\circ}=\frac{ditance \ between \ Alexandria \ and \ Aswan}{Earth's \ circumference}$
+
+|
+
+- His estimate: approximately 40,338 km (25,065 mi)
+- Today's number (around the equator): 40,075.017 km (24,901.461 mi) 
+  
+:::
+ 
+::: {.column width="40%"}
+
+![](assets/EarthCircumference.webp)  
+:::
+ 
+  
+::::
+  
+::: {.aside}
+https://en.wikipedia.org/wiki/Eratosthenes
+:::
+
+
+## Data science today
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](assets/NASA1.webp){width=80%}
+:::
+
+::: {.column width="30%"}
+![](assets/NASA2.webp){width=80%}
+:::
+
+::: {.column width="30%"}
+![](assets/NASA3.webp){width=80%}
+:::
+
+::::
+
+::: {.small}
+- Nowadays, skill set: 
+  - programming
+  - statistics
+  - data visualization
+  - creativity
+  - data exploration and going hunting for "problems"
+  - understanding the data and data generation process
+  - formulating a question and then finding the right method to answer it
+  - communication in an interdisciplinary world
+  
+:::
+
+::: {.aside}
+https://images.nasa.gov
+:::
+
 ## Statistical learning
 
 :::: {.columns}
@@ -123,11 +195,6 @@ Sometimes it underestimates the true variability. Sometimes it overestimates it.
 ::: {.notes}
 - "Statistical learning should not be viewed as a series of black boxes. No single approach will perform well in all possible applications. Without understanding all of the cogs inside the box, or the interaction between those cogs, it is impossible to select the best box." -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
 :::
-
-
-## Learning from the data
-
-pca, cor etc.. introduce linear modesl this way?
 
 
 ## Supervised vs unsupervised learning
@@ -750,6 +817,19 @@ Meinshausen and Bühlmann 2010
 :::
 
 
+## Additional links
+
+- Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
+
+- Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
+
+- [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+
+. . .
+
+- In reasoning quantitatively about the world and seeking to understand it, while thinking **critically** and understanding our assumptions and limitations, maybe using the tools we learnt about today, **you** are a participating data scientist.
+
+
 ## Resources
 
 :::: {.columns}
@@ -784,14 +864,6 @@ Meinshausen and Bühlmann 2010
 Freely available soft copies. Lots of online material, R packages with the datasets ISLR2.
 ::: 
 
-## For fun
-
-- Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
-
-- Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
-
-- [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
-
 
 ## Concluding Remarks
 
@@ -812,6 +884,20 @@ Freely available soft copies. Lots of online material, R packages with the datas
 :::
 :::
 
+
+## {background-image="/assets/images/network.svg"}
+
+::: {.v-center .center}
+::: {}
+
+[Thank you!]{.largest}
+
+[Questions?]{.larger}
+
+[{{< meta current_year >}} • [SciLifeLab](https://www.scilifelab.se/) • [NBIS](https://nbis.se/) • [RaukR](https://nbisweden.github.io/raukr-2026)]{.smaller}
+
+:::
+:::
 
 
 
