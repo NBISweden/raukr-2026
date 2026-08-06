@@ -68,15 +68,32 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 :::
 
 
-## Statistics and the real world
+## Statistical methods are developed to make sense of the world
 
-? someexample on fisher or t-test or gauss?
+:::: {.columns}
 
-## Making sense of the world and learning with statitics
+::: {.column width="70%"}
+- William Sealy Gosset worked as a chemist and brewer at Guinness Brewery in Dublin in the early 1900s.
+- Used pen name *Student* because Guinness prohibited employees from publishing research under their own names.
+- Guiness wanted to improve barley varieties and beer quality.
+- Experiments with small sample sizes. The population variance is unknown and must be estimated.
+- Student's t-distribution and test of statistical significance.
 
+:::
+
+::: {.column width="20%"}
+![](assets/Gosset.webp)
+:::
+
+
+::::
+
+::: {.notes}
+Gosset's idea was simply to replace σ (population) with s (sample). Because s is itself random.
+Sometimes it underestimates the true variability. Sometimes it overestimates it. That makes the standardized statistic more variable than a Normal random variable, producing the heavier tails of the t-distribution. As the sample size increases, s→σ, so the t-distribution approaches the Normal distribution.
+:::
 
 ## Statistical learning
-
 
 :::: {.columns}
 
@@ -108,7 +125,7 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 :::
 
 
-## learning from data
+## Learning from the data
 
 pca, cor etc.. introduce linear modesl this way?
 
@@ -660,12 +677,77 @@ heatmap(cor(X))
 
 ## Shrinkage methods: elastic net
 
-- A compromise between the ridge and lasso.
+$$
+\lambda \sum_{j=1}^p(\alpha|\beta_j| + (1-\alpha)\beta_j^2)
+$$
+
+- A compromise between the ridge and lasso. 
+- $\alpha$ can be between 0 and 1. 
+- Choice of $\alpha$ is not so easy and depends on how noisy the data is as well.
+
+```{r}
+fitCV <- cv.glmnet(x = X, y = y, alpha = 0.5)
+```
 
 ## Stability selection
 
-meinshausen paper fig on stb paths and correlated variables
+:::: {.columns}
 
+::: {.column width="50%"}
+![](assets/StabilitySelectionSubsetting.webp){width=80%}
+
+- Can be used when p > N.
+- We speak of selection probability values for predictors instead of beta coefficient values.
+- How is this calculated with lasso stability selection?
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+$$
+\hat{\beta}=\min\limits_{\beta} (||y-X\beta||_2^2 + \lambda \sum_{j=1}^p\frac{|\beta_j|}{W_j} )
+$$
+:::
+
+::: {.fragment}
+- Randomized lasso stability selection.
+- Weakness term is between 0 and 1.
+- What do you think the effect of the weakness parameter is?
+:::
+
+::: {.fragment}
+- The randomized lasso changes the penalty λ to a randomly chosen value in the range [λ, λ/weakness].
+:::
+
+:::
+
+::::
+
+## Stability paths
+
+![](assets/StabilityPaths.webp){width=80%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
+
+::: {.notes}
+Q: comment on: lambda choice affecting beta coefficients, separation of signal from noise
+:::
+
+
+## Selecting true predictors
+
+- Regularization with stability selection is very conservative in practice.
+- We need to specify 2 of: probability cutoff, upper bound on PFER, number of selected variables q
+- *Not* slecting a predictor is also a result and telling. Can you think of an example where this could happen?
+
+![](assets/StabilitySelectionPFER.webp){width=60%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
 
 
 ## Resources
