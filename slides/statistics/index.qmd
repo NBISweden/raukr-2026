@@ -11,7 +11,9 @@ format:
 ```{r}
 #| echo: false
 
+library(MASS)
 library(ggplot2)
+library(patchwork)
 ```
 
 ## R and statistics
@@ -378,13 +380,31 @@ head(X)
 
 ## Evaluating the quality of the linear fit
 
+:::: {.columns}
 
+::: {.column width="50%"}
+- Residual standard error $RSE=\sqrt{\frac{1}{N-p-1}RSS}$
+- Roughly represents the average amount of deviation from the fitted line.
+- The size of the RSE value will reflect how poorly the model fits the data.
+- Measured in units of $y$.
 
-## The bias-variance trade-off
+::: {.fragment}
+- $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$.
+- RSS can be thought of as measuring the variability that is left unexplained after doing the regression.
+- The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression.
+:::
 
-- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
+:::
 
-- bias: the error introduced by approximating a real life problem
+::: {.column width="50%"}
+![](assets/FitAndPrediction.webp)
+:::
+
+::::
+
+::: {.aside}
+[https://xkcd.com/605/](https://xkcd.com/605/)
+:::
 
 ## Correlation is not causation
 
@@ -393,7 +413,6 @@ head(X)
 ::: {.column width="50%"}
 
 ![](assets/SpuriousCorrelation1.webp){width=70%}
-
 ![](assets/SpuriousCorrelation2.webp){width=70%}
 
 :::
@@ -401,13 +420,101 @@ head(X)
 ::: {.column width="50%"}
 
 ![](assets/SpuriousCorrelation3.webp){width=70%}
-
 ![](assets/SpuriousCorrelation4.webp){width=70%}
 
 :::
 
-
 ::::
+
+## Outliers
+
+- What is an outlier?
+- Why do they arise?
+- Can the linear fit be impacted by outliers and when?
+- What can you say about the fit and residuals?
+
+```{r}
+#| echo: false
+
+## add outlier points
+set.seed(123)
+nOutliers <- 30
+advertisingOutlData <- rbind(advertisingData, 
+                         data.frame(TV = runif(n = nOutliers, min = 50, max = 150), 
+                                    radio = runif(n = nOutliers, min = 10, max = 15), 
+                                    newspaper = runif(n = nOutliers, min = 10, max = 30), 
+                                    sales = runif(n = nOutliers, min = 20, max = 30)))
+
+## fit linear model with lm()
+lmFit <- lm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          residual = lmFit$residuals, 
+                          predictedSales = lmFit$fitted.values))
+beta0lm <- lmFit$coefficients["(Intercept)"]
+beta1lm <- lmFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue", alpha = 0.4)
+```
+
+## Robust regression
+
+```{r}
+#| echo: false
+
+## robust linear fit
+robustFit <- rlm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          predictedSales = robustFit$fitted.values, 
+                          weightedResidual = robustFit$wresid, 
+                          weight = robustFit$w))
+beta0rlm <- robustFit$coefficients["(Intercept)"]
+beta1rlm <- robustFit$coefficients["TV"]
+
+## plot
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    geom_abline(intercept = beta0rlm, slope = beta1rlm, color = "forestgreen") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue", alpha = 0.4)
+
+p2 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = weight)) +
+    geom_abline(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "forestgreen") +
+    theme_bw() 
+
+p1 + p2
+```
+
+
+## The bias-variance trade-off
+
+- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
+
+- bias: the error introduced by approximating a real life problem
+
+## Shrinkage methods: ridge
+
+
+## Shrinkage methods: lasso
+
+## Shrinkage methods: elastic net
+
+
+
 
 ## Resources
 
