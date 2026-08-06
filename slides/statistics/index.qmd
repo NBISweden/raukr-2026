@@ -816,14 +816,52 @@ Q: comment on: lambda choice affecting beta coefficients, separation of signal f
 Meinshausen and Bühlmann 2010
 :::
 
+## Gaussian graphical models (GGMs)
+
+- Model statistical relationships between variables using graphs
+- Special algebraic and geometric properties
+- Covariance matrix: covariance between each pair of variables
+- In GGMs the inverse covariance matrix is the adjacency matrix (edges in graph)
+
+![](assets/GGM.webp){width=60%}
+
+## Estimating the graph
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Fitt lasso on each variable, using all others as predictors.
+- Lambda controls sparsity.
+- Draw edge with AND/OR rule.
+- Edges in the graph reflect meaningful relationships. A missing edge between $x_1$ and $x_2$ means those two variables are conditionally independent given all other variables.
+
+|
+
+- Example: gene x cell count matrix. We want to learn the gene regulatory network. If necessary, we need to transform the data to look Gaussian to meet the needed assumptions. `glmnet` allows you to specify other distribution families that better match the response.
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/graph.webp)
+
+:::
+
+::::
+
+::: {.aside}
+Meinshausen and Bühlmann 2006
+:::
+
+
 
 ## Additional links
 
 - Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
-
 - Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
-
 - [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+- [Journal of the Royal Statistical Society Series B](https://academic.oup.com/jrsssb)
 
 . . .
 
