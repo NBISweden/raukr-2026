@@ -502,9 +502,12 @@ p1 + p2
 
 ## The bias-variance trade-off
 
-- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
+- Suppose we have our estimated beta coefficients. Do you think we would get the same values if we did a fit on another set of observations? 
 
+::: {.fragment}
+- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
 - bias: the error introduced by approximating a real life problem
+:::
 
 ## Shrinkage methods: ridge
 
@@ -513,6 +516,9 @@ p1 + p2
 
 ## Shrinkage methods: elastic net
 
+## Stability selection
+
+meinshausen paper fig on stb paths and correlated variables
 
 
 
@@ -579,7 +585,5 @@ Freely available soft copies. Lots of online material, R packages with the datas
 :::
 
 
-
-to add: model accuracy 
 
 
