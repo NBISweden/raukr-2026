@@ -23,29 +23,30 @@ library(tidyverse)
 ### Learning outcomes
 
 - understand what a linear model is
-- understand the different flavors of linear regression and what differenciates them
-- understand variance-bias trade off and colinearity in regression
+- understand the different flavors of linear regression and what differentiates them
+- know what these terms mean: predictor, response, residual, coefficient, least squares
+- understand bias-variance trade off and collinearity in regression
 - be able to assess what linear regression fits best to learn what you need from your data
 
-Note that boxes labeled **Task** will ask you to do follow up anaylses or exploration using what has been demonstrated. We will discuss them and go through them together.
+Note that boxes labeled **Task** will ask you to do follow up analyses or exploration using what has been demonstrated. We will discuss them and go through them together.
 
 ### Linear models
 
-
-Linear models are incredibly useful and powerful in that they allows us to learn something from the data while providing a high degree of interpretability. Given a variable $y$, the model assumes the expected value of $y$ is linear in the inputs $x$.
-
+Linear models are incredibly useful and powerful in that they allows us to learn something from the data while providing a high degree of interpretability. Given a variable $y$, the model assumes the expected value of $y$ is linear in the inputs $x$. Mathematically, we model $y = \beta_0 + \beta_1x_1 + ... + \beta_px_p + \epsilon$ for $p$ variables or predictors.
 
 
 ### Annotations and vocabulary
 
-We will refer to the dep var y, x, X.., e, epsilon etc
+There is some vocabulary we will use in this lab, and it's good to start getting used to these naming conventions if you don't already know them. We often refer to $y$ as the *response* or *dependent variable*, and to $x$ as the *predictor* or *independent variable*.
 
-assumptions: indep observations, n > p, error normal with mean 0, linear relationship no collinearity
+We are learning the linear function $y \sim \hat{f}(x)$. This fit is not perfect, due to measuring errors or if the linear model is a poor representation of $y$. We look at the difference between the observed $y$ and predicted $\hat{y}=\beta_0 + \beta_1x_1 + ... + \beta_px_p$. This difference is called the residual. For each observation $i$, the residual $e_i = y_i - \hat{y_i}$. The least squares method will find beta estimates that minimize the squared sum of these residuals. In other words we want to minimize the the residual sum of squares (RSS) where $RSS=\sum_{i=1}^Ne_i^2$.
+
 
 ### The data sets
 
-explain about advertising and credit data sets. and Auto
+#### Advertising data set
 
+The advertising data set is a simulated data set coming from the "Introduction to Statistical Learning" book by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani. 
 ```{r}
 ## Set to the desired working directory (you may change this to suit your wdir)
 wdir <- "~/GitHub/raukr-2026/labs/statistics"
@@ -63,6 +64,39 @@ str(advertisingData)
 head(advertisingData)
 summary(advertisingData)
 ```
+
+```{r}
+colnames(advertisingData)
+```
+
+- sales: sales (in thousands) of the product
+- TV: advertising budget on TV
+- radio: advertising budget on the radio
+- newspaper: advertising budget in newspapers
+
+#### Credit data set
+
+The Credit data set is a data set coming from the "Introduction to Statistical Learning" book by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani. It contains information on credit card debt for customers, and is available through the R package accompanying the book, called `ISLR2`.
+```{r}
+attach(Credit)
+head(Credit)
+```
+
+```{r}
+colnames(Credit)
+```
+
+- Income: income in thousands of dollars
+- Limit: credit limit
+- Rating: credit rating
+- Cards: number of credit cards
+- Age: age of individual
+- Education: years of education
+- Own: house ownership
+- Student: student status
+- Married: marital status
+- Region: East, West or South
+- Balance: average credit card depth of an individual
 
 #### Prostate data set
 
@@ -86,23 +120,23 @@ summary(prostateData)
 colnames(prostateData)
 ```
 
-* lcavol: log cancer volume
-* lweight: log prostate weight
-* age: individual's age
-* lbph: log of benign prostatic hyperplasia amount
-* svi: seminal vesicle invasion
-* lcp: log of capsular penetration
-* gleason: Gleason score
-* pgg45: percent of Gleason scores 4 or 5 pgg45
-* lpsa: log of PSA
-* train: if this will be used as training data. We will ignore this and use all the data since we are interested in learning the relationship between predictors and not using the data to train a model to use for future predictions.
+- lcavol: log cancer volume
+- lweight: log prostate weight
+- age: individual's age
+- lbph: log of benign prostatic hyperplasia amount
+- svi: seminal vesicle invasion
+- lcp: log of capsular penetration
+- gleason: Gleason score
+- pgg45: percent of Gleason scores 4 or 5 pgg45
+- lpsa: log of PSA
+- train: if this will be used as training data. We will ignore this and use all the data since we are interested in learning the relationship between predictors and not using the data to train a model to use for future predictions.
 
 
 ## Simple linear regression
 
 As the name implies, a simple linear regression predicts a quantitative response $y$ on the basis of a single predictor $x$ and assumes an approximately linear relationship between $x$ and $y$. Mathematically, we can write this linear relationship as $$y = \beta_0 + \beta_1x + \epsilon$$ where $\beta_0$ and $\beta_1$ are the intercept term and the coefficient for $x$ respectively. The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
 
-Let us use the advertising data set, to see if we can learn something about the relationship between TV advertising and sales. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$.
+Let us use the advertising data set, to see if we can learn something about the relationship between TV advertising and sales. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$. We are going to assume that we are statistical consultants that were hired by a client to investigate the association between advertising and the sales, in thousands of unites, of a particular product. The data contains advertising budgets for the product for three different media: TV, radio and newspaper. Can we learn something about the relationship between sales and advertising that can guide or inform future marketing plans?
 
 Let us have a first look at the sales vs TV relationship in the data. Visually, we can see some kind of linear relationship and that sales increases with increasing TV advertising budget. Is there anything else you notice about the spread of the data?
 
