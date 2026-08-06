@@ -100,7 +100,7 @@ colnames(Credit)
 
 #### Prostate data set
 
-The prostate cancer data set comes from The Elements of Statistical Learning book by Trevor Hastie, Robert Tibshirani and Jerome Friedman. The data contains measures of prostate specific antigen (PSA) and a number of clinical measures in men who were about to receive a radical prostatectomy.
+The prostate cancer data set comes from The Elements of Statistical Learning book by Trevor Hastie, Robert Tibshirani and Jerome Friedman. The data contains measurements of prostate specific antigen (PSA) and a number of clinical measurements in men who were about to receive a radical prostatectomy.
 ```{r}
 ## Download the dataset
 download.file(url = "https://hastie.su.domains/ElemStatLearn/datasets/prostate.data", 
@@ -136,10 +136,11 @@ colnames(prostateData)
 
 As the name implies, a simple linear regression predicts a quantitative response $y$ on the basis of a single predictor $x$ and assumes an approximately linear relationship between $x$ and $y$. Mathematically, we can write this linear relationship as $$y = \beta_0 + \beta_1x + \epsilon$$ where $\beta_0$ and $\beta_1$ are the intercept term and the coefficient for $x$ respectively. The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
 
-Let us use the advertising data set, to see if we can learn something about the relationship between TV advertising and sales. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$. We are going to assume that we are statistical consultants that were hired by a client to investigate the association between advertising and the sales, in thousands of unites, of a particular product. The data contains advertising budgets for the product for three different media: TV, radio and newspaper. Can we learn something about the relationship between sales and advertising that can guide or inform future marketing plans?
+We are going to assume that we are statistical consultants that were hired by a client to investigate the association between advertising and the sales, in thousands of units, of the product in the advertising data set. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$. 
+
+The data contains advertising budgets for the product for three different media: TV, radio and newspaper. Can we learn something about the relationship between sales and advertising that can guide or inform future marketing plans?
 
 Let us have a first look at the sales vs TV relationship in the data. Visually, we can see some kind of linear relationship and that sales increases with increasing TV advertising budget. Is there anything else you notice about the spread of the data?
-
 
 ```{r}
 ggplot(advertisingData, aes(x = TV, y = sales)) + 
@@ -157,10 +158,10 @@ names(simpleLinearFit)
 
 ::: {.callout-note appearance="simple" icon=false}
 ## Task
-Explore the `simpleLinearFit` object and what it contains. You can make use of the following methods: `str()`, `class()`, `names()` and the `$` sign to access slots. You can also refer to the help page of the `lm()` function to see what it returns. Do you get the same values if you compare the `residuals` from the `simpleLinearFit` object to the difference between the sales values and the `fitted.values` in the `simpleLinearFit` object? Plot the distribution of the residuals. Is it approximately normal?
+Explore the `simpleLinearFit` object and what it contains. You can make use of the following methods: `str()`, `class()`, `names()` and the `$` sign to access slots. You can also refer to the help page of the `lm()` function to see what it returns. Do you get the same values if you compare the `residuals` from the `simpleLinearFit` object to the difference between the sales values and the `fitted.values` in the `simpleLinearFit` object?
 :::
 
-Let's plot the linear fit on our original scatter plot.
+Let's plot the linear fit on our original scatter plot. 
 
 ```{r}
 #| fig-width: 10
@@ -203,9 +204,9 @@ Pick either one of the other two advertising budgets, newspaper or radio, and re
 
 ### Assessing the quality of the fit
 
-We will explore two measures that allow us to assess the quality of the linear regression fit: the residual standard error (RSE) and the $R^2$ statistic.
+We will explore two measurements that allow us to assess the quality of the linear regression fit: the residual standard error (RSE) and the $R^2$ statistic.
 
-Recall that we can't perfectly predict $y$ from $x$ and that there is an associated residual $e$ for each observation showing how much we have deviated from the line. The RSE roughly represents the average amount of deviation from this line, as reflected in its formula: $RSE=\sqrt{\frac{1}{n-2}RSS}$. Let's have a look at the RSE value in our example. Not that here we have $n-2$ since we have 2 coefficients.
+Recall that we can't perfectly predict $y$ from $x$ and that there is an associated residual $e$ for each observation showing how much we have deviated from the line. The RSE roughly represents the average amount of deviation from this line, as reflected in its formula: $RSE=\sqrt{\frac{1}{N-2}RSS}$ where N is the number of observations. Let's have a look at the RSE value in our example. Note that here we have $N-2$ since we have 2 coefficients.
 
 ```{r}
 summary(simpleLinearFit)
@@ -221,7 +222,7 @@ mean(advertisingData$sales)
 summary(simpleLinearFit)$sigma / mean(advertisingData$sales) * 100
 ```
 
-The size of the RSE value will reflect how poorly the model fits the data. However, the RSE is measured in units of $y$ and it is not always clear what a good value should be. The $R^2$ statistic on the other hand represents the proportion of variance explained, meaning it will always have a value between 0 and 1: $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$. TSS is the **t**otal **s**um of **s**quares and measures the total variance in $y$, whereas the RSS can be thought of as measuring the variability that is left unexplained after doing the regression. The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression. In our example, $R^2$ has a value of `{r} round(summary(simpleLinearFit)$r.squared, 2)`, meaning that around two thirds of the variability in sales is explained by a linear regression on TV advertising budget. Even though the $R^2$ is nicely interpretable, it can still be difficult to judge what a good value should look like in practice, particularly in fields where data is generated with a degree of experimental noise such as in biology.
+The size of the RSE value will reflect how poorly the model fits the data. However, the RSE is measured in units of $y$ and it is not always clear what a good value should be. The $R^2$ statistic on the other hand represents the proportion of variance explained, meaning it will always have a value between 0 and 1: $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$ and $\bar{y}$ is the mean of $y$. TSS is the **t**otal **s**um of **s**quares and measures the total variance in $y$, whereas the RSS can be thought of as measuring the variability that is left unexplained after doing the regression. The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression. In our example, $R^2$ has a value of `{r} round(summary(simpleLinearFit)$r.squared, 2)`, meaning that around two thirds of the variability in sales is explained by a linear regression on TV advertising budget. Even though the $R^2$ is nicely interpretable, it can still be difficult to judge what a good value should look like in practice, particularly in fields where data is generated with a degree of experimental noise such as in biology.
 
 ::: callout-note
 Note that in the case of the simple linear regression, the $R^2$ is identical to $Cor(y, \hat{y})^2$.
@@ -259,8 +260,7 @@ summary(simpleLinearFit)
 summary(multipleLinearFit)
 ```
 
-
-We interpret $\beta_j$ as the average effect on $y$ of a one unit increase in $x_j$, holding all other predictors fixed. Spending an additional \$1,000 on radio advertising is associated with an average increase in around 189 units of additional sales. How to the coefficients for all predictors in the multiple linear regression compare to the coefficients if we were to do a simple linear regression separately per predictor? What do you notice about the newspaper predictor and the (adjusted) $R^2$ values?
+We interpret $\beta_j$ as the average effect on $y$ of a one unit increase in $x_j$, holding all other predictors fixed. Spending an additional \$1,000 on radio advertising is associated with an average increase in around 189 units of additional sales. How do the coefficients for all predictors in the multiple linear regression compare to the coefficients if we were to do a simple linear regression separately per predictor? What do you notice about the newspaper predictor and the (adjusted - adjusted for the numebr of predictors) $R^2$ values?
 
 The multiple linear regression allows us to assess the contribution of a predictor in explaining the response vector in context with the other predictors and allows us to assess the relative contributions of each predictor.
 
@@ -313,7 +313,7 @@ Use the `model.matrix()` function to see what the predictor matrix looks like. W
 
 ::: {.callout-note appearance="simple" icon=false}
 ## Task
-Examine the Credit data set. Which columns represent categorical variables? Pick one categorical variable and do a linear fit. Notice that categorical variables are represented as l-1 dummy variables, where l is the number of levels.
+Examine the Credit data set. Which columns represent categorical variables? Pick one categorical variable and do a linear fit. Notice that categorical variables are represented as $l-1$ dummy variables, where $l$ is the number of levels.
 :::
 
 Example:
@@ -328,7 +328,7 @@ Can you think of another way to represent categorical variables?
 
 ## Robust regression
 
-So far in the linear fit, the coefficients are estimated using the least squares methods by minimizing the sum of squared residuals: $\min\limits_{\beta}\sum_{i=1}^{N}e_{i}^{2}$ where the residual for the $i^{th}$ observation $e_{i} = (y_i - \hat{y_i})$. What if we had outlier points which would result in large residuals? Does this have an impact on the linear fit? To illustrate this, we will add artificial observations to the advertising data set which deviate quite a bit from the rest of the trend in the data and visualize below.
+So far in the linear fit, the coefficients are estimated using the least squares method by minimizing the sum of squared residuals: $\min\limits_{\beta}\sum_{i=1}^{N}e_{i}^{2}$ where the residual for the $i^{th}$ observation $e_{i} = (y_i - \hat{y_i})$. What if we had outlier points which would result in large residuals? Does this have an impact on the linear fit? To illustrate this, we will add artificial observations to the advertising data set which deviate quite a bit from the rest of the trend in the data and visualize below.
 
 ```{r}
 ## add outlier points
@@ -449,11 +449,11 @@ The flexibility and power of linear models is not to be underestimated. So far w
 
 ## Bias-variance trade off
 
-So far with the least squares approach, we have estimated beta coefficients such that the residual sum of squares is minimized. This simple approach while powerful, does not always work best in practice on real world data. If we learn the model on one data set, do we get the same coefficients estimated on another data set? Data can inherently vary due to measuring errors for example, and so we can easily end up over-fitting the coefficients in one data set. Additionally, suppose that two predictors are highly correlated with each other but not with the response. If both predictors get equal coefficient values but opposite signs they cancel each other out. In such cases the coefficients can get arbitrarily large without adding much to the RSS. We again suffer at getting good estimates of the beta coefficients and reliably interpreting them. To overcome these problems and estimate beta coefficients that are more robust and representative shrinkage methods have been proposed by imposing a penalty on the size of the beta coefficients. This problem is known as the bias-variance trade off, since the beta estimates will vary less with such imposed penalties at the expense of being slightly more biased since we are deliberately constraining them.
+So far with the least squares approach, we have estimated beta coefficients such that the residual sum of squares is minimized. This simple approach while powerful, does not always work best in practice on real world data. If we learn the model on one data set, do we get the same coefficients estimated on another data set? Data can inherently vary due to measuring errors for example, and so we can easily end up over-fitting the coefficients in one data set. Additionally, suppose that two predictors are highly correlated with each other but not with the response. If both predictors get equal coefficient values but opposite signs they cancel each other out. In such cases the coefficients can get arbitrarily large without adding much to the RSS. We again suffer at getting good estimates of the beta coefficients and reliably interpreting them. To overcome these problems and estimate beta coefficients that are more robust and representative, shrinkage methods have been proposed by imposing a penalty on the size of the beta coefficients. This problem is known as the bias-variance trade off, since the beta estimates will vary less with such imposed penalties at the expense of being slightly more biased since we are deliberately constraining them.
 
 ::: {.callout-note appearance="simple" icon=false}
 ## Task
-Pick one of the two data sets we have explored so far (Advertising or Credit), randomly split the observations into two and then do a linear fit on each subset. Do you get identical beta estimates or do they vary? The code below demonstrates this on the Advertising data set.
+Pick one of the two data sets we have explored so far (Advertising or Credit), randomly split the observations into two and then do a linear fit on each subset. Do you get identical beta estimates or do they vary? The code below demonstrates this on the Advertising data set. 
 :::
 
 ```{r}
@@ -475,11 +475,13 @@ fit1
 fit2
 ```
 
+We see that the beta estimates vary. For newspaper they can even have opposite signs. This is perhaps to be expected because data varies, and important to keep in mind as we interpret the numerical values of these coefficients.
+
 ## Shrinkage methods
 
 ### Ridge regression
 
-The ridge regression penalizes by putting a limit on the sum of the squared beta coefficients. This is done by adding a penalty term $\lambda$ as follows when estimating the beta coefficients:
+The ridge regression penalizes the beta coefficients by putting a limit on the sum of the squared coefficients. This is done by adding a penalty term $\lambda$ as follows when estimating the beta coefficients:
 
 $$
 \hat{\beta}=\min\limits_{\beta}\{\sum_{i=1}^N
@@ -531,7 +533,7 @@ p2 <- p1 +
 p1 / p2 + plot_layout(guides = 'collect')
 ```
 
-Notice that we get different beta estimates with different penalty values. As the penalty increases, the coefficient values decrease or shrink due to heavier penalization. Choosing the right penalty is therefore critical and can have a big impact on our estimates. How can we choose a reasonable $\lambda$ value? A common method is to do cross-validation. For a chosen set of lambdas, the cross-validation error for each value of lambda is calculated, and finally the lambda value which gives the smallest error (`lambda.min`) is chosen and the model is re-fit with that penalty value. For more details on this. Another common choice is `lambda.1se` which is where the cross-validated error is within one standard error of the minimum.
+Notice that we get different beta estimates with different penalty values. As the penalty increases, the coefficient values decrease or shrink due to heavier penalization. Choosing the right penalty is therefore critical and can have a big impact on our estimates. How can we choose a reasonable $\lambda$ value? A common method is to do cross-validation. For a chosen set of lambdas, the cross-validation error for each value of lambda is calculated, and finally the lambda value which gives the smallest error (`lambda.min`) is chosen and the model is re-fit with that penalty value. Another common choice is `lambda.1se` which is where the cross-validated error is within one standard error of the minimum.
 
 ```{r}
 ## fit with cross validation
@@ -676,7 +678,7 @@ p1 / p2 + plot_layout(guides = 'collect')
 
 ## Stability selection
 
-Although these methods could also fall under shrinkage methods since they do make use of them, they offer additional gains where typical regression methods fail, such as when the number of predictors exceeds the number of observations. The idea behind stability selection is to apply the regression of choice on several subsets of the data, and select the predictors which consistently pop up. Lasso stability selection will apply the lasso regression on subsets of the data and return a selection probability for each predictor which is the number of times it was selected divided by the total number of times a regression was performed. The authors of this methods introduced a new form of regularization with the randomized lasso stability selection. There, a a weakness parameter is additionally used to vary the lasso penalty term $\lambda$ to a randomly chosen value between $[\lambda, \lambda/weakness]$ for each predictor. This type of regularization has advantages in cases where the **number of predictors** exceeds the number of observations, in selecting variables **consistently**, demonstrating better **error control** and not **depending strongly** on the penalization parameter (Meinshausen and Bühlmann 2010).
+Although these methods could also fall under shrinkage methods since they do make use of them, they offer additional gains where typical regression methods fail, such as when the number of predictors exceeds the number of observations. The idea behind stability selection is to apply the regression of choice on several subsets of the data, and select the predictors which consistently pop up. Lasso stability selection will apply the lasso regression on subsets of the data and return a selection probability for each predictor which is the number of times it was selected divided by the total number of times a regression was performed. The authors of these methods introduced a new form of regularization with the randomized lasso stability selection. There, a weakness parameter is additionally used to vary the lasso penalty term $\lambda$ to a randomly chosen value between $[\lambda, \lambda/weakness]$ for each predictor. This type of regularization has advantages in cases where the **number of predictors** exceeds the number of observations, in selecting variables **consistently**, demonstrating better **error control** and not **depending strongly** on the penalization parameter (Meinshausen and Bühlmann 2010).
 
 We will apply the randomized lasso stability selection using the `monaLisa` package. Have a look at the help page of the `randLassoStabSel()` function for more details.
 
@@ -697,7 +699,7 @@ randLasso$selAUC  # Area under the curve of the stability paths
 plotStabilityPaths(randLasso)
 ```
 
-This plot shows the selection probability or each predictor (line) as a function of the regularization step, with less strong regularization going from left to right. These so called stability paths can be quite informative, as an indicator of which predictor(s) gets selected first, if it stays up and how well the selected supposedly meaningful predictors separate from the noisy rest.
+This plot shows the selection probability or each predictor (line) as a function of the regularization step, with weaker regularization going from left to right. These so called stability paths can be quite informative, as an indicator of which predictor(s) gets selected first, if it stays up and how well the selected supposedly meaningful predictors separate from the noisy rest.
 
 In our example nothing gets selected. In practice, randomized stability selection is quite conservative, preferring to select nothing rather than something false. Our choice in parameter values depends on how stringent we want to be and how strong the signal in the data is. For more stringent selections, one may decrease the value of the weakness parameter which will make it harder for a variable to get selected. The user is in control of false discoveries with the PFER parameter, which indicates the number of falsely selected variables. As for the selection probability cutoff, Meinshausen and Bühlmann (2010) argue that values in the range of [0.6, 0.9] should give similar results.
 
@@ -717,14 +719,10 @@ A lot of the ideas and material presented in this lab were constructed using the
 * An Introduction to Statistical Learning with applications in R *by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani*.
 * The Elements of Statistical Learning *by Trevor Hastie, Robert Tibshirani and Jerome Friedman*.
 
-Additional reading material and interesting resources:
-* Meinshausen paper
-* blogs wxw
-
-end with honorable mentions like logistic regression, multivariate regression, graphical lasso, GGMs and the beautiful properties there and how lasso is used to estimate the graph -> save it for the slides
-
-
 ## Session
+
+<details>
+  <summary>Click here</summary>
 
 ```{r}
 #| label: sessionInfo
@@ -733,4 +731,4 @@ date()
 sessionInfo()
 ```
 
-
+</details>
