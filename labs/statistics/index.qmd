@@ -523,7 +523,7 @@ Do a multiple linear regression on the same data we used in the ridge regression
 The Lasso regression also imposes a penalty on the size of the coefficients. However it does so slightly differently, namely by penalizing and thus limiting the sum of the absolute beta values. This has the wonderful effect of resulting in a *selection* of predictors by setting the coefficients of the uninteresting ones which don't contribute much to the response to zero. Predictors with non-zero coefficients are considered *selected*. The beta coefficients are estimated, minimizing the following:
 
 $$
-\hat{\beta}=\frac{1}{2}\min\limits_{\beta}\{\sum_{i=1}^N
+\hat{\beta}=\min\limits_{\beta}\{\frac{1}{2}\sum_{i=1}^N
 (y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
 $$
 

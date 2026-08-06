@@ -12,6 +12,8 @@ format:
 #| echo: false
 
 library(MASS)
+library(ISLR2)
+library(glmnet)
 library(ggplot2)
 library(patchwork)
 ```
@@ -503,18 +505,162 @@ p1 + p2
 ## The bias-variance trade-off
 
 - Suppose we have our estimated beta coefficients. Do you think we would get the same values if we did a fit on another set of observations? 
+- What happens to beta coefficients predictors which are highly correlated but don't explain the response $y$?
+- Out goal is get good and robust estimates of the coefficients that we can interpret.
+- Shrinkage methods try to overcome these issues by imposing a penalty on the size of the coeficients.
 
 ::: {.fragment}
 - variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
-- bias: the error introduced by approximating a real life problem
+- bias: the error introduced by approximating a real life problem.
+- trade-off: beta estimates will vary less at the expense of being slightly more biased.
 :::
 
 ## Shrinkage methods: ridge
 
+$$
+\hat{\beta}=\min\limits_{\beta}\{\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p\beta_j^2 \}
+$$
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.fragment}
+![](assets/Ridge.webp){width=70%}
+:::
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+- Where are we penalizing more harshly?
+- What $\lambda$ would you choose?
+:::
+:::
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+## k-fold cross validation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](assets/CV.webp)
+
+- For each $\lambda$, train on k-1 folds and test on kth fold.
+- Compute prediction error and average the k prediction errors.
+- Repeat for each $\lambda$.
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+![](assets/LambdaMin.webp)
+:::
+:::
+
+::::
+
+::: {.aside}
+Images from An Introduction to Statistical Learning and from `glmnet`
+:::
+
+## `glmnet`
+
+![](assets/glmnetDevs.webp)
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## prepare to fit
+y <- Credit$Balance
+X <- model.matrix(Balance ~ 0 + Income + Limit + Rating + 
+                      Cards + Age + Education, 
+                  data = Credit)
+
+## fit
+fit <- glmnet(x = X, y = y, alpha = 0)
+fitCV <- cv.glmnet(x = X, y = y, alpha = 0)
+
+## "best" lambda
+fitCV$lambda.min
+fitCV$lambda.1se
+```
+:::
+:::
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+#| fig-height: 3
+
+plot(fit)
+plot(fitCV)
+```
+:::
+:::
+
+::::
+
 
 ## Shrinkage methods: lasso
 
+$$
+\hat{\beta}=\min\limits_{\beta}\{\frac{1}{2}\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
+$$
+
+- Variable *selection*.
+
+|
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## fit
+fitCV <- cv.glmnet(x = X, y = y, alpha = 1)
+
+## "best" lambda
+fitCV$lambda.min
+fitCV$lambda.1se
+```
+
+```{r}
+coef(fitCV, s = "lambda.1se")
+```
+
+:::
+:::
+
+::: {.column width="50%"}
+![](assets/Shrinkage.webp)
+:::
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+## Collinearity
+
+- Suppose we have two variables that explain $y$ and which are highly correlated. What should and will the lasso do?
+- Is this a problem?
+
+```{r}
+heatmap(cor(X))
+```
+
 ## Shrinkage methods: elastic net
+
+- A compromise between the ridge and lasso.
 
 ## Stability selection
 
