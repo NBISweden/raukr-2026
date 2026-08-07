@@ -3,6 +3,7 @@ title: "Statistical Learning"
 author: "Dania Machlab"
 description: "Linear Models"
 format: html
+image: "assets/featured.webp"
 ---
 
 ```{r}
@@ -49,7 +50,7 @@ We are learning the linear function $y \sim \hat{f}(x)$. This fit is not perfect
 The advertising data set is a simulated data set coming from the "Introduction to Statistical Learning" book by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani. 
 ```{r}
 ## Set to the desired working directory (you may change this to suit your wdir)
-wdir <- "~/GitHub/raukr-2026/labs/statistics"
+wdir <- "~/GitHub/raukr-2026/labs/stats"
 setwd(wdir)
 
 ## Download the dataset
