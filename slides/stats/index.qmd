@@ -960,6 +960,7 @@ $$
 
 ::: {.column width="50%"}
 ::: {.fragment}
+- What is happening to the total sum in the above equation?
 - Where are we penalizing more harshly?
 - What $\lambda$ would you choose?
 :::
@@ -1043,9 +1044,6 @@ $$
 (y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
 $$
 
-- Variable *selection*.
-
-|
 
 :::: {.columns}
 
@@ -1053,6 +1051,7 @@ $$
 ::: {.small}
 ```{r}
 ## fit
+fit <- glmnet(x = X, y = y, alpha = 1)
 fitCV <- cv.glmnet(x = X, y = y, alpha = 1)
 
 ## "best" lambda
@@ -1068,23 +1067,49 @@ coef(fitCV, s = "lambda.1se")
 :::
 
 ::: {.column width="50%"}
-![](assets/Shrinkage.webp)
+
+::: {.small}
+```{r}
+#| fig-height: 3
+
+plot(fit)
+plot(fitCV)
+```
+::: 
+
 :::
 
 ::::
+
+
+## Variable *selection* with the lasso 
+
+- When would we want to make use of such a method?
+
+. . .
+
+- What do you think the method does when 2 predictors $x_1$ and $x_2$ are highly correlated to each other?
+- Is this problematic?
+
+- Collinearity within the predictor matrix:
+
+```{r}
+#| fig-height: 4
+#| fig-width: 4
+#| echo: false
+
+heatmap(cor(X), labRow = FALSE, labCol = FALSE)
+```
+
+
+## Illustration of the bias-variance trade-off
+
+![](assets/Shrinkage.webp){width=60%}
 
 ::: {.aside}
 Image from An Introduction to Statistical Learning
 :::
 
-## Collinearity
-
-- Suppose we have two variables that explain $y$ and which are highly correlated. What should and will the lasso do?
-- Is this a problem?
-
-```{r}
-heatmap(cor(X))
-```
 
 ## Shrinkage methods: elastic net
 
@@ -1099,6 +1124,25 @@ $$
 ```{r}
 fitCV <- cv.glmnet(x = X, y = y, alpha = 0.5)
 ```
+
+
+## So far
+
+- We understand how linear models work.
+- We understand the limitations they can suffer from.
+- Shrinkage methods can be used to estimate more *robust* coefficients or to *select* meaningful variables.
+- Collinearity in the predictor matrix is a known challenge.
+
+. . . 
+
+- But can we do a little better with reasonably correlated predictors and co-select them?
+- What if we have more predictors than obervations?
+- What if our data set has a very low signal to noise ratio?
+
+. . . 
+
+- Enter stability selection.
+
 
 ## Stability selection
 
