@@ -554,6 +554,7 @@ What do the beta terms reflect> intercept: expected y when x=0, slope: avr incre
 - $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
 - $y = \beta.X + \epsilon$
 - Assumptions:
+  - given x and y values, estimate the coefficients
   - linear relationship
   - constant variance of residuals (homoscedasticity)
   - $\epsilon \sim N(0, \sigma^2)$
@@ -561,10 +562,6 @@ What do the beta terms reflect> intercept: expected y when x=0, slope: avr incre
   - no multicollinearity among predictors
   - n >> p
   
-::: {.fragment}
-- Is this a linear model? $log2(y) = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$
-:::
-
 :::
 
 ::::
@@ -572,6 +569,33 @@ What do the beta terms reflect> intercept: expected y when x=0, slope: avr incre
 ::: {.aside}
 Image from An Introduction to Statistical Learning
 :::
+
+## Spot the linear model
+
+. . .
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_4x_5 + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$$
+
+. . . 
+
+$$log2(y) = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 e^{\beta_1x} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + \beta_1e^{x} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + sin(\beta_1x) + \epsilon$$
+
 
 ## Multiple linear regression
 
@@ -592,10 +616,54 @@ head(X)
 ::: {.small}
 ```{r}
 ## linear fit
-fit <- lm(sales ~ X + 0, data = advertisingData)
-summary(fit)
+fit1 <- lm(sales ~ TV + radio + newspaper, data = advertisingData)
+fit2 <- lm(sales ~ X + 0, data = advertisingData)
 ```
+
+```{r}
+fit1
+```
+
+```{r}
+fit2
+```
+
+
 ::: 
+:::
+
+::::
+
+## How do we interpret the coefficient values?
+
+```{r}
+fit1
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/LeastSquares.webp){width=70%}
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+|
+|
+|
+
+$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
+
+:::
+
 :::
 
 ::::
