@@ -94,6 +94,7 @@ Gosset's idea was simply to replace σ (population) with s (sample). Because s i
 Sometimes it underestimates the true variability. Sometimes it overestimates it. That makes the standardized statistic more variable than a Normal random variable, producing the heavier tails of the t-distribution. As the sample size increases, s→σ, so the t-distribution approaches the Normal distribution.
 :::
 
+
 ## Data science and learning from data
 
 :::: {.columns}
@@ -166,6 +167,43 @@ https://en.wikipedia.org/wiki/Eratosthenes
 https://images.nasa.gov
 :::
 
+## Hypothesis generation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/HypothesisGeneration.webp)
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/HypoethesisHistory.webp){width=65%}
+
+:::
+
+::::
+. . . 
+
+- Formulate a hypothesis -> collect data -> test
+
+. . . 
+
+- Collect data -> explore -> generate hypothesis
+
+. . . 
+
+- Explore -> new data -> confirm 
+
+. . . 
+
+- Exploration vs confirmation
+
+::: {.aside}
+[Research Hypothesis](https://pmc.ncbi.nlm.nih.gov/articles/PMC12534748/?utm_source=chatgpt.com)
+:::
+
 ## Statistical learning
 
 :::: {.columns}
@@ -205,7 +243,7 @@ https://images.nasa.gov
 ::: {.column width="50%"}
 
 ::: {.fragment}
-- Suppose we have measurements for $p$ variables $x_1, x_2 ... x_p$ and their associated response measurement $y$ and wish to say something about how $x_1, x_2 ... x_p$ explain or relate to $y$. An example is prediction or classification.
+- Suppose we have measurements for $p$ variables $x_1, x_2 ... x_p$ and their associated variable $y$ and wish to say something about how $x_1, x_2 ... x_p$ explain or relate to $y$. An example is prediction or classification.
 
 - $y \sim f(x)$
 
@@ -233,6 +271,112 @@ https://images.nasa.gov
 :::
 
 
+## Prediction
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+
+- Training data vs test data
+
+- Trade off between prediction accuracy and model interpretability
+
+![](assets/InterpretabilityVsFlexibility.webp){width=100%}
+
+:::
+
+::: {.column width="50%"}
+ 
+- Training data: to estimate the model parameters and tune the model.
+- Test data: evaluate the model.
+- Do you think we can mix both or use the training data to test?
+
+::: {.fragment}
+- Answer: Definitely not. Why: Our aim is to use the model on new data and not to explain the data we already have. 
+- Overfitting -- Be skeptical when someone claims 100% accuracy with prediction ..
+
+![](assets/Overfitting.webp){width=100%}
+
+:::
+
+:::
+
+::::
+
+
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+[Overfitting](https://www.geeksforgeeks.org/machine-learning/underfitting-and-overfitting-in-machine-learning/)
+:::
+
+
+## Inference
+
+- Which $x$ variables are associated with the variable $y$?
+- Can we learn or day something about this *relationship*?
+- Suppose we saw the data below, can we use a model to learn the nature of the relationship between the number of Nobel prizes and chocolate consumption?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/ChocolateConsumption.webp){width=80%}
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/NobelLaureatesChocolateHabits.webp){width=90%}
+:::
+
+:::
+
+::::
+
+
+::: {.aside}
+[Franz H. Messerli 2012](https://library.scottbarrykaufman.com/uploads/2012/10/Messerli-2012.pdf)
+[Chocolate habits of Nobel prizewinners](https://www.nature.com/articles/499409a)
+:::
+
+## Choosing the right model
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](assets/ModelChoice.webp){width=100%}
+
+:::
+
+::: {.column width="70%"}
+
+| 
+|
+
+::: {.fragment}
+- Do we have prior information about the data?
+- Data generation process?
+- Expected distributions (e.g. count data)?
+- Missing values, missing at random? 
+- Do we have enough data points?
+- Are we trying to learn something about the relationship between our variables or to have a model that we can use to predict outcomes for future data sets?
+  
+:::
+
+:::
+
+::::
+
+
+::: {.aside}
+[https://xkcd.com/2048/](https://xkcd.com/2048/)
+:::
+
 ## Linear models
 
 | 
@@ -259,49 +403,6 @@ Neural networks gained popularity in the 1980s, and support vector machines aros
 ::: 
 
 
-## Prediction
-
-- Training data vs test data
-
-- Trade off between prediction accuracy and model interpretability
-
-![](assets/InterpretabilityVsFlexibility.webp){width=60%}
-
-::: {.aside}
-Image from An Introduction to Statistical Learning
-:::
-
-
-## Inference
-
-- Which predictors ($x$s) are associated with the response $y$?
-- Can we learn something about this relationship?
-- Suppose we saw the data below, can we use a model to learn the nature of the relationship?
-
-:::: {.columns}
-
-::: {.column width="50%"}
-
-![](assets/ChocolateConsumption.webp){width=90%}
-
-:::
-
-::: {.column width="50%"}
-
-![](assets/NobelLaureatesChocolateHabits.webp){width=90%}
-
-:::
-
-::::
-
-
-::: {.aside}
-[Franz H. Messerli 2012](https://library.scottbarrykaufman.com/uploads/2012/10/Messerli-2012.pdf)
-[Chocolate habits of Nobel prizewinners](https://www.nature.com/articles/499409a)
-:::
-
-
-
 ## Why care about linear approaches?
 
 :::: {.columns}
@@ -326,7 +427,7 @@ Image from An Introduction to Statistical Learning
 
 ::::
 
-## Simple Linear regression
+## Simple linear regression
 
 - learn the association between a single predictor $x$ and a quantitative response $y$.
 
@@ -335,6 +436,10 @@ Image from An Introduction to Statistical Learning
 $$y = \beta_0 + \beta_1x + \epsilon$$
 
 - The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
+
+:::: {.columns}
+
+::: {.column width="70%"}
 
 ```{r}
 #| fig-height: 4
@@ -350,6 +455,19 @@ ggplot(advertisingData, aes(x = TV, y = sales)) +
     geom_smooth(method = "lm", se = FALSE) + 
     theme_bw()
 ```
+
+:::
+
+::: {.column width="30%"}
+
+- What do $\beta_0$ and $\beta_1$ capture?
+- Can you think of a way to do do the fit?
+
+:::
+
+::::
+
+
 
 ## Least squares
 
@@ -398,6 +516,30 @@ Image from An Introduction to Statistical Learning
 
 ::: {.notes}
 What do the beta terms reflect> intercept: expected y when x=0, slope: avr increase in y associated with one unit increase in x.
+:::
+
+## Can you think of another way?
+
+. . . 
+
+![](assets/Orthogonal.webp){width=60%}
+
+. . . 
+
+- Given $x$, how far is the prediction off $y$?
+- What line lies closest to the cloud of points regardless of which axis is $x$ or $y$
+
+. . . 
+
+- Which would you pick?
+
+. . . 
+
+- Least squares: residuals are capturing unexplained variance and prediction error. 
+
+
+::: {.aside}
+[Image source](https://www.atmos.washington.edu/~dennis/Chapter_4_Regression.pdf?utm_source=chatgpt.com)
 :::
 
 ## Multiple linear regression
@@ -913,7 +1055,7 @@ Meinshausen and Bühlmann 2006
 
 ## Experimental design
 
-
+![](assets/BatchEffects.webp)
 
 
 
@@ -924,6 +1066,12 @@ Meinshausen and Bühlmann 2006
 - [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
 - [Journal of the Royal Statistical Society Series B](https://academic.oup.com/jrsssb)
 - [Statistical Ideas that Changed the World](https://ledaliang.github.io/journalclub/)
+- [https://what-if.xkcd.com/archive/](https://what-if.xkcd.com/archive/)
+
+. . .
+
+- XKCD: link here
+read in image here
 
 . . .
 
