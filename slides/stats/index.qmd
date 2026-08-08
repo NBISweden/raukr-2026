@@ -668,38 +668,91 @@ $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
 
 ::::
 
-## Categorical variables and interaction terms
+## Categorical variables 
+
+- How would you represent them?
+
+. . . 
+
+- Categorical variables with $l$ levels can be represented as $l-1$ so called dummy variables consisting of columns of 1s and 0s. We will see this more in the lab session.
+
+::: {.small}
+```{r}
+head(Credit)
+```
+:::
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+
+::: {.small}
+```{r}
+X <- model.matrix(~ Own, 
+                  data = Credit)
+head(X)
+
+```
+:::
+
+:::
+
+::: {.column width="40%"}
+
+::: {.small}
+```{r}
+X <- model.matrix(~ Region, 
+                  data = Credit)
+head(X)
+```
+:::
+
+:::
+
+::::
+
+
+## Interaction terms
+
+- Beta coefficients per predictor say something about the effect of that predictor on $y$ when all others are fixed. Can you think of a way to have a coefficient capturing the simultaneous effect of two predictors holidng the rest fixed in our predictor matrix?
+
+. . .
+
+- Interaction terms allow us to capture more complex relationships in the model reflecting the joint effect of two predictors. This is represented in the product of the two predictors.
+
+| 
+| 
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-- Categorical variables with $l$ levels can be represented as $l-1$ so called dummy variables consisting of columns of 1s and 0s. We will see this more in the lab session.
-- Beta coefficients per predictor say something about the effect of that predictor on $y$ when all others are fixed.
-- Interaction terms allow us to capture more complex relationships in the model reflecting the joint effect of two predictors. This is represented in the product of the two predictors.
 
-::: 
-
-::: {.column width="50%"}
 ::: {.small}
 ```{r}
 X <- model.matrix(~ TV + radio + newspaper + TV:radio, 
                   data = advertisingData)
 head(X)
 ```
+:::
 
-| 
-|
+:::
 
+::: {.column width="50%"}
+
+::: {.small}
 ```{r}
 X <- model.matrix(~ TV*radio + newspaper, 
                   data = advertisingData)
 head(X)
 ```
 :::
+
 :::
 
-:::: 
+::::
+
 
 ## Evaluating the quality of the linear fit
 
@@ -733,12 +786,6 @@ head(X)
 
 :::: {.columns}
 
-::: {.column width="50%"}
-
-![](assets/SpuriousCorrelation1.webp){width=70%}
-![](assets/SpuriousCorrelation2.webp){width=70%}
-
-:::
 
 ::: {.column width="50%"}
 
@@ -747,11 +794,18 @@ head(X)
 
 :::
 
+::: {.column width="50%"}
+
+![](assets/SpuriousCorrelation1.webp){width=70%}
+
+![](assets/CorrelationCausation.webp)
+
+
+:::
+
 ::::
 
-## 
 
-![](assets/CorrelationCausation.webp){width=60%}
 
 
 ::: {.aside}
@@ -763,8 +817,15 @@ head(X)
 
 - What is an outlier?
 - Why do they arise?
+- What do you do with them?
 - Can the linear fit be impacted by outliers and when?
 - What can you say about the fit and residuals?
+
+:::: {.columns}
+
+
+::: {.column width="50%"}
+
 
 ```{r}
 #| echo: false
@@ -797,7 +858,25 @@ ggplot(df, aes(x = TV, y = sales)) +
                  color = "steelblue", alpha = 0.4)
 ```
 
+:::
+
+::: {.column width="50%"}
+
+![](assets/SingleCell.webp)
+
+:::
+
+::::
+
+::: {.aside}
+[Image from OSCA](https://bioconductor.org/books/3.23/OSCA.basic/index.html)
+:::
+
+
+
 ## Robust regression
+
+$RSS=\sum_{i=1}^Ne_i^2$
 
 ```{r}
 #| echo: false
@@ -837,7 +916,7 @@ p1 + p2
 
 ![](assets/DataVaries.webp){width=60%}
 
-- We draw samples from a populationa and sample size matters.
+- We draw samples from a population and sample size matters. Is it representative?
 - How strong is the signal. How easily is it detected and how much variance does it explain in the data?
 - Something to be said for good quality data sets.
 
@@ -849,7 +928,12 @@ p1 + p2
 ## The bias-variance trade-off
 
 - Suppose we have our estimated beta coefficients. Do you think we would get the same values if we did a fit on another set of observations? 
-- What happens to beta coefficients predictors which are highly correlated but don't explain the response $y$?
+- What happens to the beta coefficients of predictors which are highly correlated but don't explain the response $y$?
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_3 + \beta_4x_4 + \beta_5x_5 + \epsilon$$
+
+. . . 
+
 - Out goal is get good and robust estimates of the coefficients that we can interpret.
 - Shrinkage methods try to overcome these issues by imposing a penalty on the size of the coeficients.
 
