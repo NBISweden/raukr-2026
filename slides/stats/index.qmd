@@ -1153,7 +1153,7 @@ fitCV <- cv.glmnet(x = X, y = y, alpha = 0.5)
 
 - Can be used when p > N.
 - We speak of selection probability values for predictors instead of beta coefficient values.
-- How is this calculated with lasso stability selection?
+- How is this calculated with lasso stability selection. If predictor $x_1$ has a non-zero beta coefficient 80 times and we subset 100 times to do a regression what is its selection probability? Do you think this is high?
 
 :::
 
@@ -1189,12 +1189,22 @@ Meinshausen and Bühlmann 2010
 
 ::: {.notes}
 Q: comment on: lambda choice affecting beta coefficients, separation of signal from noise
+
+data set:
+For n =115 samples, there is a continuous response variable measuring the log-
+arithm of riboflavin (vitamin B2) production rate of bacillus subtilis, and we have p= 4088
+continuous covariates measuring the logarithm of gene expressions from essentially the whole
+genome of bacillus subtilis.
+Randomly permutes all except 6 of the 4088 gene expressions across the samples. The set of six
+unpermuted genes has been chosen randomly among the 200 genes with the highest marginal
+association with the response. 
+
 :::
 
 
 ## Selecting true predictors
 
-- Regularization with stability selection is very conservative in practice.
+- Regularization with stability selection is rather conservative in practice.
 - We need to specify 2 of: probability cutoff, upper bound on PFER, number of selected variables q
 - *Not* slecting a predictor is also a result and telling. Can you think of an example where this could happen?
 
@@ -1203,6 +1213,82 @@ Q: comment on: lambda choice affecting beta coefficients, separation of signal f
 ::: {.aside}
 Meinshausen and Bühlmann 2010
 :::
+
+## What about correlated predictors?
+
+- What did we say about correlated predictors?
+
+![](assets/StabilitySelectionPerformance.webp){width=60%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
+
+::: {.notes}
+(a) Independent predictor variables: all p=1000 predictor variables are IID standard normal
+distributed; sample size n =100 and n =1000.
+(b) Block structure with 10 blocks: the p=1000-dimensional predictor variable follows an
+N .0, Σ/ distribution, where Σkm =0 for all pairs .k, m/ except if mod10.k/=mod10.m/,
+for which Σkm =0:5; sample size n =200 and n =1000.
+(c) Toeplitz design: the p=1000-dimensional predictor variable follows an N .0, Σ/ distribu-
+tion, where Σkm =ρ|k−m| and ρ=0:99; sample size n =200 and n =1000.
+(d) Factor model with two factors: let φ1 and φ2 be two latent variables following IID stan-
+dard normal distributions. Each predictor variable Xk, for k=1, . . . , p, is generated as
+Xk =fk,1φ1 +fk,2φ2 +ηk, where fk,1, fk,2 and ηk have IID standard normal distributions
+for all k=1, . . . , p; sample sizes are n =200 and n =1000, and p=1000.
+(e) (f) Data set (e) identical to (d) but with 10 instead of two factors.
+Motif regression data set: this is a data set (p=660 and n =2587) about finding transcrip-
+tion factor binding sites (motifs) in DNA sequences. The real-valued predictor variables
+are abundance scores for p candidate motifs (for each of the genes). Our data set is from a
+heat shock experiment with yeast. For a general description and motivation about motif
+regression we refer to Conlon et al. (2003).
+434 N. Meinshausen and P. Bühlmann
+(g) This data set is the vitamin gene expression data (with p=4088 and n =158) that were
+described in Section 2.2.
+:::
+
+## Strengths of stability selection
+
+- p >> n situations (flexibility to for example add many more interaction terms in predictor matrix)
+- Reasonably correlated predictor matrix.
+- Consistent variable selection (robust) - important in noisy data sets.
+- Conservative, no selection is a result. 
+- Parameters for error control.
+- Less dependent on the particular $\lambda$ choice.
+
+. . . 
+
+- Overall questions on the linear models and concepts we have explored so far before we move to some interesting uses and applications?
+
+## Loess
+
+```{r}
+
+## create example
+set.seed(123)
+n <- 150
+x <- runif(n, 0, 10)
+f <- function(x) {
+  2 + 0.5*x + 2*sin(x)
+}
+y <- f(x) + rnorm(n, 0, 0.8)
+
+df <- data.frame(x, y)
+
+ggplot(df, aes(x = x, y = y)) + 
+    geom_point() + 
+    theme_bw()
+```
+
+
+## Experimental design
+
+![](assets/BatchEffects.webp)
+
+## Batch correction
+
+
+
 
 ## Gaussian graphical models (GGMs)
 
@@ -1249,9 +1335,7 @@ Meinshausen and Bühlmann 2006
 - Logistic regression.
 - ... to mention a few additional ones.
 
-## Experimental design
 
-![](assets/BatchEffects.webp)
 
 
 
