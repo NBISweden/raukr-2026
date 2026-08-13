@@ -68,8 +68,100 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
  
 :::
 
+## Biocondutor
 
-## Statistical methods are developed to make sense of the world
+:::: {.columns}
+
+::: {.column width="85%"}
+
+- "The mission of the Bioconductor project is to develop, support, and disseminate free open source software that facilitates rigorous and reproducible analysis of data from current and emerging biological assays. We are dedicated to building a diverse, collaborative, and welcoming community of developers and data scientists."
+
+:::
+
+::: {.column width="15%"}
+
+![](assets/BiocHexLogo.webp){width=75%}
+
+:::
+
+::::
+
+- Current release (2.23): 
+  - 2,418 software packages
+  - 928 AnnotationData packages
+  - 436 ExperimentData packages
+  - 28 Workflows
+  - 8 books
+
+also mention version controlling with bioc and their releases, renv with bioc release and biocmanager
+
+::: {.notes}
+
+- communities within BioC
+- shared data structures such as SummarizedExperiment, GRanges, DNAstrings .. 
+- Tools work together 
+- higher standards when it comes to documentation and vignettes
+- courses, conferences, events.. 
+- Get involved, it's a very welcoming community to all levels, recently: student-ECR council for students and early-career researchers (ECRs) mentorship program with a Bioc developer or experienced memeber planned for the next conference
+
+:::
+
+::: {.aside}
+[https://bioconductor.org](https://bioconductor.org)
+:::
+
+## EuroBioc 2026 Turku, Finland (June 3-5) {.center}
+
+![](assets/EuroBioc2026a.webp)
+
+## 25 years of Bioconductor {.center}
+
+![](assets/EuroBioc2026b.webp)
+
+## Conferences
+
+- BioC
+- BiocAsia
+- EuroBioC -- next one in Basel, Switzerland Sept 8-10 (pre-conf 6-7)
+
+| 
+
+
+:::: {.columns}
+::: {.column width="20%"}
+![Image 1](assets/CarolineUhler.webp)
+*Caroline Uhler*
+:::
+::: {.column width="20%"}
+![Image 2](assets/DavideRisso.webp)
+*Davide Risso*
+:::
+::: {.column width="20%"}
+![Image 3](assets/MireiaRamos.webp)
+*Mireia Ramos-Rodríguez*
+:::
+::: {.column width="20%"}
+![Image 4](assets/LucaGiorgetti.webp)
+*Luca Giorgetti*
+:::
+::: {.column width="20%"}
+![Image 5](assets/DariaLazic.webp)
+*Daria Lazic*
+:::
+::::
+
+. . . 
+
+- Zulip channel open to anyone.
+
+
+::: {.aside} 
+
+[https://eurobioc2027.bioconductor.org](https://eurobioc2027.bioconductor.org)
+
+:::
+
+## Statistical methods are developed to be used in the real world!
 
 :::: {.columns}
 
@@ -1260,9 +1352,13 @@ described in Section 2.2.
 
 - Overall questions on the linear models and concepts we have explored so far before we move to some interesting uses and applications?
 
+## Break here with an example data set and ask students which method they would use?
+
+
 ## Loess
 
 ```{r}
+#| echo: false
 
 ## create example
 set.seed(123)
@@ -1278,7 +1374,71 @@ df <- data.frame(x, y)
 ggplot(df, aes(x = x, y = y)) + 
     geom_point() + 
     theme_bw()
+
 ```
+
+
+```{r}
+fit1 <- loess(y ~ x)
+```
+
+```{r}
+#| echo: false
+
+df$fitted <- fit1$fitted
+ggplot(df, aes(x = x, y = y)) + 
+    geom_point() + 
+    geom_point(aes(x = x, y = fitted), color = "firebrick") + 
+    theme_bw()
+
+```
+
+```{r}
+fit2 <- loess(y ~ x, span = 0.9)
+```
+
+```{r}
+#| echo: false
+
+df$fittedSpanPt9 <- fit2$fitted
+ggplot(df, aes(x = x, y = y)) + 
+    geom_point() + 
+    geom_point(aes(x = x, y = fittedSpanPt9), color = "firebrick") + 
+    theme_bw()
+
+```
+
+
+```{r}
+fit3 <- loess(y ~ x, span = 0.5)
+```
+
+```{r}
+#| echo: false
+
+df$fittedSpanPt5 <- fit3$fitted
+ggplot(df, aes(x = x, y = y)) + 
+    geom_point() + 
+    geom_point(aes(x = x, y = fittedSpanPt5), color = "firebrick") + 
+    theme_bw()
+
+```
+
+## `Limma`'s normalize cyclic loess and example of GC bias
+
+. . .
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+![](assets/GCbias1.webp){width=60%}
+
+![](assets/GCbias2.webp){width=60%}
+
+:::
+
+::::
 
 
 ## Experimental design
@@ -1286,7 +1446,6 @@ ggplot(df, aes(x = x, y = y)) +
 ![](assets/BatchEffects.webp)
 
 ## Batch correction
-
 
 
 
