@@ -86,6 +86,12 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
 
 ::::
 
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+
 - Current release (2.23): 
   - 2,418 software packages
   - 928 AnnotationData packages
@@ -93,16 +99,38 @@ Robert Gentleman (23andme) + others - Bioconductor project in 2001
   - 28 Workflows
   - 8 books
 
-also mention version controlling with bioc and their releases, renv with bioc release and biocmanager
+```{r}
+#| eval: false
+BiocManager::install(
+    "Biostrings", 
+    version = "3.23")
+renv::init(bioconductor = "3.23")
+```
+
+
+:::
+
+
+::: {.column width="60%"}
+
+![](assets/BiocPubl.webp){width=70%}
+
+:::
+
+::::
+
+
 
 ::: {.notes}
 
-- communities within BioC
+- release cycles, ~ 6 months, packages tested togther
+- communities within BioC, e.g. tidyomics, spatial hackathon etc
 - shared data structures such as SummarizedExperiment, GRanges, DNAstrings .. 
 - Tools work together 
 - higher standards when it comes to documentation and vignettes
 - courses, conferences, events.. 
 - Get involved, it's a very welcoming community to all levels, recently: student-ECR council for students and early-career researchers (ECRs) mentorship program with a Bioc developer or experienced memeber planned for the next conference
+- installing packages: stick to release..
 
 :::
 
@@ -121,8 +149,8 @@ also mention version controlling with bioc and their releases, renv with bioc re
 ## Conferences
 
 - BioC
-- BiocAsia
-- EuroBioC -- next one in Basel, Switzerland Sept 8-10 (pre-conf 6-7)
+- BiocAsia -- next one in Melbourne, Australia Nov 19-20, 2026
+- EuroBioC -- next one in Basel, Switzerland Sept 8-10, 2027 (pre-conf 6-7)
 
 | 
 
@@ -152,7 +180,7 @@ also mention version controlling with bioc and their releases, renv with bioc re
 
 . . . 
 
-- Zulip channel open to anyone.
+- [Zulip](https://community-bioc.zulipchat.com/join/4k2tpsy7h6zjbaduydwm2n56/) channel open to everyone
 
 
 ::: {.aside} 
