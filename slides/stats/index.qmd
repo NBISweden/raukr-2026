@@ -19,6 +19,18 @@ library(ggplot2)
 library(patchwork)
 ```
 
+
+## Outline
+
+- R and statistics
+- Bioconductor project
+- Overview of statistical learning
+- Simple linear regression
+- Multiple linear regression
+- Shrinkage methods
+- Stability selection
+- Applications
+
 ## R and statistics
 
 - S (for **S**tatistics) is a statistical programming language developed at Bell Labs in 1976. 
@@ -425,8 +437,8 @@ https://images.nasa.gov
 - Do you think we can mix both or use the training data to test?
 
 ::: {.fragment}
-- Answer: Definitely not. Why: Our aim is to use the model on new data and not to explain the data we already have. 
-- Overfitting -- Be skeptical when someone claims 100% accuracy with prediction ..
+- Our aim here is to use the model on new data and not to explain the data we already have. 
+- Overfitting -- Should we be skeptical when someone claims 100% prediction accuracy with their model?
 
 ![](assets/Overfitting.webp){width=100%}
 
@@ -439,7 +451,7 @@ https://images.nasa.gov
 
 
 ::: {.aside}
-Image from An Introduction to Statistical Learning
+Images: An Introduction to Statistical Learning, 
 [Overfitting](https://www.geeksforgeeks.org/machine-learning/underfitting-and-overfitting-in-machine-learning/)
 :::
 
@@ -471,7 +483,7 @@ Image from An Introduction to Statistical Learning
 
 
 ::: {.aside}
-[Franz H. Messerli 2012](https://library.scottbarrykaufman.com/uploads/2012/10/Messerli-2012.pdf)
+Images: [Franz H. Messerli 2012](https://library.scottbarrykaufman.com/uploads/2012/10/Messerli-2012.pdf), 
 [Chocolate habits of Nobel prizewinners](https://www.nature.com/articles/499409a)
 :::
 
@@ -506,7 +518,7 @@ Image from An Introduction to Statistical Learning
 
 
 ::: {.aside}
-[https://xkcd.com/2048/](https://xkcd.com/2048/)
+Images: [https://xkcd.com/2048/](https://xkcd.com/2048/)
 :::
 
 ## Linear models
@@ -948,7 +960,7 @@ head(X)
 
 
 ::: {.aside}
-[https://xkcd.com/552/](https://xkcd.com/552/)
+[https://xkcd.com/552/](https://xkcd.com/552/), [spurious-correlations](https://www.tylervigen.com/spurious-correlations)
 :::
 
 
@@ -1010,10 +1022,13 @@ ggplot(df, aes(x = TV, y = sales)) +
 ::::
 
 ::: {.aside}
-[Image from OSCA](https://bioconductor.org/books/3.23/OSCA.basic/index.html)
+[Image from OSCA book](https://bioconductor.org/books/3.23/OSCA.basic/index.html)
 :::
 
 
+::: {.notes}
+Sometimes we are interested in data points which vary more than expected e.g. single cell data and highly variable genes.
+:::
 
 ## Robust regression
 
@@ -1134,7 +1149,7 @@ Image from An Introduction to Statistical Learning
 ::::
 
 ::: {.aside}
-Images from An Introduction to Statistical Learning and from `glmnet`
+Images: from An Introduction to Statistical Learning, `glmnet` package
 :::
 
 ## `glmnet`
@@ -1399,12 +1414,24 @@ described in Section 2.2.
 
 . . . 
 
-- Overall questions on the linear models and concepts we have explored so far before we move to some interesting uses and applications?
-
-## Break here with an example data set and ask students which method they would use?
+| 
+| 
+| 
+- Overall questions on the linear models and concepts we have explored so far before we move on to some interesting uses and applications?
 
 
 ## Loess
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+::: {.small}
+```{r}
+# example data set
+```
+
+::: 
 
 ```{r}
 #| echo: false
@@ -1426,54 +1453,95 @@ ggplot(df, aes(x = x, y = y)) +
 
 ```
 
-
+::: {.small}
 ```{r}
 fit1 <- loess(y ~ x)
 ```
+:::
 
 ```{r}
 #| echo: false
 
-df$fitted <- fit1$fitted
-ggplot(df, aes(x = x, y = y)) + 
-    geom_point() + 
-    geom_point(aes(x = x, y = fitted), color = "firebrick") + 
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit1, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
     theme_bw()
 
 ```
 
+:::
+
+::: {.column width="40%"}
+
+::: {.fragment}
+
+::: {.small}
 ```{r}
 fit2 <- loess(y ~ x, span = 0.9)
 ```
+:::
 
 ```{r}
 #| echo: false
 
-df$fittedSpanPt9 <- fit2$fitted
-ggplot(df, aes(x = x, y = y)) + 
-    geom_point() + 
-    geom_point(aes(x = x, y = fittedSpanPt9), color = "firebrick") + 
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit2, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
     theme_bw()
 
 ```
 
-
+::: {.small}
 ```{r}
 fit3 <- loess(y ~ x, span = 0.5)
 ```
+:::
+
 
 ```{r}
 #| echo: false
 
-df$fittedSpanPt5 <- fit3$fitted
-ggplot(df, aes(x = x, y = y)) + 
-    geom_point() + 
-    geom_point(aes(x = x, y = fittedSpanPt5), color = "firebrick") + 
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit3, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
     theme_bw()
 
 ```
 
+:::
+
+:::
+
+::::
+
 ## `Limma`'s normalize cyclic loess and example of GC bias
+
+```{r}
+#| eval: false
+limma::normalizeCyclicLoess()
+```
+
 
 . . .
 
