@@ -37,42 +37,14 @@ library(patchwork)
 - R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R package first.
 
 
-## R and statistics
-
-:::: {.columns}
-
-::: {.column width="70%"}
-![](assets/RousseeuwPrize.webp)
-:::
-
-::::
-
-::: {.aside}
-[Rousseeuw Prize](https://www.rousseeuwprize.org/2026)
-:::
-
-
-::: {.notes}
-
-S: statisticians needed a flexible framework to explore data and where they could also develop new methods
-
-Bell Labs:
- - an American industrial research and development company owned by the Finnish technology company Nokia.
- - former subsidiary of the American Telephone and Telegraph Company (AT&T)
-
-R: first letters in creators' names and the S language successor
-
-Robert Gentleman (23andme) + others - Bioconductor project in 2001
-
-- The Rousseeuw Prize for Statistics: awarded every 2 years, US$1,000,000 award, Belgium
- 
-:::
-
-## Biocondutor
+## R and bioinformatics - the Bioconductor project
 
 :::: {.columns}
 
 ::: {.column width="85%"}
+
+|
+|
 
 - "The mission of the Bioconductor project is to develop, support, and disseminate free open source software that facilitates rigorous and reproducible analysis of data from current and emerging biological assays. We are dedicated to building a diverse, collaborative, and welcoming community of developers and data scientists."
 
@@ -138,6 +110,7 @@ renv::init(bioconductor = "3.23")
 [https://bioconductor.org](https://bioconductor.org)
 :::
 
+
 ## EuroBioc 2026 Turku, Finland (June 3-5) {.center}
 
 ![](assets/EuroBioc2026a.webp)
@@ -189,7 +162,43 @@ renv::init(bioconductor = "3.23")
 
 :::
 
+
+## R and statistics
+
+:::: {.columns}
+
+::: {.column width="70%"}
+![](assets/RousseeuwPrize.webp)
+:::
+
+::::
+
+::: {.aside}
+[Rousseeuw Prize](https://www.rousseeuwprize.org/2026)
+:::
+
+
+::: {.notes}
+
+S: statisticians needed a flexible framework to explore data and where they could also develop new methods
+
+Bell Labs:
+ - an American industrial research and development company owned by the Finnish technology company Nokia.
+ - former subsidiary of the American Telephone and Telegraph Company (AT&T)
+
+R: first letters in creators' names and the S language successor
+
+Robert Gentleman (23andme) + others - Bioconductor project in 2001
+
+- The Rousseeuw Prize for Statistics: awarded every 2 years, US$1,000,000 award, Belgium
+ 
+:::
+
+
 ## Statistical methods are developed to be used in the real world!
+
+| 
+| 
 
 :::: {.columns}
 
@@ -214,6 +223,9 @@ Gosset's idea was simply to replace σ (population) with s (sample). Because s i
 Sometimes it underestimates the true variability. Sometimes it overestimates it. That makes the standardized statistic more variable than a Normal random variable, producing the heavier tails of the t-distribution. As the sample size increases, s→σ, so the t-distribution approaches the Normal distribution.
 :::
 
+::: {.aside}
+[https://en.wikipedia.org/wiki/William_Sealy_Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset)
+:::
 
 ## Data science and learning from data
 
@@ -539,10 +551,12 @@ Neural networks gained popularity in the 1980s, and support vector machines aros
 
 ::: {.column width="70%"}
 
+::: {.fragment}
 ![](assets/LinearModelsVsNonLinear1.webp)
 
 ![](assets/LinearModelsVsNonLinear2.webp)
 
+:::
 :::
 
 ::::
@@ -559,7 +573,7 @@ $$y = \beta_0 + \beta_1x + \epsilon$$
 
 :::: {.columns}
 
-::: {.column width="70%"}
+::: {.column width="50%"}
 
 ```{r}
 #| fig-height: 4
@@ -578,10 +592,15 @@ ggplot(advertisingData, aes(x = TV, y = sales)) +
 
 :::
 
-::: {.column width="30%"}
+::: {.column width="50%"}
+
+|
+|
+|
+|
 
 - What do $\beta_0$ and $\beta_1$ capture?
-- Can you think of a way to do do the fit?
+- How do we find the best fit?
 
 :::
 
@@ -947,6 +966,7 @@ head(X)
 ::: {.column width="50%"}
 
 
+::: {.fragment}
 ```{r}
 #| echo: false
 
@@ -977,13 +997,14 @@ ggplot(df, aes(x = TV, y = sales)) +
     geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
                  color = "steelblue", alpha = 0.4)
 ```
-
+:::
 :::
 
 ::: {.column width="50%"}
 
+::: {.fragment}
 ![](assets/SingleCell.webp)
-
+:::
 :::
 
 ::::
