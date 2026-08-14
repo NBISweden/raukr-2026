@@ -711,7 +711,13 @@ Apply the stability selection method of choice (lasso or randomized) on the pros
 
 ## Bonus exercise
 
+### Option A
+
 Use the prostate cancer data set apply a ridge regression, a lasso and lasso stability selection. Compare the coefficients you are getting and what gets selected, keeping in mind what the correlation structure looks like as well in the predictor matrix.
+
+### Option B
+
+Think about if/how you can use these methods in your projects and which flavor of them would best suit your needs.
 
 ## Resources
 
