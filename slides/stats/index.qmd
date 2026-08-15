@@ -22,9 +22,7 @@ library(patchwork)
 
 ## Outline
 
-- R and statistics
-- Bioconductor project
-- Overview of statistical learning
+- Overview: R, Bioconductor, statistical learning
 - Simple linear regression
 - Multiple linear regression
 - Shrinkage methods
@@ -41,12 +39,12 @@ library(patchwork)
 
 . . . 
 
-- R released in 1993 by **R**oss Ihaka and **R**obert Gentleman as the free and open-source alternative (part of GNU project) using ideas and syntax from S.
+- R released in 1993 by **R**oss Ihaka and **R**obert Gentleman as the free and open-source alternative (initially part of GNU project) using ideas and syntax from S.
   - R 1.0 released in 2000.
   
 . . . 
 
-- R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R package first.
+- R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R packages first.
 
 
 ## R and bioinformatics - the Bioconductor project
@@ -115,6 +113,7 @@ renv::init(bioconductor = "3.23")
 - courses, conferences, events.. 
 - Get involved, it's a very welcoming community to all levels, recently: student-ECR council for students and early-career researchers (ECRs) mentorship program with a Bioc developer or experienced memeber planned for the next conference
 - installing packages: stick to release..
+- click on link and go build reports
 
 :::
 
@@ -133,7 +132,7 @@ renv::init(bioconductor = "3.23")
 
 ## Conferences
 
-- BioC
+- BioC -- Aug 10-12 in Seattle
 - BiocAsia -- next one in Melbourne, Australia Nov 19-20, 2026
 - EuroBioC -- next one in Basel, Switzerland Sept 8-10, 2027 (pre-conf 6-7)
 
@@ -239,7 +238,7 @@ Sometimes it underestimates the true variability. Sometimes it overestimates it.
 [https://en.wikipedia.org/wiki/William_Sealy_Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset)
 :::
 
-## Data science and learning from data
+## Early examples of Data science and learning from data
 
 :::: {.columns}
 
