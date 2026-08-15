@@ -1535,53 +1535,127 @@ ggplot(df, aes(x, y)) +
 
 ::::
 
-## `Limma`'s normalize cyclic loess and example of GC bias
 
-```{r}
-#| eval: false
-limma::normalizeCyclicLoess()
-```
+::: {.notes}
+
+loess: uses points around x to do a linear regression, and nearby observations get more weight than distant observations. 100 pts means roughly 100 local regressions done. For each pt, uses the estimated coefficients to calculate predicted y, which will become part of the final fit.
+
+:::
 
 
-. . .
+## GC bias trends in ATAC-seq/ChIP-seq data
+
 
 :::: {.columns}
 
-::: {.column width="40%"}
+::: {.column width="50%"}
 
-![](assets/GCbias1.webp){width=60%}
+![](assets/GCbias1.webp)
 
-![](assets/GCbias2.webp){width=60%}
+:::
+
+::: {.column width="50%"}
+
+
+![](assets/GCbias2.webp)
+
 
 :::
 
 ::::
 
 
-## Experimental design
-
-![](assets/BatchEffects.webp)
-
-## Batch correction
-
-
-
-## Gaussian graphical models (GGMs)
-
-- Model statistical relationships between variables using graphs
-- Special algebraic and geometric properties
-- Covariance matrix: covariance between each pair of variables
-- In GGMs the inverse covariance matrix is the adjacency matrix (edges in graph)
-
-![](assets/GGM.webp){width=60%}
-
-## Estimating the graph
+## Correcting the trend with `limma`'s `normalizeCyclicLoess()` 
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-- Fitt lasso on each variable, using all others as predictors.
+![](assets/CyclicLoessBefore.webp)
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/CyclicLoessAfter.webp)
+
+:::
+
+:::
+
+::::
+
+
+## Experimental design and batch correction
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+![](assets/BatchEffects.webp)
+
+:::
+
+::: {.column width="40%"}
+
+|
+|
+
+::: {.fragment}
+
+::: {.small}
+$$y_{observed} = \beta_0 + \beta_{biology}x_{biology} + \beta_{batch}x_{batch} + \epsilon$$
+:::
+
+
+|
+|
+|
+
+$$y_{corrected} = \beta_0 + \beta_{biology}x_{biology} + \epsilon$$ 
+
+or 
+
+$$y_{corrected} = y_{observed} - \beta_{batch}x_{batch}$$
+
+:::
+
+:::
+
+::::
+
+::: {.notes}
+
+`limma`'s `removeBatchEffect()`
+My use cases: bulk RNA to see PCA when batch is removed.. In DE we model batch effect as a covariate.
+
+:::
+
+::: {.aside}
+[Image source](https://doi.org/10.1093/biostatistics/kxx053)
+:::
+
+
+
+## Gaussian graphical models (GGMs)
+
+- Model statistical relationships between variables using graphs.
+- Special algebraic and geometric properties.
+- Covariance matrix: covariance between each pair of variables.
+- The goal is to estimate the precision matrix (inverse covariance matrix ) which shows the edges in the graph.
+
+
+![](assets/GGM.webp){width=60%}
+
+## Estimating the (sparse) graph
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Fit lasso on each variable, using all others as predictors.
 - Lambda controls sparsity.
 - Draw edge with AND/OR rule.
 - Edges in the graph reflect meaningful relationships. A missing edge between $x_1$ and $x_2$ means those two variables are conditionally independent given all other variables.
@@ -1609,30 +1683,32 @@ Meinshausen and Bühlmann 2006
 - Mixed effects models.
 - Multivariate regression.
 - Logistic regression.
-- ... to mention a few additional ones.
+- ... to mention a few.
 
 
 
 
 
-## Additional links
+## Extra reading/links
 
-- Written by Witten (wxw): [https://www.danielawitten.com/written-by-witten](https://www.danielawitten.com/written-by-witten)
-- Nicolei Meinshausen: [https://people.math.ethz.ch/~nicolai/](https://people.math.ethz.ch/~nicolai/)
-- [https://www.tylervigen.com/spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+- [Written by Witten (wxw)](https://www.danielawitten.com/written-by-witten)
+- [Nicolei Meinshausen's website](https://people.math.ethz.ch/~nicolai/)
+- [Spurious correlations](https://www.tylervigen.com/spurious-correlations)
 - [Journal of the Royal Statistical Society Series B](https://academic.oup.com/jrsssb)
 - [Statistical Ideas that Changed the World](https://ledaliang.github.io/journalclub/)
 - [https://what-if.xkcd.com/archive/](https://what-if.xkcd.com/archive/)
+- [https://xkcd.com](https://xkcd.com)
 
-. . .
+![](assets/Yoda.webp){width=40%}
 
-- XKCD: link here
-read in image here
 
-. . .
+::: {.notes}
+In reasoning quantitatively about the world and seeking to understand it, while thinking **critically** and **creatively**, maybe using some of the tools we learnt about today, **you** are a participating data scientist.
+:::
 
-- In reasoning quantitatively about the world and seeking to understand it, while thinking **critically** and **creatively**, maybe using some of the tools we learnt about today, **you** are a participating data scientist.
-
+::: {.aside}
+[https://what-if.xkcd.com/3/](https://what-if.xkcd.com/3/)
+:::
 
 ## Resources
 
