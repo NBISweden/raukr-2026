@@ -1,0 +1,741 @@
+---
+title: "Statistical Learning"
+author: "Dania Machlab"
+description: "Linear Models"
+format: html
+image: "assets/featured.webp"
+---
+
+```{r}
+#| echo: false
+
+library(ISLR2)
+library(MASS)
+library(glmnet)
+library(monaLisa)
+library(SummarizedExperiment)
+library(ggplot2)
+library(patchwork)
+library(tidyverse)
+```
+
+## Overview
+
+### Learning outcomes
+
+- understand what a linear model is
+- understand the different flavors of linear regression and what differentiates them
+- know what these terms mean: predictor, response, residual, coefficient, least squares
+- understand bias-variance trade off and collinearity in regression
+- be able to assess what linear regression fits best to learn what you need from your data
+
+Note that boxes labeled **Task** will ask you to do follow up analyses or exploration using what has been demonstrated. We will discuss them and go through them together.
+
+### Linear models
+
+Linear models are incredibly useful and powerful in that they allows us to learn something from the data while providing a high degree of interpretability. Given a variable $y$, the model assumes the expected value of $y$ is linear in the inputs $x$. Mathematically, we model $y = \beta_0 + \beta_1x_1 + ... + \beta_px_p + \epsilon$ for $p$ variables or predictors.
+
+
+### Annotations and vocabulary
+
+There is some vocabulary we will use in this lab, and it's good to start getting used to these naming conventions if you don't already know them. We often refer to $y$ as the *response* or *dependent variable*, and to $x$ as the *predictor* or *independent variable*.
+
+We are learning the linear function $y \sim \hat{f}(x)$. This fit is not perfect, due to measuring errors or if the linear model is a poor representation of $y$. We look at the difference between the observed $y$ and predicted $\hat{y}=\beta_0 + \beta_1x_1 + ... + \beta_px_p$. This difference is called the residual. For each observation $i$, the residual $e_i = y_i - \hat{y_i}$. The least squares method will find beta estimates that minimize the squared sum of these residuals. In other words we want to minimize the the residual sum of squares (RSS) where $RSS=\sum_{i=1}^Ne_i^2$.
+
+
+### The data sets
+
+#### Advertising data set
+
+The advertising data set is a simulated data set coming from the "Introduction to Statistical Learning" book by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani. 
+```{r}
+## Set to the desired working directory (you may change this to suit your wdir)
+wdir <- "~/GitHub/raukr-2026/labs/stats"
+setwd(wdir)
+
+## Download the dataset
+download.file(url = "https://www.statlearning.com/s/Advertising.csv", 
+              destfile = file.path(wdir, "assets", "Advertising.csv"))
+
+## Read in the data 
+advertisingData <- read.csv(file = "assets/Advertising.csv", 
+                            header = TRUE, 
+                            row.names = 1)
+str(advertisingData)
+head(advertisingData)
+summary(advertisingData)
+```
+
+```{r}
+colnames(advertisingData)
+```
+
+- sales: sales (in thousands) of the product
+- TV: advertising budget on TV
+- radio: advertising budget on the radio
+- newspaper: advertising budget in newspapers
+
+#### Credit data set
+
+The Credit data set is a data set coming from the "Introduction to Statistical Learning" book by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani. It contains information on credit card debt for customers, and is available through the R package accompanying the book, called `ISLR2`.
+```{r}
+attach(Credit)
+head(Credit)
+```
+
+```{r}
+colnames(Credit)
+```
+
+- Income: income in thousands of dollars
+- Limit: credit limit
+- Rating: credit rating
+- Cards: number of credit cards
+- Age: age of individual
+- Education: years of education
+- Own: house ownership
+- Student: student status
+- Married: marital status
+- Region: East, West or South
+- Balance: average credit card depth of an individual
+
+#### Prostate data set
+
+The prostate cancer data set comes from The Elements of Statistical Learning book by Trevor Hastie, Robert Tibshirani and Jerome Friedman. The data contains measurements of prostate specific antigen (PSA) and a number of clinical measurements in men who were about to receive a radical prostatectomy.
+```{r}
+## Download the dataset
+download.file(url = "https://hastie.su.domains/ElemStatLearn/datasets/prostate.data", 
+              destfile = file.path(wdir, "assets", "ProstateData.txt"))
+
+## Read in the data 
+prostateData <- read.table(file = "assets/ProstateData.txt", 
+                           header = TRUE, 
+                           sep = "\t", 
+                           row.names = 1)
+str(prostateData)
+head(prostateData)
+summary(prostateData)
+```
+
+```{r}
+colnames(prostateData)
+```
+
+- lcavol: log cancer volume
+- lweight: log prostate weight
+- age: individual's age
+- lbph: log of benign prostatic hyperplasia amount
+- svi: seminal vesicle invasion
+- lcp: log of capsular penetration
+- gleason: Gleason score
+- pgg45: percent of Gleason scores 4 or 5 pgg45
+- lpsa: log of PSA
+- train: if this will be used as training data. We will ignore this and use all the data since we are interested in learning the relationship between predictors and not using the data to train a model to use for future predictions.
+
+
+## Simple linear regression
+
+As the name implies, a simple linear regression predicts a quantitative response $y$ on the basis of a single predictor $x$ and assumes an approximately linear relationship between $x$ and $y$. Mathematically, we can write this linear relationship as $$y = \beta_0 + \beta_1x + \epsilon$$ where $\beta_0$ and $\beta_1$ are the intercept term and the coefficient for $x$ respectively. The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
+
+We are going to assume that we are statistical consultants that were hired by a client to investigate the association between advertising and the sales, in thousands of units, of the product in the advertising data set. In other words, we are estimating the beta coefficients in the following equation: $sales = \beta_0 + \beta_1TV + \epsilon$. 
+
+The data contains advertising budgets for the product for three different media: TV, radio and newspaper. Can we learn something about the relationship between sales and advertising that can guide or inform future marketing plans?
+
+Let us have a first look at the sales vs TV relationship in the data. Visually, we can see some kind of linear relationship and that sales increases with increasing TV advertising budget. Is there anything else you notice about the spread of the data?
+
+```{r}
+ggplot(advertisingData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    theme_bw()
+```
+
+Let's estimate the beta coefficients and learn the exact linear function capturing this relationship.
+```{r}
+## Fit linear model
+simpleLinearFit <- lm(sales ~ TV, data = advertisingData) 
+simpleLinearFit
+names(simpleLinearFit)
+```
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Explore the `simpleLinearFit` object and what it contains. You can make use of the following methods: `str()`, `class()`, `names()` and the `$` sign to access slots. You can also refer to the help page of the `lm()` function to see what it returns. Do you get the same values if you compare the `residuals` from the `simpleLinearFit` object to the difference between the sales values and the `fitted.values` in the `simpleLinearFit` object?
+:::
+
+Let's plot the linear fit on our original scatter plot. 
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingData, 
+                          residual = simpleLinearFit$residuals, 
+                          predictedSales = simpleLinearFit$fitted.values))
+beta0 <- simpleLinearFit$coefficients["(Intercept)"]
+beta1 <- simpleLinearFit$coefficients["TV"]
+
+## plot
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0, slope = beta1, color = "firebrick") + 
+    theme_bw()
+
+p2 <- p1 + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue")
+
+p1 + p2
+```
+
+The red line is the linear fit and we can visualize the residuals in blue, which show the difference between predicted and observed sales values. Recall that for each observation $i$, the residual $e_i=y_i-\hat{y_i}$. 
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Plot the distribution of the residuals. Is it approximately normal?
+:::
+
+Now that we have our fit, how do we interpret the values of the beta coefficients and what can we communicate back to our clients? $\beta_0$ is the intercept term, and shows the expected value of $y$ when $x=0$. The slope, $\beta_1$, shows the average increase in $y$ associated with a one-unit increase in $x$. In our example, $\beta_0$ has a value of `{r} round(beta0, 4)` and $\beta_1$ a value of `{r} round(beta1, 4)`. That means that an additional \$1000 spent on TV advertising is associated with selling approximately `{r} round(1000*beta1, 1)` extra units of the product.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Pick either one of the other two advertising budgets, newspaper or radio, and repeat this exercise. What are you expecting based on the scatter plots before doing any fit? Is there a positive relationship to sales, and to what extent? Fit a line and interpret the coefficients. Can you say something about how well the fit captures the trend in the data?
+:::
+
+
+### Assessing the quality of the fit
+
+We will explore two measurements that allow us to assess the quality of the linear regression fit: the residual standard error (RSE) and the $R^2$ statistic.
+
+Recall that we can't perfectly predict $y$ from $x$ and that there is an associated residual $e$ for each observation showing how much we have deviated from the line. The RSE roughly represents the average amount of deviation from this line, as reflected in its formula: $RSE=\sqrt{\frac{1}{N-2}RSS}$ where N is the number of observations. Let's have a look at the RSE value in our example. Note that here we have $N-2$ since we have 2 coefficients.
+
+```{r}
+summary(simpleLinearFit)
+```
+
+The RSE has a value of `{r} round(summary(simpleLinearFit)$sigma, 2)`. The observed sales deviate from the true regression line by about 3,260 units on average (since the sales is in thousands of units). Is this something we can live with? What is the mean value of sales in our data set?
+
+```{r}
+## mean sales (in thousdands of units)
+mean(advertisingData$sales)
+
+## percentage error
+summary(simpleLinearFit)$sigma / mean(advertisingData$sales) * 100
+```
+
+The size of the RSE value will reflect how poorly the model fits the data. However, the RSE is measured in units of $y$ and it is not always clear what a good value should be. The $R^2$ statistic on the other hand represents the proportion of variance explained, meaning it will always have a value between 0 and 1: $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$ and $\bar{y}$ is the mean of $y$. TSS is the **t**otal **s**um of **s**quares and measures the total variance in $y$, whereas the RSS can be thought of as measuring the variability that is left unexplained after doing the regression. The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression. In our example, $R^2$ has a value of `{r} round(summary(simpleLinearFit)$r.squared, 2)`, meaning that around two thirds of the variability in sales is explained by a linear regression on TV advertising budget. Even though the $R^2$ is nicely interpretable, it can still be difficult to judge what a good value should look like in practice, particularly in fields where data is generated with a degree of experimental noise such as in biology.
+
+::: callout-note
+Note that in the case of the simple linear regression, the $R^2$ is identical to $Cor(y, \hat{y})^2$.
+:::
+
+
+
+## Multiple linear regression
+
+Now that we have a good understanding of the simple linear regression with one dependent variable $x$, let's extend this problem by including more predictors (dependent variables). Continuing with the advertising data set, can we say something about which kind of advertising has a bigger impact on sales based on the size of the beta coefficients? With more than one predictor, this form of linear regression is called multiple linear regression and is formulated as follows for $p$ predictors: $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$.
+
+In the original advertising data, $sales = \beta_0 + \beta_1TV + \beta_2radio + \beta_3newspaper + \epsilon$. As with the simple linear regression, we estimate the beta coefficients to minimize the sum of the squared residuals or the RSS.
+
+We don't have too many predictors to crowd a pairs plot. Let's look at all combinations of scatter plots and get a feeling for the data. What can we see?
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+## visualize the data
+pairs(advertisingData, pch = 16)
+```
+
+```{r}
+## fit
+multipleLinearFit <- lm(sales ~ TV + radio + newspaper, 
+                        data = advertisingData) 
+multipleLinearFit
+
+## compare to the sales ~ TV fit
+summary(simpleLinearFit)
+```
+
+```{r}
+summary(multipleLinearFit)
+```
+
+We interpret $\beta_j$ as the average effect on $y$ of a one unit increase in $x_j$, holding all other predictors fixed. Spending an additional \$1,000 on radio advertising is associated with an average increase in around 189 units of additional sales. How do the coefficients for all predictors in the multiple linear regression compare to the coefficients if we were to do a simple linear regression separately per predictor? What do you notice about the newspaper predictor and the (adjusted - adjusted for the numebr of predictors) $R^2$ values?
+
+The multiple linear regression allows us to assess the contribution of a predictor in explaining the response vector in context with the other predictors and allows us to assess the relative contributions of each predictor.
+
+
+## Interaction terms
+
+In our advertising data, we have seen that both the TV and radio are media whose budgets contribute towards explaining the sales and both have (significantly) positive coefficient estimates. But what can we say about their joint contribution towards the sales at the same time? What if each predictor is associated with sales in a different way, and if we were to take them together the beta coefficient for the TV and radio budget would be even bigger? These are questions we currently have, and which we can address by including an interaction term, reflecting the product of the TV and radio predictors. 
+
+We can represent the predictors in a matrix form $X$ called the predictor matrix. The equation $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$ can be rewritten as $y = \beta.X + \epsilon$ where $\beta$ is the vector of beta coefficients which we are estimating. $X$ includes the intercept term which is a vector of 1s (multiplying 1 by the estimated intercept yields the intercept). In R we can use the `model.matrix()` function to create this matrix (the `lm()` function does this internally).
+
+To add an interaction term, we can simply add `TV:radio` into the `lm()` function, or we can use `TV*radio` which will expand into `TV + radio + TV:radio`.
+
+```{r}
+## create predictor matrix (you may recognize this as the design matrix)
+X <- model.matrix(~ TV + radio + newspaper + TV:radio, 
+                  data = advertisingData)
+head(X)
+
+## linear regression (all ways below work)
+#lm(sales ~ TV + radio + TV:radio + newspaper, data = advertisingData)
+#lm(sales ~ TV*radio + newspaper, data = advertisingData)
+fit <- lm(advertisingData$sales ~ X + 0)
+summary(fit)
+```
+
+What do you notice about the beta coefficients and the adjusted R-squared?
+
+
+
+## Categorical variables
+
+So far we have dealt with quantitative values of the predictors. What if we have a qualitative variable for example indicating presence or absence? What happens in the linear fit when such a predictor exists? To illustrate this, we will use another data set, namely the Credit data set, where we have a mixture of quantitative and qualitative variables.
+```{r}
+head(Credit)
+```
+
+
+To illustrate, we will use the balance variable as the response vector and investigate differences in credit card balance between those who own a house and those who don't: $balance = \beta_0 + \beta_1Own + \epsilon$. The categorical variable *Own* can be represented as a vector of 0s and 1s indicating where an individual owns a house. This is also called a dummy variable and takes two possible values: $x_i=1$ if the $i^{th}$ person owns a house and $x_i=0$ otherwise. This results in $y_i = \beta_0 + \beta_1 +\epsilon_i$ if person $i$ owns a house and in $y_i = \beta_0 +\epsilon_i$ if person $i$ does not own a house. $\beta_0$ is now interpreted as the average credit balance for those who do not own, $\beta_0+\beta_1$ the average credit balance for those who do own, and $\beta_1$ reflects the average difference in credit balance between home owners and non-owners. What is the average credit card debt for home owners in the Credit data set?
+
+```{r}
+## fit
+lm(Balance ~ Own, data = Credit)
+```
+
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Use the `model.matrix()` function to see what the predictor matrix looks like. What do you see?
+:::
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Examine the Credit data set. Which columns represent categorical variables? Pick one categorical variable and do a linear fit. Notice that categorical variables are represented as $l-1$ dummy variables, where $l$ is the number of levels.
+:::
+
+Example:
+```{r}
+X <- model.matrix(~ Region, 
+                  data = Credit)
+head(X)
+```
+
+Can you think of another way to represent categorical variables?
+
+
+## Robust regression
+
+So far in the linear fit, the coefficients are estimated using the least squares method by minimizing the sum of squared residuals: $\min\limits_{\beta}\sum_{i=1}^{N}e_{i}^{2}$ where the residual for the $i^{th}$ observation $e_{i} = (y_i - \hat{y_i})$. What if we had outlier points which would result in large residuals? Does this have an impact on the linear fit? To illustrate this, we will add artificial observations to the advertising data set which deviate quite a bit from the rest of the trend in the data and visualize below.
+
+```{r}
+## add outlier points
+nOutliers <- 30
+advertisingOutlData <- rbind(advertisingData, 
+                         data.frame(TV = runif(n = nOutliers, min = 50, max = 150), 
+                                    radio = runif(n = nOutliers, min = 10, max = 15), 
+                                    newspaper = runif(n = nOutliers, min = 10, max = 30), 
+                                    sales = runif(n = nOutliers, min = 20, max = 30)))
+
+## visualize
+ggplot(advertisingOutlData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    theme_bw()
+
+## fit linear model with lm()
+lmFit <- lm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          residual = lmFit$residuals, 
+                          predictedSales = lmFit$fitted.values))
+beta0lm <- lmFit$coefficients["(Intercept)"]
+beta1lm <- lmFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue")
+```
+
+What do you notice about the fitted line and the residuals?
+
+Currently, all residuals contribute equally in the summation we are minimizing. With a robust linear regression, the very big residuals can be weighted less and therefore contribute less to the total sum of the squared residuals. 
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+## robust linear fit
+robustFit <- rlm(sales ~ TV, data = advertisingOutlData) 
+robustFit
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          predictedSales = robustFit$fitted.values, 
+                          weightedResidual = robustFit$wresid, 
+                          weight = robustFit$w))
+beta0rlm <- robustFit$coefficients["(Intercept)"]
+beta1rlm <- robustFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(aes(intercept = beta0lm, 
+                    slope = beta1lm,
+                    color = "Linear regression")) + 
+    geom_abline(aes(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "Robust regression")) +
+    geom_abline(aes(intercept = beta0, 
+                    slope = beta1,
+                    color = "Original linear regression (without outliers)")) +
+    scale_color_manual(name = "Model", 
+                       values = c("Linear regression" = "firebrick", 
+                                  "Robust regression" = "forestgreen", 
+                                  "Original linear regression (without outliers)" = "steelblue")) +
+    theme_bw() 
+```
+
+Note that the fitted line using the robust regression better fits the trend in the non-outlier points and gets closer to the original fit we had on the data before adding the so-called outliers. The robust regression can have useful applications for example in data sets where we are interested in selecting outliers which deviate from an expected trend, and we want to capture a good fit on that trend.
+
+Let's plot the same scatter plot, coloring by the weight each point receives, reflecting its contribution to the sum of the squared residuals. What do you see? Seeing a scatter plot like this, and assuming we are interested in the outlier points in the cloud above the rest of the data, as they seem to be capturing a signal deviating from an expected background trend, how can we select that group in a data-driven manner?
+
+
+```{r}
+#| fig-width: 15
+#| fig-height: 4
+
+## plot coloring by weight
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = weight)) +
+    geom_abline(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "forestgreen") +
+    theme_bw() 
+
+## naturally define cutoffs for outliers
+p2 <- ggplot(df, aes(x = 1 - weight)) + 
+    geom_density() + 
+    theme_bw() 
+df$selected <- 1 - df$weight > 0.3
+
+p3 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = selected)) +
+    geom_abline(intercept = beta0rlm, 
+                slope = beta1rlm,
+                color = "forestgreen") +
+    theme_bw() 
+
+p1 + p2 + p3
+```
+
+We have done this selection very exploratively, to illustrate that it is possible to select outliers in a data-driven way with robust statistical methods and continue with downstream analyses. Note that in these cases we are actually interested in outliers that deviate from an expected technical or background trend and in properly fitting that expected trend.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Using the credit data set, model the relationship between Income (response) and Age (predictor). We will assume that there is a general trend between both variables and that there are some individuals who deviate from this trend. We wish to reasonably select  these individuals and fit the background trend. 
+:::
+
+
+## Note on non-linearities
+
+The flexibility and power of linear models is not to be underestimated. So far we have used the predictors as they are in our examples. However there is nothing preventing us from using non-linear transformations of these predictors, such as the square root ($\sqrt{(x)}$), a log transformation ($log2(x)$) or raising it to the power of some number (such as $x^2$ or $x^3$), to mention a few. The relationship between predictors, whatever transformation they may have taken, is still linear in the context of the linear model. Linear models assume a linear relationship between the predictors and the expected value of the response. Using transformed values of the predictors or response does not violate this, merely how we interpret the fit. 
+
+## Bias-variance trade off
+
+So far with the least squares approach, we have estimated beta coefficients such that the residual sum of squares is minimized. This simple approach while powerful, does not always work best in practice on real world data. If we learn the model on one data set, do we get the same coefficients estimated on another data set? Data can inherently vary due to measuring errors for example, and so we can easily end up over-fitting the coefficients in one data set. Additionally, suppose that two predictors are highly correlated with each other but not with the response. If both predictors get equal coefficient values but opposite signs they cancel each other out. In such cases the coefficients can get arbitrarily large without adding much to the RSS. We again suffer at getting good estimates of the beta coefficients and reliably interpreting them. To overcome these problems and estimate beta coefficients that are more robust and representative, shrinkage methods have been proposed by imposing a penalty on the size of the beta coefficients. This problem is known as the bias-variance trade off, since the beta estimates will vary less with such imposed penalties at the expense of being slightly more biased since we are deliberately constraining them.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Pick one of the two data sets we have explored so far (Advertising or Credit), randomly split the observations into two and then do a linear fit on each subset. Do you get identical beta estimates or do they vary? The code below demonstrates this on the Advertising data set. 
+:::
+
+```{r}
+## set seed for random sampling (for reproducibility)
+set.seed(123)
+i <- sample(x = nrow(advertisingData), 
+            size = floor(nrow(advertisingData)/2))
+
+## subset data
+set1 <- advertisingData[i, ]
+set2 <- advertisingData[-i, ]
+
+## fit model
+fit1 <- lm(formula = sales ~ TV + radio + newspaper, data = set1)
+fit2 <- lm(formula = sales ~ TV + radio + newspaper, data = set2)
+
+## compare fits
+fit1
+fit2
+```
+
+We see that the beta estimates vary. For newspaper they can even have opposite signs. This is perhaps to be expected because data varies, and important to keep in mind as we interpret the numerical values of these coefficients.
+
+## Shrinkage methods
+
+### Ridge regression
+
+The ridge regression penalizes the beta coefficients by putting a limit on the sum of the squared coefficients. This is done by adding a penalty term $\lambda$ as follows when estimating the beta coefficients:
+
+$$
+\hat{\beta}=\min\limits_{\beta}\{\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p\beta_j^2 \}
+$$
+
+Notice that in addition to the RSS (first part of the equation) we are penalizing the sum of the squared beta coefficients. When is the above equation identical to the RSS? How do you think the size of $\lambda$ impacts the shrinkage?
+
+The ridge regression shrinks the values of the estimated beta coefficients towards zero. However they are not equal to zero and every coefficient will have an estimated value. To apply the shrinkage regressions, we will make use of the functions from the `glmnet` package and use the Credit data set. Note that here we will represent the predictors in a matrix $X$. We will focus on the quantitative variables in the Credit data set, but these methods can be used on the whole data set.
+
+```{r}
+## prepare to fit
+y <- Credit$Balance
+X <- model.matrix(Balance ~ 0 + Income + Limit + Rating + Cards + Age + Education, 
+                  data = Credit)
+head(X)
+
+## fit
+## note that internally, glmnet by default standardizes the predictors 
+## ... but returns the beta estimates in the original space
+ridgeFit <- glmnet(x = X, y = y, alpha = 0)
+#plot(ridgeFit)
+
+## examine the beta estimate for each lambda 
+head(ridgeFit$lambda)
+ridgeFit$beta[1:6, 1:6]
+ncol(ridgeFit$beta) == length(ridgeFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(ridgeFit$beta)
+colnames(betaMat) <- ridgeFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 1e4))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+Notice that we get different beta estimates with different penalty values. As the penalty increases, the coefficient values decrease or shrink due to heavier penalization. Choosing the right penalty is therefore critical and can have a big impact on our estimates. How can we choose a reasonable $\lambda$ value? A common method is to do cross-validation. For a chosen set of lambdas, the cross-validation error for each value of lambda is calculated, and finally the lambda value which gives the smallest error (`lambda.min`) is chosen and the model is re-fit with that penalty value. Another common choice is `lambda.1se` which is where the cross-validated error is within one standard error of the minimum.
+
+```{r}
+## fit with cross validation
+ridgeFit <- cv.glmnet(x = X, y = y, alpha = 0)
+
+## plot
+plot(ridgeFit)
+
+## explore
+ridgeFit$lambda.min
+ridgeFit$lambda.1se
+coef(ridgeFit, s = "lambda.1se")
+```
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Do a multiple linear regression on the same data we used in the ridge regression and compare the estimates for the beta coefficients.
+:::
+
+
+### Lasso regression
+
+The Lasso regression also imposes a penalty on the size of the coefficients. However it does so slightly differently, namely by penalizing and thus limiting the sum of the absolute beta values. This has the wonderful effect of resulting in a *selection* of predictors by setting the coefficients of the uninteresting ones which don't contribute much to the response to zero. Predictors with non-zero coefficients are considered *selected*. The beta coefficients are estimated, minimizing the following:
+
+$$
+\hat{\beta}=\min\limits_{\beta}\{\frac{1}{2}\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
+$$
+
+
+```{r}
+## fit
+lassoFit <- glmnet(x = X, y = y, alpha = 1)
+#plot(lassoFit)
+
+## examine the beta estimate for each lambda 
+ncol(lassoFit$beta) == length(lassoFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(lassoFit$beta)
+colnames(betaMat) <- lassoFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 200))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+
+How do these plots compare to that of the ridge regression? What do you think it means when a predictor gets set to zero before another one (e.g. Cards and Income)? 
+
+
+```{r}
+## fit with cross validation
+lassoFit <- cv.glmnet(x = X, y = y, alpha = 1)
+
+## plot
+plot(lassoFit)
+
+## explore
+lassoFit
+lassoFit$lambda.min
+lassoFit$lambda.1se
+coef(lassoFit, s = "lambda.1se")
+```
+
+Is there a coefficient which got set to zero and where does it lie on the plot showing coefficient estimates as a function of the penalty?
+
+#### Note on collinearity
+
+Since the lasso regression selects the variables that best explain the response vector, there is no need to choose variables which don't contribute nor to select variables which don't add much additional value. Consider two predictors which both contribute to the response vector, and which are highly correlated to each other. It is enough to select one of them to be able to explain the response and the model rather thinks there is no need to be redundant and select the second predictor if it doesn't add or explain much more. This is something one should certainly be aware of and consider in regression.
+
+Let's go back to our example and look at the correlation structure of our predictor matrix, as well as the correlation to the response vector.
+
+```{r}
+cor(X)
+```
+
+```{r}
+cor(X, y)
+```
+
+From the lasso fit, Rating was selected and had a beta coefficient of `{r} round(coef(lassoFit, s = "lambda.1se")["Rating", ], 4)`. Compare to that of the Limit predictor. What do you notice about the correlation between Ratings and Limit to each other and to the response?
+
+
+
+### Elastic net regression
+
+We won't dive too deep here, but it is worth mentioning the elastic net. The elastic net is an interesting situation or compromise between the ridge and lasso regressions. You may have noticed that we needed to specify an alpha parameter in the `glmnet` function to perform the ridge and lasso regressions with alphas of 0 and 1 respectively. The elastic net selects variables like the lasso and shrinks the coefficients of correlated predictors like the ridge using the following penalty:
+
+$$
+\lambda \sum_{j=1}^p(\alpha|\beta_j| + (1-\alpha)\beta_j^2)
+$$
+
+Alpha is a value between 0 and 1 and will dictate how close the regression is to a lasso ($\alpha=1$) or a ridge ($\alpha=0$). The choice in alpha value can be quite tricky. In practice we try a few values, keeping in mind what we know about the correlation structure in our data set, and see what makes sense. 
+
+#### Fit with `alpha=0.5`
+
+```{r}
+## fit with alpha = 0.5
+elasticNetFit <- glmnet(x = X, y = y, alpha = 0.5)
+
+## examine the beta estimate for each lambda 
+ncol(elasticNetFit$beta) == length(elasticNetFit$lambda)
+
+## prepare to plot
+betaMat <- as.matrix(elasticNetFit$beta)
+colnames(betaMat) <- elasticNetFit$lambda
+df <- betaMat |>
+    as.data.frame() |>
+    rownames_to_column("predictor") |>
+    pivot_longer(
+        -predictor,
+        names_to = "lambda",
+        values_to = "coefficient",
+        names_transform = list(lambda = as.numeric)
+    )
+
+## plot
+p1 <- ggplot(df,
+       aes(lambda, coefficient, colour = predictor)) +
+  geom_line() +
+  theme_bw()
+p2 <- p1 +
+    coord_cartesian(xlim = c(0, 200))
+p1 / p2 + plot_layout(guides = 'collect')
+```
+
+
+## Stability selection
+
+Although these methods could also fall under shrinkage methods since they do make use of them, they offer additional gains where typical regression methods fail, such as when the number of predictors exceeds the number of observations. The idea behind stability selection is to apply the regression of choice on several subsets of the data, and select the predictors which consistently pop up. Lasso stability selection will apply the lasso regression on subsets of the data and return a selection probability for each predictor which is the number of times it was selected divided by the total number of times a regression was performed. The authors of these methods introduced a new form of regularization with the randomized lasso stability selection. There, a weakness parameter is additionally used to vary the lasso penalty term $\lambda$ to a randomly chosen value between $[\lambda, \lambda/weakness]$ for each predictor. This type of regularization has advantages in cases where the **number of predictors** exceeds the number of observations, in selecting variables **consistently**, demonstrating better **error control** and not **depending strongly** on the penalization parameter (Meinshausen and Bühlmann 2010).
+
+We will apply the randomized lasso stability selection using the `monaLisa` package. Have a look at the help page of the `randLassoStabSel()` function for more details.
+
+```{r}
+## stability selection
+randLasso <- randLassoStabSel(x = X, 
+                              y = y, 
+                              weakness = 0.8, 
+                              cutoff = 0.6, 
+                              PFER = 1)
+
+## selected predictors
+randLasso$selected
+randLasso$selProb
+randLasso$selAUC  # Area under the curve of the stability paths
+
+## plot stability paths
+plotStabilityPaths(randLasso)
+```
+
+This plot shows the selection probability or each predictor (line) as a function of the regularization step, with weaker regularization going from left to right. These so called stability paths can be quite informative, as an indicator of which predictor(s) gets selected first, if it stays up and how well the selected supposedly meaningful predictors separate from the noisy rest.
+
+In our example nothing gets selected. In practice, randomized stability selection is quite conservative, preferring to select nothing rather than something false. Our choice in parameter values depends on how stringent we want to be and how strong the signal in the data is. For more stringent selections, one may decrease the value of the weakness parameter which will make it harder for a variable to get selected. The user is in control of false discoveries with the PFER parameter, which indicates the number of falsely selected variables. As for the selection probability cutoff, Meinshausen and Bühlmann (2010) argue that values in the range of [0.6, 0.9] should give similar results.
+
+::: {.callout-note appearance="simple" icon=false}
+## Task
+Apply the stability selection method of choice (lasso or randomized) on the prostate cancer data set. Decide on the parameter values and play with them. Examine the output of `randLassoStabSel()` and plot the stability paths. What are you selecting? Explore the available plotting functions `plotStabilityPaths()` and `plotSelectionProb()`.
+:::
+
+## Bonus exercise
+
+### Option A
+
+Use the prostate cancer data set and apply a ridge regression, lasso regression and lasso stability selection. Compare the coefficients you are getting and what gets selected, keeping in mind what the correlation structure looks like as well in the predictor matrix.
+
+### Option B
+
+Think about if/how you can use these methods in your projects and which flavor of them would best suit your needs.
+
+## Resources
+
+A lot of the ideas and material presented in this lab were constructed using the following books:
+
+* An Introduction to Statistical Learning with applications in R *by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani*.
+* The Elements of Statistical Learning *by Trevor Hastie, Robert Tibshirani and Jerome Friedman*.
+
+## Session
+
+<details>
+  <summary>Click here</summary>
+
+```{r}
+#| label: sessionInfo
+
+date()
+sessionInfo()
+```
+
+</details>

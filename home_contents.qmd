@@ -41,7 +41,7 @@ execute:
 |Interactive data visualization         |Roy Francis                   |[Slides](slides/ivis/index.html), [Lab](labs/ivis/index.html)|
 |[WEEK 2]{.badge .badge-primary}                                       |||
 |[17-Aug-2026 (Mon)]{.badge .badge-secondary}                          |||
-|Statistics                             |Dania Machlab                 ||
+|Statistics                             |Dania Machlab                 |[Slides](slides/stats/index.html), [Lab](labs/stats/index.html)|
 |Object-oriented programming            |Marcin Kierczak               |Slides, Lab|
 |[18-Aug-2026 (Tue)]{.badge .badge-secondary}                          |||
 |Web apps with Shiny                    |Roy Francis                   |[Slides](slides/shiny/index.html), [Lab](labs/shiny/index.html)|

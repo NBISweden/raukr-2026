@@ -1,0 +1,1793 @@
+---
+title: "Statistical Learning"
+author: "Dania Machlab"
+image: "assets/featured.webp"
+format:
+  revealjs:
+    df-print: default
+---
+
+## Packages {visibility="hidden"}
+
+```{r}
+#| echo: false
+
+library(MASS)
+library(ISLR2)
+library(glmnet)
+library(ggplot2)
+library(patchwork)
+```
+
+
+## Outline
+
+- Overview: R, Bioconductor, statistical learning
+- Simple linear regression
+- Multiple linear regression
+- Shrinkage methods
+- Stability selection
+- Applications
+
+## R and statistics
+
+- S (for **S**tatistics) is a statistical programming language developed at Bell Labs in 1976. 
+  - *"to turn ideas into software, quickly and faithfully"* -- John Chambers
+
+- Bell labs: Unix, C, C++, Information Theory
+  - 11 Nobel prizes and 5 Turing awards
+
+. . . 
+
+- R released in 1993 by **R**oss Ihaka and **R**obert Gentleman as the free and open-source alternative (initially part of GNU project) using ideas and syntax from S.
+  - R 1.0 released in 2000.
+  
+. . . 
+
+- R is the language of choice for academic statisticians and new developments and methods in statistics are often released as R packages first.
+
+
+## R and bioinformatics - the Bioconductor project
+
+:::: {.columns}
+
+::: {.column width="85%"}
+
+|
+|
+
+- "The mission of the Bioconductor project is to develop, support, and disseminate free open source software that facilitates rigorous and reproducible analysis of data from current and emerging biological assays. We are dedicated to building a diverse, collaborative, and welcoming community of developers and data scientists."
+
+:::
+
+::: {.column width="15%"}
+
+![](assets/BiocHexLogo.webp){width=75%}
+
+:::
+
+::::
+
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+
+- Current release (2.23): 
+  - 2,418 software packages
+  - 928 AnnotationData packages
+  - 436 ExperimentData packages
+  - 28 Workflows
+  - 8 books
+
+```{r}
+#| eval: false
+BiocManager::install(
+    "Biostrings", 
+    version = "3.23")
+renv::init(bioconductor = "3.23")
+```
+
+
+:::
+
+
+::: {.column width="60%"}
+
+![](assets/BiocPubl.webp){width=70%}
+
+:::
+
+::::
+
+
+
+::: {.notes}
+
+- release cycles, ~ 6 months, packages tested togther
+- communities within BioC, e.g. tidyomics, spatial hackathon etc
+- shared data structures such as SummarizedExperiment, GRanges, DNAstrings .. 
+- Tools work together 
+- higher standards when it comes to documentation and vignettes
+- courses, conferences, events.. 
+- Get involved, it's a very welcoming community to all levels, recently: student-ECR council for students and early-career researchers (ECRs) mentorship program with a Bioc developer or experienced memeber planned for the next conference
+- installing packages: stick to release..
+- click on link and go build reports
+
+:::
+
+::: {.aside}
+[https://bioconductor.org](https://bioconductor.org)
+:::
+
+
+## EuroBioc 2026 Turku, Finland (June 3-5) {.center}
+
+![](assets/EuroBioc2026a.webp)
+
+## 25 years of Bioconductor {.center}
+
+![](assets/EuroBioc2026b.webp)
+
+## Conferences
+
+- BioC -- Aug 10-12 in Seattle
+- BiocAsia -- next one in Melbourne, Australia Nov 19-20, 2026
+- EuroBioC -- next one in Basel, Switzerland Sept 8-10, 2027 (pre-conf 6-7)
+
+| 
+
+
+:::: {.columns}
+::: {.column width="20%"}
+![Image 1](assets/CarolineUhler.webp)
+*Caroline Uhler*
+:::
+::: {.column width="20%"}
+![Image 2](assets/DavideRisso.webp)
+*Davide Risso*
+:::
+::: {.column width="20%"}
+![Image 3](assets/MireiaRamos.webp)
+*Mireia Ramos-Rodríguez*
+:::
+::: {.column width="20%"}
+![Image 4](assets/LucaGiorgetti.webp)
+*Luca Giorgetti*
+:::
+::: {.column width="20%"}
+![Image 5](assets/DariaLazic.webp)
+*Daria Lazic*
+:::
+::::
+
+. . . 
+
+- [Zulip](https://community-bioc.zulipchat.com/join/4k2tpsy7h6zjbaduydwm2n56/) channel open to everyone
+
+
+::: {.aside} 
+
+[https://eurobioc2027.bioconductor.org](https://eurobioc2027.bioconductor.org)
+
+:::
+
+
+## R and statistics
+
+:::: {.columns}
+
+::: {.column width="70%"}
+![](assets/RousseeuwPrize.webp)
+:::
+
+::::
+
+::: {.aside}
+[Rousseeuw Prize](https://www.rousseeuwprize.org/2026)
+:::
+
+
+::: {.notes}
+
+S: statisticians needed a flexible framework to explore data and where they could also develop new methods
+
+Bell Labs:
+ - an American industrial research and development company owned by the Finnish technology company Nokia.
+ - former subsidiary of the American Telephone and Telegraph Company (AT&T)
+
+R: first letters in creators' names and the S language successor
+
+Robert Gentleman (23andme) + others - Bioconductor project in 2001
+
+- The Rousseeuw Prize for Statistics: awarded every 2 years, US$1,000,000 award, Belgium
+ 
+:::
+
+
+## Statistical methods are developed to be used in the real world!
+
+| 
+| 
+
+:::: {.columns}
+
+::: {.column width="70%"}
+- William Sealy Gosset worked as a chemist and brewer at Guinness Brewery in Dublin in the early 1900s.
+- Used pen name *Student* because Guinness prohibited employees from publishing research under their own names.
+- Guiness wanted to improve barley varieties and beer quality.
+- Experiments with small sample sizes. The population variance is unknown and must be estimated.
+- Student's t-distribution and test of statistical significance.
+
+:::
+
+::: {.column width="20%"}
+![](assets/Gosset.webp)
+:::
+
+
+::::
+
+::: {.notes}
+Gosset's idea was simply to replace σ (population) with s (sample). Because s is itself random.
+Sometimes it underestimates the true variability. Sometimes it overestimates it. That makes the standardized statistic more variable than a Normal random variable, producing the heavier tails of the t-distribution. As the sample size increases, s→σ, so the t-distribution approaches the Normal distribution.
+:::
+
+::: {.aside}
+[https://en.wikipedia.org/wiki/William_Sealy_Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset)
+:::
+
+## Early examples of learning something about the world
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+- Eratosthenes: ancient Greek philosopher, scholar, mathematician, geographer, poet, astronomer and music theorist.
+- Estimating the circumference of the earth in 240 BC.
+- Assumptions:
+  - earth is round
+  - sun is so far the rays coming from there are parallel
+  - distance between Alexandria and Syene is known
+  
+|
+
+- $\frac{7.2^\circ}{360^\circ}=\frac{ditance \ between \ Alexandria \ and \ Aswan}{Earth's \ circumference}$
+
+|
+
+- His estimate: approximately 40,338 km (25,065 mi)
+- Today's number (around the equator): 40,075.017 km (24,901.461 mi) 
+  
+:::
+ 
+::: {.column width="40%"}
+
+![](assets/EarthCircumference.webp)  
+:::
+ 
+  
+::::
+  
+::: {.aside}
+https://en.wikipedia.org/wiki/Eratosthenes
+:::
+
+
+## Data science today
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](assets/NASA1.webp){width=80%}
+:::
+
+::: {.column width="30%"}
+![](assets/NASA2.webp){width=80%}
+:::
+
+::: {.column width="30%"}
+![](assets/NASA3.webp){width=80%}
+:::
+
+::::
+
+::: {.small}
+- Nowadays, skill set: 
+  - programming
+  - statistics
+  - data visualization
+  - creativity
+  - data exploration and going hunting for "problems"
+  - understanding the data and data generation process
+  - formulating a question and then finding the right method to answer it
+  - communication in an interdisciplinary world
+  
+:::
+
+::: {.aside}
+https://images.nasa.gov
+:::
+
+## Hypothesis generation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/HypothesisGeneration.webp)
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/HypoethesisHistory.webp){width=65%}
+
+:::
+
+::::
+. . . 
+
+- Formulate a hypothesis -> collect data -> test
+
+. . . 
+
+- Collect data -> explore -> generate hypothesis
+
+. . . 
+
+- Explore -> new data -> confirm 
+
+. . . 
+
+- Exploration vs confirmation
+
+::: {.aside}
+Images: [https://xkcd.com/2569/](https://xkcd.com/2569/), [Research Hypothesis](https://pmc.ncbi.nlm.nih.gov/articles/PMC12534748/?utm_source=chatgpt.com)
+:::
+
+## Statistical learning
+
+:::: {.columns}
+
+::: {.column width="70%"}
+
+- "Statistical learning refers to a set of tools for making sense of complex datasets" -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
+
+- Many of these methods were developed long before we had computers, and they are incredibly useful today.
+
+- No single methods will perform well or be appropriate for all data set. It is therefore important to understand how these tools work, when to use them and how to interpret the results.
+
+- "*We are drowning in information and starving for knowledge*" -- Rutherford D. Roger as quoted in Elements of Statistical Learning
+
+:::
+
+::: {.column width="30%"}
+
+![](assets/MachineLearningXKCD.webp)
+:::
+
+::::
+
+::: {.aside}
+[https://xkcd.com/1838](https://xkcd.com/1838)
+:::
+
+::: {.notes}
+- "Statistical learning should not be viewed as a series of black boxes. No single approach will perform well in all possible applications. Without understanding all of the cogs inside the box, or the interaction between those cogs, it is impossible to select the best box." -- An Introduction to Statistical Learning by James, Witten, Hastie and Tibshirani
+:::
+
+
+## Supervised vs unsupervised learning
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.fragment}
+- Suppose we have measurements for $p$ variables $x_1, x_2 ... x_p$ and their associated variable $y$ and wish to say something about how $x_1, x_2 ... x_p$ explain or relate to $y$. An example is prediction or classification.
+
+- $y \sim f(x)$
+
+![](assets/SupervisedLearning.webp){width=35%}
+
+:::
+
+::: 
+
+::: {.column width="50%"}
+
+::: {.fragment}
+- Suppose we only have measurements for variables $x_1, x_2 ... x_p$ and wish to learn the relationships between them. An example method is clustering.
+
+![](assets/UnsupervisedLearning.webp){width=70%}
+:::
+
+:::
+
+::::
+
+::: {.aside}
+Images: [https://xkcd.com/2173/](https://xkcd.com/2173/), Complex Heatmap book
+:::
+
+
+## Prediction
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+
+- Training data vs test data
+
+- Trade off between prediction accuracy and model interpretability
+
+![](assets/InterpretabilityVsFlexibility.webp){width=100%}
+
+:::
+
+::: {.column width="50%"}
+ 
+- Training data: to estimate the model parameters and tune the model.
+- Test data: evaluate the model.
+- Do you think we can mix both or use the training data to test?
+
+::: {.fragment}
+- Our aim here is to use the model on new data and not to explain the data we already have. 
+- Overfitting -- Should we be skeptical when someone claims 100% prediction accuracy with their model?
+
+![](assets/Overfitting.webp){width=100%}
+
+:::
+
+:::
+
+::::
+
+
+
+::: {.aside}
+Images: An Introduction to Statistical Learning, 
+[Overfitting](https://www.geeksforgeeks.org/machine-learning/underfitting-and-overfitting-in-machine-learning/)
+:::
+
+
+## Inference
+
+- Which $x$ variables are associated with the variable $y$?
+- Can we learn or day something about this *relationship*?
+- Suppose we saw the data below, can we use a model to learn the nature of the relationship between the number of Nobel prizes and chocolate consumption?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/ChocolateConsumption.webp){width=80%}
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/NobelLaureatesChocolateHabits.webp){width=90%}
+:::
+
+:::
+
+::::
+
+
+::: {.aside}
+Images: [Franz H. Messerli 2012](https://library.scottbarrykaufman.com/uploads/2012/10/Messerli-2012.pdf), 
+[Chocolate habits of Nobel prizewinners](https://www.nature.com/articles/499409a)
+:::
+
+## Choosing the right model
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](assets/ModelChoice.webp){width=100%}
+
+:::
+
+::: {.column width="70%"}
+
+| 
+|
+
+::: {.fragment}
+- Do we have prior information about the data?
+- Data generation process?
+- Expected distributions (e.g. count data)?
+- Missing values, missing at random? 
+- Do we have enough data points?
+- Are we trying to learn something about the relationship between our variables or to have a model that we can use to predict outcomes for future data sets?
+  
+:::
+
+:::
+
+::::
+
+
+::: {.aside}
+Images: [https://xkcd.com/2048/](https://xkcd.com/2048/)
+:::
+
+## Linear models
+
+| 
+|
+
+[$y = f(x) + \epsilon$]{.large}
+
+- $y$ is often called the response or dependent variable
+
+- $x$ is often called the predictor or independent variable
+
+- $\epsilon$ is the random error term
+
+- Statistical learning refers to a set of approaches for estimating $f$ 
+
+- Simple linear model: $y = \beta_0 + \beta_1x + \epsilon$
+
+- By the 1970s many methods for learning from the data were available. The vast majority of them were *linear* methods because fitting *non-linear* relationships was computationally difficult at the time.
+
+
+
+::: {.notes}
+Neural networks gained popularity in the 1980s, and support vector machines arose in the 1990s.
+::: 
+
+
+## Why care about linear approaches?
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+- Having a good understanding of linear models is essential for understanding non-linear ones. Many of the latter are generalizations of the linear methods.
+
+- Powerful in their interpretability and in their flexibility
+
+- If we are interested in *inference* then retaining interpretability is key
+
+:::
+
+::: {.column width="70%"}
+
+::: {.fragment}
+![](assets/LinearModelsVsNonLinear1.webp)
+
+![](assets/LinearModelsVsNonLinear2.webp)
+
+:::
+:::
+
+::::
+
+## Simple linear regression
+
+- learn the association between a single predictor $x$ and a quantitative response $y$.
+
+- assumes an approximately linear relationship between $x$ and $y$.
+
+$$y = \beta_0 + \beta_1x + \epsilon$$
+
+- The error term $\epsilon$ captures the noise or lack of fit to the linear equation.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 4
+#| fig-width: 5
+#| echo: false
+
+advertisingData <- read.csv(file = "https://www.statlearning.com/s/Advertising.csv", 
+                            header = TRUE, 
+                            row.names = 1)
+
+ggplot(advertisingData, aes(x = TV, y = sales)) + 
+    geom_point() + 
+    geom_smooth(method = "lm", se = FALSE) + 
+    theme_bw()
+```
+
+:::
+
+::: {.column width="50%"}
+
+|
+|
+|
+|
+
+- What do $\beta_0$ and $\beta_1$ capture?
+- How do we find the best fit?
+
+:::
+
+::::
+
+
+
+## Least squares
+
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+::: {.fragment}
+- $y = \beta_0 + \beta_1x + \epsilon$
+:::
+
+
+::: {.fragment}
+- $\hat{y_i}=\beta_0 + \beta_1x_i$
+:::
+
+::: {.fragment}
+- $e_i=y_i-\hat{y_i}$
+::: 
+
+::: {.fragment}
+- The residual sum of squares (RSS) is defined as $RSS=\sum_{i=1}^Ne_i^2$
+
+- We want to choose beta estimates which minimize the RSS. This is the least squares method.
+
+- Least squares was developed at the beginning of the 19th century (earliest form of linear regression), with applications in astronomy.
+:::
+
+:::
+
+::: {.column width="60%"}
+
+::: {.fragment}
+![](assets/LeastSquares.webp)
+::: 
+
+::: 
+
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+::: {.notes}
+What do the beta terms reflect> intercept: expected y when x=0, slope: avr increase in y associated with one unit increase in x.
+:::
+
+## Can you think of another way?
+
+. . . 
+
+![](assets/Orthogonal.webp){width=60%}
+
+. . . 
+
+- Given $x$, how far is the prediction off $y$?
+- What line lies closest to the cloud of points regardless of which axis is $x$ or $y$
+
+. . . 
+
+- Which would you pick?
+
+. . . 
+
+- Least squares: residuals are capturing unexplained variance and prediction error. 
+
+
+::: {.aside}
+[Image source](https://www.atmos.washington.edu/~dennis/Chapter_4_Regression.pdf?utm_source=chatgpt.com)
+:::
+
+## Multiple linear regression
+
+:::: {.columns}
+
+::: {.column width="60%"}
+![](assets/MultipleRegression.webp){width=70%}
+:::
+
+::: {.column width="40%"}
+- $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
+- $y = \beta.X + \epsilon$
+- Assumptions:
+  - given x and y values, estimate the coefficients
+  - linear relationship
+  - constant variance of residuals (homoscedasticity)
+  - $\epsilon \sim N(0, \sigma^2)$
+  - independence of observations
+  - no multicollinearity among predictors
+  - n >> p
+  
+:::
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+## Spot the linear model
+
+. . .
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_4x_5 + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$$
+
+. . . 
+
+$$log2(y) = \beta_0 + \beta_1x_1 + \beta_2x_2^2 + \beta_3\sqrt{x_3} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 e^{\beta_1x} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + \beta_1e^{x} + \epsilon$$
+
+. . .
+
+$$y = \beta_0 + sin(\beta_1x) + \epsilon$$
+
+
+## Multiple linear regression
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## predictor matrix
+X <- model.matrix(~ TV + radio + newspaper, 
+                  data = advertisingData)
+head(X)
+```
+:::
+::: 
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## linear fit
+fit1 <- lm(sales ~ TV + radio + newspaper, data = advertisingData)
+fit2 <- lm(sales ~ X + 0, data = advertisingData)
+```
+
+```{r}
+fit1
+```
+
+```{r}
+fit2
+```
+
+
+::: 
+:::
+
+::::
+
+## How do we interpret the coefficient values?
+
+```{r}
+fit1
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/LeastSquares.webp){width=70%}
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+|
+|
+|
+
+$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_px_p + \epsilon$
+
+:::
+
+:::
+
+::::
+
+## Categorical variables 
+
+- How would you represent them?
+
+. . . 
+
+- Categorical variables with $l$ levels can be represented as $l-1$ so called dummy variables consisting of columns of 1s and 0s. We will see this more in the lab session.
+
+::: {.small}
+```{r}
+head(Credit)
+```
+:::
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+
+::: {.small}
+```{r}
+X <- model.matrix(~ Own, 
+                  data = Credit)
+head(X)
+
+```
+:::
+
+:::
+
+::: {.column width="40%"}
+
+::: {.small}
+```{r}
+X <- model.matrix(~ Region, 
+                  data = Credit)
+head(X)
+```
+:::
+
+:::
+
+::::
+
+
+## Interaction terms
+
+- Beta coefficients per predictor say something about the effect of that predictor on $y$ when all others are fixed. Can you think of a way to have a coefficient capturing the simultaneous effect of two predictors holidng the rest fixed in our predictor matrix?
+
+. . .
+
+- Interaction terms allow us to capture more complex relationships in the model reflecting the joint effect of two predictors. This is represented in the product of the two predictors.
+
+| 
+| 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+
+::: {.small}
+```{r}
+X <- model.matrix(~ TV + radio + newspaper + TV:radio, 
+                  data = advertisingData)
+head(X)
+```
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.small}
+```{r}
+X <- model.matrix(~ TV*radio + newspaper, 
+                  data = advertisingData)
+head(X)
+```
+:::
+
+:::
+
+::::
+
+
+## Evaluating the quality of the linear fit
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Residual standard error $RSE=\sqrt{\frac{1}{N-p-1}RSS}$
+- Roughly represents the average amount of deviation from the fitted line.
+- The size of the RSE value will reflect how poorly the model fits the data.
+- Measured in units of $y$.
+
+::: {.fragment}
+- $R^2=\frac{TSS-RSS}{TSS}$ where $TSS=\sum(y_i-\bar{y})^2$.
+- RSS can be thought of as measuring the variability that is left unexplained after doing the regression.
+- The $R^2$ value thus reflects the proportion of variability in $y$ that can be explained using $x$ by performing the regression.
+:::
+
+:::
+
+::: {.column width="50%"}
+![](assets/FitAndPrediction.webp)
+:::
+
+::::
+
+::: {.aside}
+[https://xkcd.com/605/](https://xkcd.com/605/)
+:::
+
+## Correlation is not causation
+
+:::: {.columns}
+
+
+::: {.column width="50%"}
+
+![](assets/SpuriousCorrelation3.webp){width=70%}
+![](assets/SpuriousCorrelation4.webp){width=70%}
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/SpuriousCorrelation1.webp){width=70%}
+
+![](assets/CorrelationCausation.webp)
+
+
+:::
+
+::::
+
+
+
+
+::: {.aside}
+[https://xkcd.com/552/](https://xkcd.com/552/), [spurious-correlations](https://www.tylervigen.com/spurious-correlations)
+:::
+
+
+## Time for the lab
+
+|
+|
+|
+|
+|
+
+Please follow sections 1 to 5 in the lab. Read carefully and try to answer the sections marked as **Task**. 
+
+
+
+## Outliers
+
+- What is an outlier?
+- Why do they arise?
+- What do you do with them?
+- Can the linear fit be impacted by outliers and when?
+- What can you say about the fit and residuals?
+
+:::: {.columns}
+
+
+::: {.column width="50%"}
+
+
+::: {.fragment}
+```{r}
+#| echo: false
+
+## add outlier points
+set.seed(123)
+nOutliers <- 30
+advertisingOutlData <- rbind(advertisingData, 
+                         data.frame(TV = runif(n = nOutliers, min = 50, max = 150), 
+                                    radio = runif(n = nOutliers, min = 10, max = 15), 
+                                    newspaper = runif(n = nOutliers, min = 10, max = 30), 
+                                    sales = runif(n = nOutliers, min = 20, max = 30)))
+
+## fit linear model with lm()
+lmFit <- lm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          residual = lmFit$residuals, 
+                          predictedSales = lmFit$fitted.values))
+beta0lm <- lmFit$coefficients["(Intercept)"]
+beta1lm <- lmFit$coefficients["TV"]
+
+## plot
+ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue", alpha = 0.4)
+```
+:::
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+![](assets/SingleCell.webp)
+:::
+:::
+
+::::
+
+::: {.aside}
+[Image from OSCA book](https://bioconductor.org/books/3.23/OSCA.basic/index.html)
+:::
+
+
+::: {.notes}
+Sometimes we are interested in data points which vary more than expected e.g. single cell data and highly variable genes.
+:::
+
+## Robust regression
+
+$RSS=\sum_{i=1}^Ne_i^2$
+
+```{r}
+#| echo: false
+
+## robust linear fit
+robustFit <- rlm(sales ~ TV, data = advertisingOutlData) 
+
+## prepare to plot
+df <- do.call(cbind, list(advertisingOutlData, 
+                          predictedSales = robustFit$fitted.values, 
+                          weightedResidual = robustFit$wresid, 
+                          weight = robustFit$w))
+beta0rlm <- robustFit$coefficients["(Intercept)"]
+beta1rlm <- robustFit$coefficients["TV"]
+
+## plot
+p1 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point() +
+    geom_abline(intercept = beta0lm, slope = beta1lm, color = "firebrick") + 
+    geom_abline(intercept = beta0rlm, slope = beta1rlm, color = "forestgreen") + 
+    theme_bw() + 
+    geom_segment(aes(x = TV, xend = TV, y = sales, yend = predictedSales),
+                 color = "steelblue", alpha = 0.4)
+
+p2 <- ggplot(df, aes(x = TV, y = sales)) + 
+    geom_point(aes(color = weight)) +
+    geom_abline(intercept = beta0rlm, 
+                    slope = beta1rlm,
+                    color = "forestgreen") +
+    theme_bw() 
+
+p1 + p2
+```
+
+
+## Data varies
+
+![](assets/DataVaries.webp){width=60%}
+
+- We draw samples from a population and sample size matters. Is it representative?
+- How strong is the signal. How easily is it detected and how much variance does it explain in the data?
+- Something to be said for good quality data sets.
+
+
+::: {.aside}
+[https://xkcd.com/2581/](https://xkcd.com/2581/)
+:::
+
+## The bias-variance trade-off
+
+- Suppose we have our estimated beta coefficients. Do you think we would get the same values if we did a fit on another set of observations? 
+- What happens to the beta coefficients of predictors which are highly correlated but don't explain the response $y$?
+
+$$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_3 + \beta_4x_4 + \beta_5x_5 + \epsilon$$
+
+. . . 
+
+- Out goal is get good and robust estimates of the coefficients that we can interpret.
+- Shrinkage methods try to overcome these issues by imposing a penalty on the size of the coeficients.
+
+::: {.fragment}
+- variance: the amount by which $\hat{f}(x)$ would change if we estimate it in a different data set.
+- bias: the error introduced by approximating a real life problem.
+- trade-off: beta estimates will vary less at the expense of being slightly more biased.
+:::
+
+## Shrinkage methods: ridge
+
+$$
+\hat{\beta}=\min\limits_{\beta}\{\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p\beta_j^2 \}
+$$
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.fragment}
+![](assets/Ridge.webp){width=70%}
+:::
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+- What is happening to the total sum in the above equation?
+- Where are we penalizing more harshly?
+- What $\lambda$ would you choose?
+:::
+:::
+
+::::
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+## k-fold cross validation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](assets/CV.webp)
+
+- For each $\lambda$, train on k-1 folds and test on kth fold.
+- Compute prediction error and average the k prediction errors.
+- Repeat for each $\lambda$.
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+![](assets/LambdaMin.webp)
+:::
+:::
+
+::::
+
+::: {.aside}
+Images: from An Introduction to Statistical Learning, `glmnet` package
+:::
+
+## `glmnet`
+
+![](assets/glmnetDevs.webp)
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## prepare to fit
+y <- Credit$Balance
+X <- model.matrix(Balance ~ 0 + Income + Limit + Rating + 
+                      Cards + Age + Education, 
+                  data = Credit)
+
+## fit
+fit <- glmnet(x = X, y = y, alpha = 0)
+fitCV <- cv.glmnet(x = X, y = y, alpha = 0)
+
+## "best" lambda
+fitCV$lambda.min
+fitCV$lambda.1se
+```
+:::
+:::
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+#| fig-height: 3
+
+plot(fit)
+plot(fitCV)
+```
+:::
+:::
+
+::::
+
+
+## Shrinkage methods: lasso
+
+$$
+\hat{\beta}=\min\limits_{\beta}\{\frac{1}{2}\sum_{i=1}^N
+(y_i - \beta_0 - \sum_{j=1}^px_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p|\beta_j| \}
+$$
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.small}
+```{r}
+## fit
+fit <- glmnet(x = X, y = y, alpha = 1)
+fitCV <- cv.glmnet(x = X, y = y, alpha = 1)
+
+## "best" lambda
+fitCV$lambda.min
+fitCV$lambda.1se
+```
+
+```{r}
+coef(fitCV, s = "lambda.1se")
+```
+
+:::
+:::
+
+::: {.column width="50%"}
+
+::: {.small}
+```{r}
+#| fig-height: 3
+
+plot(fit)
+plot(fitCV)
+```
+::: 
+
+:::
+
+::::
+
+
+## Variable *selection* with the lasso 
+
+- When would we want to make use of such a method?
+
+. . .
+
+- What do you think the method does when 2 predictors $x_1$ and $x_2$ are highly correlated to each other?
+- Is this problematic?
+
+- Collinearity within the predictor matrix:
+
+```{r}
+#| fig-height: 4
+#| fig-width: 4
+#| echo: false
+
+heatmap(cor(X), labRow = FALSE, labCol = FALSE)
+```
+
+
+## Illustration of the bias-variance trade-off
+
+![](assets/Shrinkage.webp){width=60%}
+
+::: {.aside}
+Image from An Introduction to Statistical Learning
+:::
+
+
+## Shrinkage methods: elastic net
+
+$$
+\lambda \sum_{j=1}^p(\alpha|\beta_j| + (1-\alpha)\beta_j^2)
+$$
+
+- A compromise between the ridge and lasso. 
+- $\alpha$ can be between 0 and 1. 
+- Choice of $\alpha$ is not so easy and depends on how noisy the data is as well.
+
+```{r}
+fitCV <- cv.glmnet(x = X, y = y, alpha = 0.5)
+```
+
+
+## So far
+
+- We understand how linear models work.
+- We understand the limitations they can suffer from.
+- Shrinkage methods can be used to estimate more *robust* coefficients or to *select* meaningful variables.
+- Collinearity in the predictor matrix is a known challenge.
+
+. . . 
+
+- But can we do a little better with reasonably correlated predictors and co-select them?
+- What if we have more predictors than obervations?
+- What if our data set has a very low signal to noise ratio?
+
+. . . 
+
+- Enter stability selection.
+
+
+## Stability selection
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](assets/StabilitySelectionSubsetting.webp){width=80%}
+
+- Can be used when p > N.
+- We speak of selection probability values for predictors instead of beta coefficient values.
+- How is this calculated with lasso stability selection. If predictor $x_1$ has a non-zero beta coefficient 80 times and we subset 100 times to do a regression what is its selection probability? Do you think this is high?
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+$$
+\hat{\beta}=\min\limits_{\beta} (||y-X\beta||_2^2 + \lambda \sum_{j=1}^p\frac{|\beta_j|}{W_j} )
+$$
+:::
+
+::: {.fragment}
+- Randomized lasso stability selection.
+- Weakness term is between 0 and 1.
+- What do you think the effect of the weakness parameter is?
+:::
+
+::: {.fragment}
+- The randomized lasso changes the penalty λ to a randomly chosen value in the range [λ, λ/weakness].
+:::
+
+:::
+
+::::
+
+## Stability paths
+
+![](assets/StabilityPaths.webp){width=80%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
+
+::: {.notes}
+Q: comment on: lambda choice affecting beta coefficients, separation of signal from noise
+
+data set:
+For n =115 samples, there is a continuous response variable measuring the log-
+arithm of riboflavin (vitamin B2) production rate of bacillus subtilis, and we have p= 4088
+continuous covariates measuring the logarithm of gene expressions from essentially the whole
+genome of bacillus subtilis.
+Randomly permutes all except 6 of the 4088 gene expressions across the samples. The set of six
+unpermuted genes has been chosen randomly among the 200 genes with the highest marginal
+association with the response. 
+
+:::
+
+
+## Selecting true predictors
+
+- Regularization with stability selection is rather conservative in practice.
+- We need to specify 2 of: probability cutoff, upper bound on PFER, number of selected variables q
+- *Not* slecting a predictor is also a result and telling. Can you think of an example where this could happen?
+
+![](assets/StabilitySelectionPFER.webp){width=60%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
+
+## What about correlated predictors?
+
+- What did we say about correlated predictors?
+
+![](assets/StabilitySelectionPerformance.webp){width=60%}
+
+::: {.aside}
+Meinshausen and Bühlmann 2010
+:::
+
+::: {.notes}
+(a) Independent predictor variables: all p=1000 predictor variables are IID standard normal
+distributed; sample size n =100 and n =1000.
+(b) Block structure with 10 blocks: the p=1000-dimensional predictor variable follows an
+N .0, Σ/ distribution, where Σkm =0 for all pairs .k, m/ except if mod10.k/=mod10.m/,
+for which Σkm =0:5; sample size n =200 and n =1000.
+(c) Toeplitz design: the p=1000-dimensional predictor variable follows an N .0, Σ/ distribu-
+tion, where Σkm =ρ|k−m| and ρ=0:99; sample size n =200 and n =1000.
+(d) Factor model with two factors: let φ1 and φ2 be two latent variables following IID stan-
+dard normal distributions. Each predictor variable Xk, for k=1, . . . , p, is generated as
+Xk =fk,1φ1 +fk,2φ2 +ηk, where fk,1, fk,2 and ηk have IID standard normal distributions
+for all k=1, . . . , p; sample sizes are n =200 and n =1000, and p=1000.
+(e) (f) Data set (e) identical to (d) but with 10 instead of two factors.
+Motif regression data set: this is a data set (p=660 and n =2587) about finding transcrip-
+tion factor binding sites (motifs) in DNA sequences. The real-valued predictor variables
+are abundance scores for p candidate motifs (for each of the genes). Our data set is from a
+heat shock experiment with yeast. For a general description and motivation about motif
+regression we refer to Conlon et al. (2003).
+434 N. Meinshausen and P. Bühlmann
+(g) This data set is the vitamin gene expression data (with p=4088 and n =158) that were
+described in Section 2.2.
+:::
+
+## Strengths of stability selection
+
+- p >> n situations (flexibility to for example add many more interaction terms in predictor matrix)
+- Reasonably correlated predictor matrix.
+- Consistent variable selection (robust) - important in noisy data sets.
+- Conservative, no selection is a result. 
+- Parameters for error control.
+- Less dependent on the particular $\lambda$ choice.
+
+. . . 
+
+| 
+| 
+| 
+- Overall questions on the linear models and concepts we have explored so far before we move on to some interesting uses and applications?
+
+
+## Loess
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+::: {.small}
+```{r}
+# example data set
+```
+
+::: 
+
+```{r}
+#| echo: false
+
+## create example
+set.seed(123)
+n <- 150
+x <- runif(n, 0, 10)
+f <- function(x) {
+  2 + 0.5*x + 2*sin(x)
+}
+y <- f(x) + rnorm(n, 0, 0.8)
+
+df <- data.frame(x, y)
+
+ggplot(df, aes(x = x, y = y)) + 
+    geom_point() + 
+    theme_bw()
+
+```
+
+::: {.small}
+```{r}
+fit1 <- loess(y ~ x)
+```
+:::
+
+```{r}
+#| echo: false
+
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit1, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
+    theme_bw()
+
+```
+
+:::
+
+::: {.column width="40%"}
+
+::: {.fragment}
+
+::: {.small}
+```{r}
+fit2 <- loess(y ~ x, span = 0.9)
+```
+:::
+
+```{r}
+#| echo: false
+
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit2, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
+    theme_bw()
+
+```
+
+::: {.small}
+```{r}
+fit3 <- loess(y ~ x, span = 0.5)
+```
+:::
+
+
+```{r}
+#| echo: false
+
+new_x <- seq(min(df$x), max(df$x), length.out = 200)
+
+fitted_df <- data.frame(
+  x = new_x,
+  y = predict(fit3, newdata = new_x)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_line(data = fitted_df, aes(x, y), colour = "firebrick") + 
+    theme_bw()
+
+```
+
+:::
+
+:::
+
+::::
+
+
+::: {.notes}
+
+loess: uses points around x to do a linear regression, and nearby observations get more weight than distant observations. 100 pts means roughly 100 local regressions done. For each pt, uses the estimated coefficients to calculate predicted y, which will become part of the final fit.
+
+:::
+
+
+## GC bias trends in ATAC-seq/ChIP-seq data
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/GCbias1.webp)
+
+:::
+
+::: {.column width="50%"}
+
+
+![](assets/GCbias2.webp)
+
+
+:::
+
+::::
+
+
+## Correcting the trend with `limma`'s `normalizeCyclicLoess()` 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](assets/CyclicLoessBefore.webp)
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+![](assets/CyclicLoessAfter.webp)
+
+:::
+
+:::
+
+::::
+
+
+## Experimental design and batch correction
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+![](assets/BatchEffects.webp)
+
+:::
+
+::: {.column width="40%"}
+
+|
+|
+
+::: {.fragment}
+
+::: {.small}
+$$y_{observed} = \beta_0 + \beta_{biology}x_{biology} + \beta_{batch}x_{batch} + \epsilon$$
+:::
+
+
+|
+|
+|
+
+$$y_{corrected} = \beta_0 + \beta_{biology}x_{biology} + \epsilon$$ 
+
+or 
+
+$$y_{corrected} = y_{observed} - \beta_{batch}x_{batch}$$
+
+:::
+
+:::
+
+::::
+
+::: {.notes}
+
+`limma`'s `removeBatchEffect()`
+My use cases: bulk RNA to see PCA when batch is removed.. In DE we model batch effect as a covariate.
+
+:::
+
+::: {.aside}
+[Image source](https://doi.org/10.1093/biostatistics/kxx053)
+:::
+
+
+
+## Gaussian graphical models (GGMs)
+
+- Model statistical relationships between variables using graphs.
+- Special algebraic and geometric properties.
+- Covariance matrix: covariance between each pair of variables.
+- The goal is to estimate the precision matrix (inverse covariance matrix ) which shows the edges in the graph.
+
+
+![](assets/GGM.webp){width=60%}
+
+## Estimating the (sparse) graph
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Fit lasso on each variable, using all others as predictors.
+- Lambda controls sparsity.
+- Draw edge with AND/OR rule.
+- Edges in the graph reflect meaningful relationships. A missing edge between $x_1$ and $x_2$ means those two variables are conditionally independent given all other variables.
+
+|
+
+- Example: gene x cell count matrix. We want to learn the gene regulatory network. If necessary, we need to transform the data to look Gaussian to meet the needed assumptions. `glmnet` allows you to specify other distribution families that better match the response.
+
+:::
+
+::: {.column width="50%"}
+
+![](assets/graph.webp)
+
+:::
+
+::::
+
+::: {.aside}
+Meinshausen and Bühlmann 2006
+:::
+
+## And much more we haven't covered here
+
+- Mixed effects models.
+- Multivariate regression.
+- Logistic regression.
+- ... to mention a few.
+
+
+
+
+
+## Extra reading/links
+
+- [Written by Witten (wxw)](https://www.danielawitten.com/written-by-witten)
+- [Nicolei Meinshausen's website](https://people.math.ethz.ch/~nicolai/)
+- [Spurious correlations](https://www.tylervigen.com/spurious-correlations)
+- [Journal of the Royal Statistical Society Series B](https://academic.oup.com/jrsssb)
+- [Statistical Ideas that Changed the World](https://ledaliang.github.io/journalclub/)
+- [https://what-if.xkcd.com/archive/](https://what-if.xkcd.com/archive/)
+- [https://xkcd.com](https://xkcd.com)
+
+![](assets/Yoda.webp){width=40%}
+
+
+::: {.notes}
+In reasoning quantitatively about the world and seeking to understand it, while thinking **critically** and **creatively**, maybe using some of the tools we learnt about today, **you** are a participating data scientist.
+:::
+
+::: {.aside}
+[https://what-if.xkcd.com/3/](https://what-if.xkcd.com/3/)
+:::
+
+## Resources
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- **An Introduction to Statistical Learning with applications in R** -- Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+
+- [https://www.statlearning.com](https://www.statlearning.com)
+
+![](assets/ISL.webp){width=30%}
+
+:::
+
+::: {.column width="50%"}
+
+- **The Elements of Statistical Learning** -- Trevor Hastie, Robert Tibshirani and Jerome Friedman
+
+- [https://hastie.su.domains/ElemStatLearn](https://hastie.su.domains/ElemStatLearn/)
+
+| 
+| 
+
+![](assets/ESL.webp){width=30%}
+
+:::
+
+::::
+
+
+::: {.notes}
+Freely available soft copies. Lots of online material, R packages with the datasets ISLR2.
+::: 
+
+
+## Concluding Remarks
+
+::: {.v-center}
+::: {}
+
+"*The quiet statisticians have changed our world; not by discovering new facts or technical developments, but by changing the ways that we reason, experiment and form our opinions.*"
+
+-- Ian Hacking 
+
+| 
+|
+|
+
+"*Many of us are drawn to the field of statistics because we are natural-born skeptics. Through our statistical training, we become more skeptical still. Our experience—both personal and professional—has taught us that if something seems too good to be true, then it probably is. We seek the simplest possible answer to every question, and no simpler. After all, statistics is hard. The key is to enjoy the challenge.*" 
+
+-- Daniela Witten & Rob Tibshirani
+:::
+:::
+
+
+## {background-image="/assets/images/network.svg"}
+
+::: {.v-center .center}
+::: {}
+
+[Thank you!]{.largest}
+
+[Questions?]{.larger}
+
+[{{< meta current_year >}} • [SciLifeLab](https://www.scilifelab.se/) • [NBIS](https://nbis.se/) • [RaukR](https://nbisweden.github.io/raukr-2026)]{.smaller}
+
+:::
+:::
+
+
+
