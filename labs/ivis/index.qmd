@@ -1,0 +1,595 @@
+---
+title: "Interactive visualization in R"
+author: "Roy Francis"
+description: "Hands-on interactive charts and maps using the NYC Squirrel Census."
+image: "assets/featured.webp"
+format: html
+---
+
+::: {.callout-note}
+This lab uses the Central Park Squirrel Census data distributed by [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-29). Each row records one observed squirrel, including its coordinates, appearance, census shift, location, and behaviours.
+:::
+
+## Learning objectives
+
+- Prepare the NYC squirrel census for browser-based graphics.
+- Answer focused questions with counts, proportions, time series, heatmaps, and maps.
+- Build interactive charts and maps with both `plotly` and `highcharter`.
+- Use hover details and linked views to explore individual observations.
+
+## Setup
+
+Install the packages once if needed.
+
+```{r}
+#| eval: false
+install.packages(c("dplyr", "tidyr", "readr", "plotly", "highcharter"))
+```
+
+Load the packages and retrieve the documented TidyTuesday data. It involves a few transformations to prepare for plotting. Go through the code to understand how the data are structured and summarized.
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+library(plotly)
+library(highcharter)
+
+squirrels <- read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv",
+  show_col_types = FALSE
+) |>
+  mutate(
+    observation_date = as.Date(as.character(date), format = "%m%d%Y"),
+    fur_color = factor(
+      coalesce(primary_fur_color, "Unknown"),
+      levels = c("Gray", "Cinnamon", "Black", "Unknown")
+    ),
+    age_group = case_when(
+      age %in% c("Adult", "Juvenile") ~ age,
+      TRUE ~ "Unknown"
+    ),
+    above_ground_sighter_measurement = as.integer(
+      if_else(above_ground_sighter_measurement == "FALSE", "0", above_ground_sighter_measurement)
+    ),
+    location = coalesce(location, "Unknown"),
+    shift = factor(shift, levels = c("AM", "PM"))
+  )
+
+fur_colors <- c(
+  Gray = "#7A7D80",
+  Cinnamon = "#B65A24",
+  Black = "#2B2B2B",
+  Unknown = "#BDBDBD"
+)
+
+squirrel_points <- squirrels |>
+  filter(!is.na(long), !is.na(lat)) |>
+  mutate(
+    point_id = row_number(),
+    hover = paste0(
+      "<b>", unique_squirrel_id, "</b><br>",
+      "Fur: ", fur_color, "<br>",
+      "Age: ", age_group, "<br>",
+      "Shift: ", shift, "<br>",
+      "Location: ", location
+    )
+  )
+
+fur_counts <- squirrels |>
+  count(fur_color, sort = TRUE)
+
+age_counts <- squirrels |>
+  filter(age_group != "Unknown") |>
+  count(age_group)
+
+location_counts <- squirrels |>
+  filter(location != "Unknown") |>
+  count(location)
+
+shift_counts <- squirrels |>
+  filter(!is.na(shift)) |>
+  count(shift)
+
+behaviour_names <- c(
+  "running", "chasing", "climbing", "eating", "foraging", "kuks",
+  "quaas", "moans", "tail_flags", "tail_twitches", "approaches",
+  "indifferent", "runs_from"
+)
+
+behaviour_long <- squirrels |>
+  select(age_group, shift, all_of(behaviour_names)) |>
+  pivot_longer(all_of(behaviour_names),
+    names_to = "behaviour", values_to = "observed"
+  )
+
+behaviour_overall <- behaviour_long |>
+  group_by(behaviour) |>
+  summarise(proportion = mean(observed), .groups = "drop") |>
+  arrange(desc(proportion))
+
+behaviour_by_age <- behaviour_long |>
+  filter(age_group != "Unknown") |>
+  group_by(age_group, behaviour) |>
+  summarise(proportion = mean(observed), .groups = "drop")
+
+behaviour_by_shift <- behaviour_long |>
+  filter(!is.na(shift)) |>
+  group_by(shift, behaviour) |>
+  summarise(proportion = mean(observed), .groups = "drop")
+```
+
+## Plotly
+
+### Map: where were squirrels observed?
+
+Coordinates add geographic context to every other question. The free OpenStreetMap style needs no Mapbox token. With thousands of points, transparency is essential.
+
+```{r}
+plot_ly(
+  squirrel_points,
+  type = "scattermapbox",
+  lon = ~long,
+  lat = ~lat,
+  color = ~fur_color,
+  colors = unname(fur_colors),
+  text = ~hover,
+  hoverinfo = "text",
+  marker = list(size = 7, opacity = 0.65)
+) |>
+  layout(
+    title = "Central Park squirrel observations by fur color",
+    mapbox = list(
+      style = "open-street-map",
+      center = list(lon = -73.9654, lat = 40.7829),
+      zoom = 12.5
+    ),
+    margin = list(l = 0, r = 0, b = 0, t = 45)
+  )
+```
+
+### Fur color counts
+
+A barplot can help with this.
+
+```{r}
+plot_ly(
+  fur_counts,
+  x = ~reorder(fur_color, n),
+  y = ~n,
+  type = "bar",
+  text = ~n,
+  textposition = "auto",
+  marker = list(color = unname(fur_colors[as.character(fur_counts$fur_color)]))
+) |>
+  layout(
+    title = "How many squirrels have each primary fur color?",
+    xaxis = list(title = "Fur color"),
+    yaxis = list(title = "Observed squirrels")
+  )
+```
+
+### Age, location, and census shift
+
+- What were the ages of the squirrels observed?
+- Were they on the ground or above ground?
+- Were they observed in the AM or PM shift?
+
+::: {.column-body-outset}
+
+```{r}
+age_plot <- plot_ly(age_counts, x = ~age_group, y = ~n, type = "bar") |>
+  layout(title = "Adult and juvenile observations", yaxis = list(title = "Count"))
+
+location_plot <- plot_ly(location_counts, x = ~location, y = ~n, type = "bar") |>
+  layout(title = "Ground plane versus above ground", yaxis = list(title = "Count"))
+
+shift_plot <- plot_ly(shift_counts, x = ~shift, y = ~n, type = "bar") |>
+  layout(title = "Observations by census shift", yaxis = list(title = "Count"))
+
+subplot(age_plot, location_plot, shift_plot, nrows = 1, margin = 0.05)
+```
+
+:::
+
+### Boxplots and violin plots
+
+Both chart types describe the distribution of a continuous measurement. Boxplots make quartiles and outliers easy to compare; violin plots add the density shape. Here, compare the recorded height above ground for adults and juveniles.
+
+```{r}
+#| label: plotly-height-distributions
+height_points <- squirrels |>
+  filter(
+    age_group != "Unknown",
+    !is.na(above_ground_sighter_measurement)
+  )
+
+height_boxplot <- plot_ly(
+  height_points,
+  x = ~age_group,
+  y = ~above_ground_sighter_measurement,
+  color = ~age_group,
+  type = "box",
+  boxpoints = "outliers"
+) |>
+  layout(
+    title = "Reported height: boxplot",
+    xaxis = list(title = "Age group"),
+    yaxis = list(title = "Height above ground")
+  )
+
+height_violin <- plot_ly(
+  height_points,
+  x = ~age_group,
+  y = ~above_ground_sighter_measurement,
+  color = ~age_group,
+  type = "violin",
+  box = list(visible = TRUE),
+  meanline = list(visible = TRUE)
+) |>
+  layout(
+    title = "Reported height: violin plot",
+    xaxis = list(title = "Age group"),
+    yaxis = list(title = "Height above ground")
+  )
+
+subplot(height_boxplot, height_violin, nrows = 1, margin = 0.06)
+```
+
+### Most commonly observed behaviour
+
+What were the most commonly observed behaviours?
+
+```{r}
+plot_ly(
+  behaviour_overall,
+  x = ~proportion,
+  y = ~reorder(behaviour, proportion),
+  type = "bar",
+  orientation = "h",
+  text = ~scales::percent(proportion, accuracy = 0.1),
+  textposition = "auto",
+  hovertemplate = "%{y}: %{x:.1%}<extra></extra>"
+) |>
+  layout(
+    title = "How often was each behaviour observed?",
+    xaxis = list(title = "Proportion of observations", tickformat = ".0%"),
+    yaxis = list(title = NULL)
+  )
+```
+
+### Behaviour by age
+
+Does behaviour differ by age?
+
+Grouped bars work well for a few named behaviours. Here we restrict to the five most commonly observed behaviours so the comparison remains readable.
+
+```{r}
+top_behaviours <- behaviour_overall |>
+  slice_head(n = 5) |>
+  pull(behaviour)
+
+behaviour_by_age |>
+  filter(behaviour %in% top_behaviours) |>
+  plot_ly(
+    x = ~behaviour,
+    y = ~proportion,
+    color = ~age_group,
+    type = "bar",
+    hovertemplate = "%{x}<br>%{fullData.name}: %{y:.1%}<extra></extra>"
+  ) |>
+  layout(
+    title = "Top behaviours: adult versus juvenile observations",
+    barmode = "group",
+    xaxis = list(title = "Behaviour"),
+    yaxis = list(title = "Proportion observed", tickformat = ".0%")
+  )
+```
+
+### Does behaviour differ by AM/PM shift?
+
+A heatmap gives the full comparison without pretending that a small visual difference is evidence of a meaningful effect.
+
+```{r}
+shift_matrix <- behaviour_by_shift |>
+  pivot_wider(names_from = shift, values_from = proportion) |>
+  arrange(desc(AM + PM))
+
+plot_ly(
+  x = c("AM", "PM"),
+  y = shift_matrix$behaviour,
+  z = as.matrix(select(shift_matrix, AM, PM)),
+  type = "heatmap",
+  colors = "YlGnBu",
+  zmin = 0,
+  zmax = 1,
+  hovertemplate = "%{y}, %{x}: %{z:.1%}<extra></extra>"
+) |>
+  layout(
+    title = "Observed behaviour by census shift",
+    xaxis = list(title = "Shift"),
+    yaxis = list(title = NULL)
+  )
+```
+
+### Time series
+
+Daily count lines show how the two shifts were sampled across the census.
+
+```{r}
+daily_counts <- squirrels |>
+  count(observation_date, shift) |>
+  filter(!is.na(observation_date), !is.na(shift))
+
+plot_ly(daily_counts, x = ~observation_date, y = ~n, color = ~shift) |>
+  add_lines() |>
+  add_markers() |>
+  layout(
+    title = "Daily observations by census shift",
+    xaxis = list(title = "Date", rangeslider = list(visible = TRUE)),
+    yaxis = list(title = "Observed squirrels")
+  )
+```
+
+### Linked views
+
+Linked views let a reader select squirrels by location and ask whether the selected observations are dominated by one fur color. The map on the left shows the spatial pattern, while the histogram on the right summarizes the fur-color distribution of the same selected records.
+
+```{r}
+linked_squirrels <- highlight_key(squirrel_points, ~point_id)
+
+coordinate_plot <- plot_ly(
+  linked_squirrels,
+  x = ~long,
+  y = ~lat,
+  color = ~fur_color,
+  colors = unname(fur_colors),
+  text = ~hover,
+  hoverinfo = "text",
+  type = "scatter",
+  mode = "markers",
+  marker = list(size = 8, opacity = 0.75),
+  showlegend = TRUE
+) |>
+  layout(
+    legend = list(title = list(text = "Fur color")),
+    xaxis = list(title = "Longitude"),
+    yaxis = list(title = "Latitude")
+  )
+
+fur_histogram <- plot_ly(
+  linked_squirrels,
+  x = ~fur_color,
+  color = ~fur_color,
+  colors = unname(fur_colors),
+  type = "histogram",
+  marker = list(opacity = 0.9),
+  showlegend = TRUE
+) |>
+  layout(
+    legend = list(title = list(text = "Fur color")),
+    xaxis = list(title = "Fur color"),
+    yaxis = list(title = "Selected squirrels")
+  )
+
+subplot(
+  coordinate_plot,
+  fur_histogram,
+  nrows = 1,
+  titleX = TRUE,
+  titleY = TRUE
+) |>
+  layout(
+    title = "Do the selected squirrels cluster by fur color?",
+    dragmode = "select",
+    legend = list(title = list(text = "Fur color"))
+  ) |>
+  highlight(on = "plotly_selected", off = "plotly_deselect", dynamic = TRUE)
+```
+
+This second linked example asks whether adult and juvenile squirrels are spatially separated within Central Park. The map on the left colours points by age group, and the bar panel on the right shows the age distribution among the same selected records.
+
+```{r}
+age_linked <- squirrel_points |>
+  filter(age_group %in% c("Adult", "Juvenile")) |>
+  mutate(age_group = factor(age_group, levels = c("Adult", "Juvenile")))
+
+age_linked <- highlight_key(age_linked, ~point_id)
+
+adult_juvenile_map <- plot_ly(
+  age_linked,
+  x = ~long,
+  y = ~lat,
+  color = ~age_group,
+  colors = c(Adult = "#2E7D32", Juvenile = "#E76F51"),
+  text = ~hover,
+  hoverinfo = "text",
+  type = "scatter",
+  mode = "markers",
+  marker = list(size = 8, opacity = 0.75),
+  showlegend = TRUE
+) |>
+  layout(
+    legend = list(title = list(text = "Age group")),
+    xaxis = list(title = "Longitude"),
+    yaxis = list(title = "Latitude")
+  )
+
+adult_juvenile_counts <- plot_ly(
+  age_linked,
+  x = ~age_group,
+  color = ~age_group,
+  colors = c(Adult = "#2E7D32", Juvenile = "#E76F51"),
+  type = "histogram",
+  marker = list(opacity = 0.9),
+  showlegend = TRUE
+) |>
+  layout(
+    legend = list(title = list(text = "Age group")),
+    xaxis = list(title = "Age group"),
+    yaxis = list(title = "Selected squirrels")
+  )
+
+subplot(
+  adult_juvenile_map,
+  adult_juvenile_counts,
+  nrows = 1,
+  titleX = TRUE,
+  titleY = TRUE
+) |>
+  layout(
+    title = "Do adult and juvenile squirrels cluster in different parts of Central Park?",
+    dragmode = "select",
+    legend = list(title = list(text = "Age group"))
+  ) |>
+  highlight(on = "plotly_selected", off = "plotly_deselect", dynamic = TRUE)
+```
+
+## Highcharter
+
+### Column chart
+
+`hchart()` offers a quick route to a simple column chart; `highchart()` and `hc_add_series()` give more control for the donut.
+
+```{r}
+fur_counts |>
+  hchart("column", hcaes(x = fur_color, y = n)) |>
+  hc_title(text = "Primary fur color counts") |>
+  hc_xAxis(title = list(text = "Fur color")) |>
+  hc_yAxis(title = list(text = "Observed squirrels")) |>
+  hc_tooltip(pointFormat = "<b>{point.y}</b> observations") |>
+  hc_plotOptions(column = list(colorByPoint = TRUE, dataLabels = list(enabled = TRUE))) |>
+  hc_colors(unname(fur_colors[as.character(fur_counts$fur_color)]))
+```
+
+### Stacked bars and area chart
+
+A stacked bar compares the location composition by age; an area chart shows daily observation totals and shift composition.
+
+```{r}
+location_age <- squirrels |>
+  filter(age_group != "Unknown", location != "Unknown") |>
+  count(location, age_group)
+
+location_age |>
+  hchart("column", hcaes(x = location, y = n, group = age_group)) |>
+  hc_title(text = "Location of adult and juvenile squirrels") |>
+  hc_xAxis(title = list(text = "Location")) |>
+  hc_yAxis(title = list(text = "Observations")) |>
+  hc_plotOptions(column = list(stacking = "normal")) |>
+  hc_tooltip(shared = TRUE)
+```
+
+```{r}
+daily_counts |>
+  mutate(timestamp = datetime_to_timestamp(observation_date)) |>
+  hchart("area", hcaes(x = timestamp, y = n, group = shift)) |>
+  hc_title(text = "Daily observations by census shift") |>
+  hc_xAxis(type = "datetime", title = list(text = "Date")) |>
+  hc_yAxis(title = list(text = "Observed squirrels")) |>
+  hc_plotOptions(area = list(stacking = "normal")) |>
+  hc_tooltip(shared = TRUE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+
+### Behaviour heatmap
+
+The heatmap answers the AM/PM behaviour question with exact values on hover.
+
+```{r}
+behaviour_heatmap <- behaviour_by_shift |>
+  mutate(
+    x = match(shift, c("AM", "PM")) - 1,
+    y = match(behaviour, rev(behaviour_names)) - 1,
+    value = round(proportion * 100, 1)
+  )
+
+highchart() |>
+  hc_add_series(
+    behaviour_heatmap, type = "heatmap",
+    hcaes(x = x, y = y, value = value)
+  ) |>
+  hc_title(text = "Observed behaviours by census shift") |>
+  hc_xAxis(categories = c("AM", "PM"), title = list(text = "Shift")) |>
+  hc_yAxis(categories = rev(behaviour_names), title = list(text = NULL)) |>
+  hc_colorAxis(
+    min = 0, max = 100,
+    stops = color_stops(colors = c("#f7fcf0", "#00441b"))
+  ) |>
+  hc_tooltip(pointFormat = "<b>{point.value:.1f}%</b> observed")
+```
+
+### Radar chart
+
+A radar chart places each behaviour on its own radial axis. It is useful for an overall pattern comparison, but the heatmap above is better when exact values matter.
+
+```{r}
+#| label: highcharter-behaviour-radar
+radar_behaviours <- behaviour_overall |>
+  slice_head(n = 6) |>
+  pull(behaviour)
+
+radar_data <- behaviour_by_shift |>
+  filter(behaviour %in% radar_behaviours) |>
+  mutate(behaviour = factor(behaviour, levels = radar_behaviours))
+
+radar_data |>
+  hchart("line", hcaes(x = behaviour, y = proportion, group = shift)) |>
+  hc_chart(polar = TRUE, type = "line") |>
+  hc_title(text = "Six most common behaviours by census shift") |>
+  hc_pane(size = "80%") |>
+  hc_xAxis(
+    title = list(text = NULL),
+    gridLineInterpolation = "polygon"
+  ) |>
+  hc_yAxis(
+    min = 0,
+    title = list(text = "Proportion observed"),
+    gridLineInterpolation = "polygon"
+  ) |>
+  hc_plotOptions(series = list(pointPlacement = "on")) |>
+  hc_tooltip(pointFormat = "<b>{series.name}</b>: {point.y:.1%}")
+```
+
+### Highcharter coordinate scatter
+
+Visualize the observation coordinates as a scatterplot.
+
+```{r}
+squirrel_points |>
+  hchart(
+    "scatter",
+    hcaes(x = long, y = lat, group = fur_color, name = unique_squirrel_id)
+  ) |>
+  hc_colors(unname(fur_colors)) |>
+  hc_title(text = "Central Park squirrel observation coordinates") |>
+  hc_xAxis(title = list(text = "Longitude")) |>
+  hc_yAxis(title = list(text = "Latitude")) |>
+  hc_legend(enabled = TRUE, title = list(text = "Fur color")) |>
+  hc_tooltip(
+    pointFormat = "<b>{point.name}</b><br>Latitude: {point.y:.4f}<br>Longitude: {point.x:.4f}"
+  )
+```
+
+## Further exploration
+
+You can explore some of these questions if you like if they haven't been answered already:
+
+- Do squirrels of different fur colors cluster in different parts of Central Park or in specific hectares?
+- Are adult and juvenile squirrels more likely to show different behaviours, such as running, chasing, foraging, or climbing?
+- Does the mix of observed behaviours differ between the AM and PM census shifts?
+- Are squirrels more often observed above ground in certain locations or during specific shifts?
+- Do the dates in the census show temporal changes in squirrel activity or the distribution of fur colors?
+
+## Session
+
+<details>
+  <summary>Click here</summary>
+
+```{r}
+#| label: session
+sessionInfo()
+```
+
+</details>
