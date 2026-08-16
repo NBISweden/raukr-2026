@@ -238,7 +238,7 @@ Sometimes it underestimates the true variability. Sometimes it overestimates it.
 [https://en.wikipedia.org/wiki/William_Sealy_Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset)
 :::
 
-## Early examples of Data science and learning from data
+## Early examples of learning something about the world
 
 :::: {.columns}
 
@@ -344,7 +344,7 @@ https://images.nasa.gov
 - Exploration vs confirmation
 
 ::: {.aside}
-[Research Hypothesis](https://pmc.ncbi.nlm.nih.gov/articles/PMC12534748/?utm_source=chatgpt.com)
+Images: [https://xkcd.com/2569/](https://xkcd.com/2569/), [Research Hypothesis](https://pmc.ncbi.nlm.nih.gov/articles/PMC12534748/?utm_source=chatgpt.com)
 :::
 
 ## Statistical learning
@@ -371,7 +371,7 @@ https://images.nasa.gov
 ::::
 
 ::: {.aside}
-(https://xkcd.com/1838)
+[https://xkcd.com/1838](https://xkcd.com/1838)
 :::
 
 ::: {.notes}
@@ -409,8 +409,7 @@ https://images.nasa.gov
 ::::
 
 ::: {.aside}
-- [https://xkcd.com/2173/](https://xkcd.com/2173/)
-- Complex Heatmap book
+Images: [https://xkcd.com/2173/](https://xkcd.com/2173/), Complex Heatmap book
 :::
 
 
@@ -961,6 +960,18 @@ head(X)
 ::: {.aside}
 [https://xkcd.com/552/](https://xkcd.com/552/), [spurious-correlations](https://www.tylervigen.com/spurious-correlations)
 :::
+
+
+## Time for the lab
+
+|
+|
+|
+|
+|
+
+Please follow sections 1 to 5 in the lab. Read carefully and try to answer the sections marked as **Task**. 
+
 
 
 ## Outliers
