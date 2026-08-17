@@ -7,16 +7,17 @@ image: "assets/featured.webp"
 ---
 
 ```{r}
-#| eval: false
-
 ## Install packages if necessary 
-## (makes sure you have the BiocManager package installed)
-pkgs <- c("MASS",
-          "ISLR2",
-          "glmnet",
-          "ggplot2",
-          "patchwork")
-BiocManager::install(pkgs)
+## (make sure you have the BiocManager package installed)
+# pkgs <- c("ISLR2, 
+#           "MASS",
+#           "glmnet",
+#           "monaLisa",
+#           "SummarizedExperiment",
+#           "ggplot2",
+#           "patchwork", 
+#           "tidyverse")
+# BiocManager::install(pkgs)
 
 ## Load packages
 suppressPackageStartupMessages({
