@@ -26,15 +26,19 @@ library(ggplot2)
 
 ## OOP Systems in R
 
-- **S3** -- basic R OOP system,
+- **S3** -- basic R OOP system inherited from the S language, 
 - **S4** -- a bit more advanced OOP, common in, e.g. Bioconductor,
-- RC -- Reference Classes, the most advanced and close to, e.g. Java OOP, extension of S4,
+- **RC** -- Reference Classes, closer to, e.g. Java OOP, extension of S4, modify-in-place,
 - **R6** -- simplified RC, extension of S3, `require(R6)`
-- **S7** -- best of S3 + S4 = S7 `require(S7)`. Still in dev phase.
+- **S7** -- best of S3 + S4 = S7 `require(S7)`. Relatively new.
+
+. . .
+
+![https://xkcd.com/927/](assets/standards_xkcd.png){height="400px"}
 
 ## S4 classes
 
-S4 classes are more advanced than S3 as you actually define the structure of the data within the object of your particular class:
+In S4 classes you define the structure of the data within the object of your particular class:
 
 ```{r S4}
 # declare class
@@ -394,7 +398,6 @@ point_in_space_class <- function(x, y, z) {
 - Are faster than RC,
 - Do not do *copy-on-modify*,
 - Thus provide OO model similar to C++ or Java.
-- Methods belong to objects, not to generics.
 
 ## R6 Class Example
 
@@ -480,6 +483,65 @@ ann$set_hair("blond")
 kate$hair
 ann$hair
 ```
+
+## S7 classes
+
+```{r}
+library('S7', quietly = T)
+```
+
+
+. . .
+
+```{r}
+Range <- new_class("Range",
+  properties = list(
+    start = class_double,
+    end = class_double
+  ),
+  validator = function(self) {
+    if (length(self@start) != 1) {
+      "@start must be length 1"
+    } else if (length(self@end) != 1) {
+      "@end must be length 1"
+    } else if (self@end < self@start) {
+      "@end must be greater than or equal to @start"
+    }
+  }
+)
+```
+
+## S7 classes cted.
+
+```{r}
+x <- Range(start = 1, end = 10)
+x
+```
+
+. . .
+
+```{r}
+#| error: true
+x@start
+x@end <- 20
+x
+x@end <- "twenty"
+x@end <- -1
+```
+
+## Generics and methods in S7
+
+```{r}
+inside <- new_generic(name = "inside", 
+                      dispatch_args = "x")
+
+method(inside, Range) <- function(x, y) {
+  y >= x@start & y <= x@end
+}
+
+inside(x, c(0, 5, 10, 15))
+```
+
 
 ## {background-image="/assets/images/network.svg"}
 
