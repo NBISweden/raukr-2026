@@ -7,16 +7,28 @@ image: "assets/featured.webp"
 ---
 
 ```{r}
-#| echo: false
+#| eval: false
 
-library(ISLR2)
-library(MASS)
-library(glmnet)
-library(monaLisa)
-library(SummarizedExperiment)
-library(ggplot2)
-library(patchwork)
-library(tidyverse)
+## Install packages if necessary 
+## (makes sure you have the BiocManager package installed)
+pkgs <- c("MASS",
+          "ISLR2",
+          "glmnet",
+          "ggplot2",
+          "patchwork")
+BiocManager::install(pkgs)
+
+## Load packages
+suppressPackageStartupMessages({
+    library(ISLR2)
+    library(MASS)
+    library(glmnet)
+    library(monaLisa)
+    library(SummarizedExperiment)
+    library(ggplot2)
+    library(patchwork)
+    library(tidyverse)
+})
 ```
 
 ## Overview
