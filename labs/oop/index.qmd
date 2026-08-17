@@ -14,13 +14,13 @@ library(bsplus)
 ```
 
 ::: {.callout-note}
-During this lab, we will go through the most important features of 3 out of the 4 existing OOP systems in R:
+During this lab, we will go through the most important features of 3 out of the 5 existing OOP systems in R:
 
 - S3,
 - S4,
 - R6.
 
-While S3 and S4 are base-R OOP systems, R6 is provided by the `R6` package. Both S3 and S4 follow the *functional OOP style* while `R6` is more similar to OOP models known from Java or C++. We will not cover the Reference Classes (a.k.a. RC) which is yet another base-R OOP model. Why? Well, it is really tricky to use and its documentation is not always complete...
+While S3 and S4 are base-R OOP systems, R6 is provided by the `R6` package. Both S3 and S4 follow the *functional OOP style* while `R6` is more similar to OOP models known from Java or C++. We will not cover the Reference Classes (a.k.a. RC) which is yet another base-R OOP model but not so widely adopted by the R community. We will also skip the S7 as it is relatively new and knowing intricacies and concepts of S3, S4 and R6 makes it easy to understand and use S7 whenever necessary based on the `S7` package documentation. 
 :::
 
 ## S3 Classes

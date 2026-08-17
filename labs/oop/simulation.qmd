@@ -1,0 +1,95 @@
+---
+title: "Object-Oriented Epidemics Simulation"
+author: "Marcin Kierczak"
+description: "Object-oriented epidemics simulation using R6 class system"
+image: "assets/featured.webp"
+format: html
+---
+
+```{r}
+#| echo: false
+library(R6)
+library(tidyverse)
+library(ggplot2)
+library(gganimate)
+library(progress)
+```
+
+::: {.callout-note}
+During this lab, we will be simulating spreading of a disease using R6 OOP system.
+:::
+
+## Define an agent
+
+```{r}
+#| eval: false
+library('R6')
+
+Agent <- R6Class(classname = "Agent",
+  public = list(
+    var1 = character()
+    initialize = function(var = "") {
+      self$var = "initial value"
+    },
+    some_other_function = function(a, b, c) {
+
+    }
+  )
+)
+```
+
+```{r}
+#| results: hide
+#| code-fold: true
+library(R6)
+
+Agent <- R6Class("Agent",
+  public = list(
+    state = character(),
+    initialize = function(state = "healthy") {
+      self$state <- state
+    },
+    update_state = function(sick_prob, recovery_prob, death_prob) {
+      # If agent is healthy it can either stay healthy or get infected
+      if (self$state == "healthy") {
+        new_state <- sample(x = c("healthy", "sick"), 
+                       size = 1, 
+                       prob = c(1-sick_prob, sick_prob))
+      # A sick agent can continue being sick, recover and become immune or die
+      } else if (self$state == "sick") { 
+        new_state <- sample(x = c("sick", "immune", "dead"), 
+                       size = 1, 
+                       prob = c((1-(recovery_prob + death_prob)), recovery_prob, death_prob))
+      
+      } else {
+        new_state <- self$state # Immune and dead states do not change
+      }
+      self$state <- new_state  # Update state
+    }
+  )
+)
+```
+
+## Define the world
+
+```{r}
+#| results: hide
+#| code-fold: true
+
+```
+
+
+**Congratulations! You are familiar with S3, S4 and R6 object models by now!**
+
+## Session
+
+<details>
+  <summary>Click here</summary>
+
+```{r}
+#| label: session
+
+sessionInfo()
+```
+
+</details>
