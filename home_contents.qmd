@@ -45,7 +45,7 @@ execute:
 |Object-oriented programming            |Marcin Kierczak               |[Slides](slides/oop/index.html), [Lab](labs/oop/index.html), [Livecode](http://livecode.kierczak.net:7777)|
 |[18-Aug-2026 (Tue)]{.badge .badge-secondary}                          |||
 |Web apps with Shiny                    |Roy Francis                   |[Slides](slides/shiny/index.html), [Lab](labs/shiny/index.html)|
-|Projects                               |Guilherme Dias                |[Lab](labs/projects/index.html)|
+|Projects                               |Guilherme Dias                |[Projects](labs/projects/index.html)|
 :::
 
 <br>
