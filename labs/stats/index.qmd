@@ -6,6 +6,9 @@ format: html
 image: "assets/featured.webp"
 ---
 
+
+Let's start by loading the packages we need in this lab.
+
 ```{r}
 ## Install packages if necessary 
 ## (make sure you have the BiocManager package installed)
