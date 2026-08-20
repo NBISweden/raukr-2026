@@ -56,4 +56,4 @@ execute:
 
 - Literate programming with Quarto [Lab](labs/quarto/index.html)
 - Creating websites with Quarto [Lab](labs/quarto-site/index.html)
-- Functions & Scripts [Slides](slides/scripting/index.html), [Lab](labs/scripting/index.html)
+
